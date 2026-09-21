@@ -1,0 +1,16 @@
+{
+  "project": "transfomer-robot-defect-gen",
+  "phase": "bootstrap",
+  "completed": [
+    "task_01_repository_skeleton",
+    "task_02_dataset_audit_tooling",
+    "fewshot_split_protocol_scaffold"
+  ],
+  "next": [
+    "download_or_mount_mvtec_ad",
+    "run_dataset_audit",
+    "validate_support_heldout_counts",
+    "integrate_gan_upstream",
+    "integrate_anomalydiffusion_upstream"
+  ]
+}
