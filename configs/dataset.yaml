@@ -1,0 +1,12 @@
+dataset:
+  name: mvtec_ad
+  root: data/raw/mvtec_ad
+  categories:
+    - metal_nut
+    - screw
+
+fewshot:
+  support_per_defect_type: 5
+  seed: 42
+  strategy: stratified_by_defect_type
+  heldout_policy: lock_remaining_real_defects
