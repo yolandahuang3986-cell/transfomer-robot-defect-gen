@@ -1,0 +1,12 @@
+experiments:
+  - id: E0
+    training_data: real_only
+  - id: E2
+    training_data: real_plus_gan
+  - id: E3
+    training_data: real_plus_diffusion
+
+ablation:
+  real_support_counts: [5, 10, 20]
+  synthetic_ratios: [1, 5, 10]
+  seeds: [42]
