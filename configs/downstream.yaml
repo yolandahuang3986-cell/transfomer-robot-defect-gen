@@ -1,0 +1,15 @@
+model:
+  task: segmentation
+  architecture: unet
+  seed: 42
+
+training:
+  epochs: 50
+  batch_size: 8
+  learning_rate: 0.0001
+
+metrics:
+  - pixel_auroc
+  - iou
+  - dice
+  - defect_recall
