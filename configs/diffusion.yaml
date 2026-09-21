@@ -1,0 +1,8 @@
+method:
+  name: diffusion
+  upstream_repo: https://github.com/sjtuplayer/anomalydiffusion
+  seed: 42
+
+generation:
+  num_samples_per_category: 100
+  sampling_steps: 50
