@@ -1,0 +1,8 @@
+method:
+  name: gan
+  upstream_repo: https://github.com/pasqualecoscia/SyntheticDefectGeneration
+  seed: 42
+
+generation:
+  num_samples_per_category: 100
+  latent_dim: 128
