@@ -76,3 +76,29 @@ See [TEAM_COLLABORATION.md](TEAM_COLLABORATION.md) for:
 - phase gates and acceptance criteria;
 - diffusion fallback rule;
 - collaboration and QA workflow.
+
+## Member A Phase 0
+
+Run on TC2 from the repository root using the isolated `robot-phase0` environment.
+Dataset archives and expanded images belong under `~/datasets/mvtec_ad` and are
+never copied into this repository.
+
+```bash
+~/envs/robot-phase0/bin/python -m pytest -q
+~/envs/robot-phase0/bin/python scripts/audit_mvtec.py --root ~/datasets/mvtec_ad --categories metal_nut screw --out ~/datasets/mvtec_ad/dataset_audit.csv
+~/envs/robot-phase0/bin/python scripts/build_fewshot_splits.py --root ~/datasets/mvtec_ad --categories metal_nut screw --n-support 5 --seed 42 --out-dir data/splits
+srun --partition=MGPU-TC2 --qos=normal --gres=gpu:nvidia:1 --cpus-per-task=2 --mem=16G --time=00:10:00 ~/envs/robot-phase0/bin/python scripts/run_gate0.py --device cuda --root ~/datasets/mvtec_ad --manifest data/splits/fewshot_n5_seed42.json --category metal_nut --out ~/datasets/mvtec_ad/gate0_metal_nut.json
+```
+
+The split builder creates a checksummed **candidate** and refuses to overwrite
+it. Review the audit counts and per-defect support/held-out coverage with the
+team before recording a freeze attestation:
+
+```bash
+python scripts/freeze_split.py --root ~/datasets/mvtec_ad --manifest data/splits/fewshot_n5_seed42.json --reviewer 'Member A' --reason 'Reviewed audit counts and per-defect support/held-out coverage'
+```
+
+Commit the candidate and its `.freeze.json` attestation together only after a
+real review. The dummy generator makes constant fixture patches solely for the
+Gate 0 smoke test. Gate 0 performs one optimization step to prove the loader,
+U-Net, evaluator, and JSON contract; its metrics are not a benchmark.

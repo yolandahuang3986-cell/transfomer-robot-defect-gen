@@ -1,37 +1,40 @@
 #!/usr/bin/env python3
+"""Build a reviewed-later candidate; never overwrite a split."""
 import argparse
-import json
 import sys
 from pathlib import Path
-
-REPO_ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(REPO_ROOT))
-
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from src.data.integrity import audit, digest, validate_manifest, write_new_json
 from src.data.mvtec import scan_dataset
 from src.data.splits import build_fewshot_manifest
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--root", required=True)
-    parser.add_argument("--categories", nargs="+", required=True)
-    parser.add_argument("--n-support", type=int, default=5)
-    parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--out-dir", default="data/splits")
-    args = parser.parse_args()
+    p = argparse.ArgumentParser()
+    p.add_argument('--root', required=True)
+    p.add_argument('--categories', nargs='+', required=True)
+    p.add_argument('--n-support', type=int, default=5)
+    p.add_argument('--seed', type=int, default=42)
+    p.add_argument('--out-dir', default='data/splits')
+    args = p.parse_args()
+    root = Path(args.root).resolve()
+    rows, counts = audit(root, args.categories)
+    split = build_fewshot_manifest(scan_dataset(root, args.categories), args.n_support, args.seed)
+    by_path = {r['image_path']: r for r in rows}
+    manifest = {k: v for k, v in split.items() if k not in ('support', 'heldout')}
+    manifest.update(schema_version=1, status='candidate', categories=sorted(args.categories),
+                    counts=counts, dataset_fingerprint=digest(rows))
+    for part in ('support', 'heldout'):
+        manifest[part] = [by_path[Path(r['image_path']).relative_to(root).as_posix()] for r in split[part]]
+    manifest['train_normal'] = [r for r in rows if r['split'] == 'train']
+    manifest['test_normal'] = [r for r in rows if r['split'] == 'test' and r['defect_type'] == 'good']
+    manifest['manifest_sha256'] = digest(manifest)
+    validate_manifest(manifest)
+    out = Path(args.out_dir) / f'fewshot_n{args.n_support}_seed{args.seed}.json'
+    write_new_json(out, manifest)
+    print({p: len(manifest[p]) for p in ('train_normal', 'test_normal', 'support', 'heldout')})
+    print(f'Candidate saved: {out}; team count/coverage review required before freeze')
 
-    records = scan_dataset(args.root, args.categories)
-    manifest = build_fewshot_manifest(records, args.n_support, args.seed)
 
-    out_dir = Path(args.out_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out = out_dir / f"fewshot_n{args.n_support}_seed{args.seed}.json"
-    out.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
-
-    print(f"Support defect images: {len(manifest['support'])}")
-    print(f"Held-out defect images: {len(manifest['heldout'])}")
-    print(f"Saved split manifest: {out}")
-
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

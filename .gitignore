@@ -5,7 +5,6 @@ __pycache__/
 data/raw/
 data/processed/
 data/generated/
-data/splits/
 !data/README.md
 checkpoints/
 *.ckpt
@@ -19,3 +18,15 @@ results/samples/*
 !results/figures/.gitkeep
 !results/samples/.gitkeep
 external/repos/
+.env
+.env.*
+!.env.example
+venv/
+env/
+.pytest_cache/
+*.tar
+*.tar.gz
+*.tar.xz
+*.zip
+*.onnx
+*.bin

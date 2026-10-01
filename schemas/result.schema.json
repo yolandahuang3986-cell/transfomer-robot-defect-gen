@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Common industrial inspection result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "experiment_id", "category", "method", "real_train_count", "synthetic_count", "seed", "generator", "inspection", "provenance", "evaluation", "training"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "experiment_id": {"type": "string", "minLength": 1},
+    "category": {"type": "string", "minLength": 1},
+    "method": {"enum": ["real_only", "dummy", "procedural", "gan", "diffusion"]},
+    "real_train_count": {"type": "integer", "minimum": 0},
+    "synthetic_count": {"type": "integer", "minimum": 0},
+    "seed": {"type": "integer"},
+    "generator": {
+      "type": "object", "additionalProperties": false,
+      "required": ["generation_seconds_per_image", "config"],
+      "properties": {
+        "generation_seconds_per_image": {"type": "number", "minimum": 0},
+        "sampling_steps": {"type": ["integer", "null"], "minimum": 1},
+        "config": {"type": "object"}
+      }
+    },
+    "inspection": {
+      "type": "object", "additionalProperties": false,
+      "required": ["pixel_auroc", "iou", "dice", "defect_recall"],
+      "properties": {
+        "pixel_auroc": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "iou": {"type": "number", "minimum": 0, "maximum": 1},
+        "dice": {"type": "number", "minimum": 0, "maximum": 1},
+        "defect_recall": {"type": ["number", "null"], "minimum": 0, "maximum": 1}
+      }
+    },
+    "training": {
+      "type": "object", "additionalProperties": false,
+      "required": ["architecture", "encoder", "encoder_weights", "image_size", "steps", "learning_rate", "loss"],
+      "properties": {
+        "architecture": {"type": "string"}, "encoder": {"type": "string"},
+        "encoder_weights": {"type": ["string", "null"]},
+        "image_size": {"type": "integer", "minimum": 32},
+        "steps": {"type": "integer", "minimum": 1},
+        "learning_rate": {"type": "number", "exclusiveMinimum": 0},
+        "loss": {"type": "number", "minimum": 0}
+      }
+    },
+    "evaluation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source", "count", "threshold", "smoke_only", "split_sha256"],
+      "properties": {
+        "source": {"enum": ["independent_fixture", "heldout_real"]},
+        "count": {"type": "integer", "minimum": 1},
+        "threshold": {"type": "number", "minimum": 0, "maximum": 1},
+        "smoke_only": {"type": "boolean"},
+        "split_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "provenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["git_commit", "git_dirty", "python", "torch", "cuda", "device", "runtime_seconds", "packages"],
+      "properties": {
+        "git_commit": {"type": "string", "minLength": 1},
+        "git_dirty": {"type": "boolean"},
+        "python": {"type": "string"}, "torch": {"type": "string"},
+        "cuda": {"type": ["string", "null"]}, "device": {"type": "string"},
+        "runtime_seconds": {"type": "number", "minimum": 0},
+        "packages": {"type": "object", "additionalProperties": {"type": "string"}}
+      }
+    }
+  }
+}

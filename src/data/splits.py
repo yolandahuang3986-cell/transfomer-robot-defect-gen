@@ -9,19 +9,33 @@ def build_fewshot_manifest(records, n_support, seed):
     Sampling is stratified by category and defect type.
     """
     rng = random.Random(seed)
+    if not isinstance(n_support, int) or isinstance(n_support, bool) or n_support < 1:
+        raise ValueError("n_support must be a positive integer")
     groups = defaultdict(list)
+    seen = set()
 
     for record in records:
+        path = str(record.image_path)
+        if path in seen:
+            raise ValueError(f"Duplicate record: {path}")
+        seen.add(path)
         if record.split == "test" and record.defect_type != "good":
+            if record.mask_path is None:
+                raise ValueError(f"Missing defect mask: {path}")
             groups[(record.category, record.defect_type)].append(record)
+
+    if not groups:
+        raise ValueError("No real defects found")
 
     support = []
     heldout = []
 
     for (category, defect_type), items in sorted(groups.items()):
-        items = list(items)
+        items = sorted(items, key=lambda item: str(item.image_path))
         rng.shuffle(items)
-        k = min(n_support, len(items))
+        if len(items) <= n_support:
+            raise ValueError(f"Insufficient held-out defects: {category}/{defect_type}")
+        k = n_support
 
         for bucket, subset in ((support, items[:k]), (heldout, items[k:])):
             bucket.extend(
