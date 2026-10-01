@@ -291,6 +291,11 @@ No final result should exist only inside a notebook cell.
 - diffusion feasibility note;
 - fallback decision written down.
 
+The source audit and per-method environment-validation template are tracked in
+[`docs/member_bc_feasibility.md`](docs/member_bc_feasibility.md). Keep the
+executor-only environment, GPU, VRAM, runtime, and reproduction fields TBD until
+the assigned member records an actual run.
+
 **Gate 0**
 A confirms that a dummy generated sample can pass:
 

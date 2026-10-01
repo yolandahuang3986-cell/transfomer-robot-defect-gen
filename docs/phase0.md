@@ -8,9 +8,11 @@
   hashes are checked for leakage. Manifest paths are portable and the whole
   manifest is checksummed.
 - Split generation uses exclusive creation. A generated manifest has status
-  `candidate`. `freeze_split.py` rechecks all data hashes and writes a separate
-  review attestation without changing the candidate. The reviewer must actually
-  inspect and approve the displayed counts/coverage before running it.
+  `candidate`. `freeze_split.py` rechecks all data hashes, changes the manifest
+  status to `frozen`, recomputes its checksum, and writes a separate review
+  attestation. The approved tracked protocol is `5-shot per defect type, seed
+  42`; its manifest and attestation live under `data/splits/`. The data owner
+  approved the audited per-defect counts and coverage before freezing.
 - Generators exchange float32 RGB NCHW images in `[0,1]`, float32 binary N1HW
   masks, and one metadata record per image. Contract tests validate all fields.
 - U-Net uses `segmentation-models-pytorch` with an untrained ResNet-18 encoder;

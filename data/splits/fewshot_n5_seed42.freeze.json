@@ -1,0 +1,7 @@
+{
+  "manifest_sha256": "259a091b8681542704a69701473b03834440bc4da3371b5415e10f6b45be901c",
+  "status": "frozen",
+  "reviewer": "Member A (project owner approval)",
+  "reason": "Approved by project owner: 5-shot per defect type, seed 42; dataset audit passed and each defect stratum retains held-out examples.",
+  "reviewed_at": "2026-10-01T13:12:48.172460+00:00"
+}

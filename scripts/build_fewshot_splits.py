@@ -22,7 +22,9 @@ def main():
     split = build_fewshot_manifest(scan_dataset(root, args.categories), args.n_support, args.seed)
     by_path = {r['image_path']: r for r in rows}
     manifest = {k: v for k, v in split.items() if k not in ('support', 'heldout')}
-    manifest.update(schema_version=1, status='candidate', categories=sorted(args.categories),
+    manifest.update(schema_version=1, status='candidate',
+                    protocol_name=f'{args.n_support}-shot per defect type, seed {args.seed}',
+                    categories=sorted(args.categories),
                     counts=counts, dataset_fingerprint=digest(rows))
     for part in ('support', 'heldout'):
         manifest[part] = [by_path[Path(r['image_path']).relative_to(root).as_posix()] for r in split[part]]

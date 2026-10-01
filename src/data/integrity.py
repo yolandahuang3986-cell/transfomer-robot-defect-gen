@@ -73,6 +73,11 @@ def validate_manifest(manifest, root=None):
     body = {k: v for k, v in manifest.items() if k != "manifest_sha256"}
     if manifest.get("manifest_sha256") != digest(body):
         raise ValueError("Manifest checksum mismatch")
+    if "protocol_name" in manifest:
+        expected = (f"{manifest['n_support_requested_per_defect_type']}-shot per defect type, "
+                    f"seed {manifest['seed']}")
+        if manifest["protocol_name"] != expected:
+            raise ValueError("Protocol name does not match split parameters")
     paths, hashes = set(), {}
     for partition in PARTITIONS:
         if not manifest.get(partition):
@@ -115,6 +120,8 @@ def validate_manifest(manifest, root=None):
 
 
 def validate_freeze_attestation(manifest, attestation):
+    if manifest.get("status") != "frozen":
+        raise ValueError("Manifest status is not frozen")
     if attestation.get("status") != "frozen":
         raise ValueError("Split is not attested as frozen")
     if attestation.get("manifest_sha256") != manifest.get("manifest_sha256"):
@@ -122,6 +129,38 @@ def validate_freeze_attestation(manifest, attestation):
     if not str(attestation.get("reviewer", "")).strip() or not str(attestation.get("reason", "")).strip():
         raise ValueError("Freeze attestation must record reviewer and reason")
     return attestation
+
+
+def freeze_manifest(path, root, reviewer, reason):
+    """Validate, atomically mark a candidate frozen, and write its attestation."""
+    import os
+    from datetime import datetime, timezone
+
+    path = Path(path)
+    attestation_path = path.with_suffix(".freeze.json")
+    if attestation_path.exists():
+        raise FileExistsError(attestation_path)
+    manifest = validate_manifest(json.loads(path.read_text(encoding="utf-8")), root)
+    if manifest.get("status") != "candidate":
+        raise ValueError("Only a candidate manifest may be frozen")
+    if not reviewer.strip() or not reason.strip():
+        raise ValueError("Reviewer and freeze reason must not be blank")
+    frozen = {k: v for k, v in manifest.items() if k != "manifest_sha256"}
+    frozen["status"] = "frozen"
+    frozen["manifest_sha256"] = digest(frozen)
+    # Stage beside the manifest and atomically replace only in explicit freeze action.
+    temp_path = path.with_name(path.name + ".freeze-tmp")
+    with temp_path.open("x", encoding="utf-8") as stream:
+        json.dump(frozen, stream, indent=2, allow_nan=False)
+        stream.write("\n")
+        stream.flush()
+        os.fsync(stream.fileno())
+    os.replace(temp_path, path)
+    record = dict(manifest_sha256=frozen["manifest_sha256"], status="frozen",
+                  reviewer=reviewer, reason=reason,
+                  reviewed_at=datetime.now(timezone.utc).isoformat())
+    write_new_json(attestation_path, record)
+    return frozen, record
 
 
 def write_new_json(path, value):
