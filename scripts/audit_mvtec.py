@@ -1,50 +1,30 @@
 #!/usr/bin/env python3
+"""Audit every image/mask before allowing split construction."""
 import argparse
+import csv
 import sys
 from pathlib import Path
-
-import pandas as pd
-
-REPO_ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(REPO_ROOT))
-
-from src.data.mvtec import scan_dataset
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from src.data.integrity import audit
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--root", required=True)
-    parser.add_argument("--categories", nargs="+", required=True)
-    parser.add_argument("--out", default="results/metrics/dataset_audit.csv")
-    args = parser.parse_args()
-
-    records = scan_dataset(args.root, args.categories)
-    rows = [
-        {
-            "category": r.category,
-            "split": r.split,
-            "defect_type": r.defect_type,
-            "image_path": str(r.image_path),
-            "has_mask": r.mask_path is not None,
-            "mask_path": str(r.mask_path) if r.mask_path else "",
-        }
-        for r in records
-    ]
-
-    df = pd.DataFrame(rows)
+    p = argparse.ArgumentParser()
+    p.add_argument('--root', required=True)
+    p.add_argument('--categories', nargs='+', required=True)
+    p.add_argument('--out', default='results/metrics/dataset_audit.csv')
+    args = p.parse_args()
+    rows, counts = audit(args.root, args.categories)
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(out, index=False)
-
-    summary = (
-        df.groupby(["category", "split", "defect_type"], dropna=False)
-        .agg(images=("image_path", "count"), masks=("has_mask", "sum"))
-        .reset_index()
-    )
-
-    print(summary.to_string(index=False))
-    print(f"\nSaved audit: {out}")
+    with out.open('w', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+    for row in counts:
+        print(row)
+    print(f'AUDIT PASS: {len(rows)} images; saved {out}')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
