@@ -1,23 +1,31 @@
 # transfomer-robot-defect-gen
 
-CA6127 group project: **Robot-View Rare-Defect Generation for Embodied Industrial Inspection**.
+CA6127 group project: **Rare-Defect Data Generation under Data Scarcity for Industrial Inspection**.
 
 ## Core research question
-Can synthetic rare-defect images improve robotic visual inspection when real defect data is scarce?
+Can synthetic rare-defect data improve industrial inspection when real defect data is scarce, and when do more expensive generative methods justify their cost?
 
 ## Core pipeline
 ```text
 MVTec AD
--> few-shot real-defect support split
--> GAN vs Diffusion defect generation
+-> frozen few-shot real-defect support split
+-> Real only / Procedural / GAN / Diffusion
 -> fixed downstream inspection model
 -> held-out real-defect evaluation
--> robot-view robustness
--> optional ManiSkill inspect-and-sort demo
+-> quality / utility / cost analysis
+-> optional robot-view robustness
 ```
+
+## Core comparison
+1. Real only
+2. Real + Procedural synthesis
+3. Real + GAN
+4. Real + Diffusion
 
 ## Data-integrity rule
 MVTec AD standard training data are normal-only. Real defects are sampled from the official defect pool into a small **support** set, while all remaining real defects are locked as **held-out evaluation**. No support image may appear in held-out evaluation.
+
+The split is frozen after Phase 0 and shared by all synthesis methods.
 
 ## MVP categories
 - metal_nut
@@ -46,14 +54,25 @@ python scripts/build_fewshot_splits.py \
 ## Scope lock
 Core:
 1. MVTec AD subset
-2. GAN-based defect synthesis
-3. Diffusion-based defect synthesis
-4. Fixed downstream inspection model
-5. Real held-out evaluation
-6. Data-scarcity and synthetic-ratio ablations
+2. Frozen few-shot support / held-out real-defect split
+3. Procedural synthetic-anomaly baseline
+4. GAN-based defect synthesis
+5. Diffusion-based defect synthesis
+6. Fixed downstream inspection model
+7. Unified evaluator and JSON result schema
+8. Synthetic-ratio, hyperparameter, quality, utility, and cost analysis
 
-Extension:
+Optional extension:
 - robot-view proxy robustness
-- optional ManiSkill inspect-and-sort demo
 
-Do not expand into full VLA / humanoid foundation-model training before the core experiment matrix is complete.
+Do not expand into robot control, full VLA, humanoid foundation-model training, or simulator work before the four core experiment chains are complete.
+
+## Team collaboration
+See [TEAM_COLLABORATION.md](TEAM_COLLABORATION.md) for:
+- three-person role ownership;
+- skill-based B/C role swap rule;
+- generator interface contract;
+- frozen-split governance;
+- phase gates and acceptance criteria;
+- diffusion fallback rule;
+- collaboration and QA workflow.
