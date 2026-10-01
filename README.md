@@ -102,3 +102,17 @@ Commit the candidate and its `.freeze.json` attestation together only after a
 real review. The dummy generator makes constant fixture patches solely for the
 Gate 0 smoke test. Gate 0 performs one optimization step to prove the loader,
 U-Net, evaluator, and JSON contract; its metrics are not a benchmark.
+
+After the freeze attestation exists, run a full reproducible baseline. The
+trainer rejects a missing or mismatched attestation and writes model weights
+only to the ignored checkpoint path:
+
+```bash
+srun --partition=MGPU-TC2 --qos=normal --gres=gpu:nvidia:1 --cpus-per-task=8 --mem=28G --time=06:00:00 \
+  ~/envs/robot-phase0/bin/python scripts/train_inspector.py \
+  --root ~/datasets/mvtec_ad --manifest data/splits/fewshot_n5_seed42.json \
+  --category metal_nut --method real_only --epochs 50 --batch-size 8 \
+  --image-size 256 --device cuda \
+  --out results/metrics/real_only_metal_nut_seed42.json \
+  --checkpoint checkpoints/real_only_metal_nut_seed42.pt
+```

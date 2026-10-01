@@ -21,3 +21,7 @@
   training step, evaluates either independent fixtures or held-out real images,
   validates the versioned JSON schema, and creates output exclusively. It is a
   smoke test, not a quality result.
+- `scripts/train_inspector.py` runs the full configured supervised baseline for
+  `real_only` or the dummy fixture condition. It checks the freeze attestation,
+  trains for the requested epochs, and evaluates held-out data once at the end.
+  Method adapters for Procedural, GAN, and Diffusion remain with their owners.

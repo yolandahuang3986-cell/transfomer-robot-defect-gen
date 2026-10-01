@@ -114,6 +114,16 @@ def validate_manifest(manifest, root=None):
     return manifest
 
 
+def validate_freeze_attestation(manifest, attestation):
+    if attestation.get("status") != "frozen":
+        raise ValueError("Split is not attested as frozen")
+    if attestation.get("manifest_sha256") != manifest.get("manifest_sha256"):
+        raise ValueError("Freeze attestation does not match manifest")
+    if not str(attestation.get("reviewer", "")).strip() or not str(attestation.get("reason", "")).strip():
+        raise ValueError("Freeze attestation must record reviewer and reason")
+    return attestation
+
+
 def write_new_json(path, value):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)

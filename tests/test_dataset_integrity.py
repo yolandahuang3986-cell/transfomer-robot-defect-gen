@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 import pytest
-from src.data.integrity import audit, digest, validate_manifest, write_new_json
+from src.data.integrity import audit, digest, validate_manifest, validate_freeze_attestation, write_new_json
 from src.data.mvtec import scan_dataset
 from src.data.splits import build_fewshot_manifest
 
@@ -51,3 +51,14 @@ def test_candidate_write_is_exclusive(tmp_path):
     with pytest.raises(FileExistsError):
         write_new_json(p, {'status': 'replacement'})
     assert json.loads(p.read_text()) == {'status': 'candidate'}
+
+
+def test_freeze_requires_matching_manifest_and_reviewer():
+    manifest = {'manifest_sha256': 'a' * 64}
+    good = {'status': 'frozen', 'manifest_sha256': 'a' * 64,
+            'reviewer': 'reviewer', 'reason': 'counts checked'}
+    assert validate_freeze_attestation(manifest, good) == good
+    with pytest.raises(ValueError, match='not attested'):
+        validate_freeze_attestation(manifest, {**good, 'status': 'candidate'})
+    with pytest.raises(ValueError, match='does not match'):
+        validate_freeze_attestation(manifest, {**good, 'manifest_sha256': 'b' * 64})

@@ -1,6 +1,8 @@
 model:
   task: segmentation
   architecture: unet
+  encoder: resnet18
+  encoder_weights: null
   seed: 42
 
 training:
@@ -9,7 +11,10 @@ training:
   learning_rate: 0.0001
 
 metrics:
-  - pixel_auroc
-  - iou
-  - dice
-  - defect_recall
+  names:
+    - pixel_auroc
+    - iou
+    - dice
+    - defect_recall
+  threshold: 0.5
+  undefined_auroc: null

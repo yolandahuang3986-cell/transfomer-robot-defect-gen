@@ -1,6 +1,8 @@
 experiments:
   - id: E0
     training_data: real_only
+  - id: E1
+    training_data: real_plus_procedural
   - id: E2
     training_data: real_plus_gan
   - id: E3
