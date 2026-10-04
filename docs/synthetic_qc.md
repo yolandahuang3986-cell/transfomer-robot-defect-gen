@@ -2,9 +2,9 @@
 
 This QC applies to every generated sample from Procedural, GAN, and Diffusion
 before it enters downstream training. The Real-only condition has no generated
-samples and does not use this filter. A owns this common policy; B and C call
-the same QC implementation from their generator adapters and must not add
-method-specific acceptance thresholds.
+samples and does not use this filter. A owns this common policy and will add the
+shared QC helper in Phase 1; B and C must call that same helper from their
+generator adapters and must not add method-specific acceptance thresholds.
 
 ## Allowed inputs
 
