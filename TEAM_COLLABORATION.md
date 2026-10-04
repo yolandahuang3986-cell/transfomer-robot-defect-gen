@@ -167,13 +167,18 @@ Each generated sample must include metadata equivalent to:
   "category": "metal_nut",
   "defect_type": "scratch",
   "seed": 42,
-  "source_image_id": "...",
+  "source_image_id": "metal_nut/train/good/001.png",
   "generation_config": {},
   "generation_seconds": 0.0
 }
 ```
 
 B/C are free to use different upstream repositories internally, but they must normalize outputs to the same contract.
+
+All synthetic generators inherit `generate_with_qc(...)` from
+`DefectGenerator`. Phase 1 training must use this shared entry point so the
+same versioned QC rules and 10x attempt cap apply to every synthetic method.
+`source_image_id` must be a relative path into the MVTec `train/good` partition.
 
 ---
 

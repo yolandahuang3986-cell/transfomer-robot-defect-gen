@@ -7,5 +7,5 @@ class DiffusionDefectGenerator(DefectGenerator):
     def fit(self, dataset, config):
         raise NotImplementedError("Integrate pinned AnomalyDiffusion implementation.")
 
-    def generate(self, normal_images, num_samples, defect_type=None, seed=42):
+    def generate(self, normal_images, num_samples, defect_type=None, seed=42, **kwargs):
         raise NotImplementedError("Integrate pinned AnomalyDiffusion implementation.")
