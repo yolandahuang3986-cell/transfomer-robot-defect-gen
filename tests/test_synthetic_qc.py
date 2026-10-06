@@ -128,5 +128,16 @@ def test_generator_base_entrypoint_rejects_non_training_normal_sources():
     normal[:, :, 4:36, 4:36] = 0.6
     with pytest.raises(ValueError, match="train/good paths"):
         FixedMaskGenerator(valid=True).generate_with_qc(
-            normal, ["metal_nut/test/good/001.png"], target_count=1
+            normal, ["metal_nut/test/good/001.png"], target_count=1,
+            defect_type="bent",
+        )
+
+
+def test_generator_base_entrypoint_blocks_out_of_scope_flip_before_generation():
+    normal = np.zeros((1, 3, 40, 40), dtype=np.float32)
+    normal[:, :, 4:36, 4:36] = 0.6
+    with pytest.raises(ValueError, match="metal_nut/flip"):
+        FixedMaskGenerator(valid=True).generate_with_qc(
+            normal, ["metal_nut/train/good/001.png"], target_count=1,
+            category="metal_nut", defect_type="flip",
         )

@@ -8,6 +8,17 @@ executable helper in `src/generation/qc.py`; every generator inherits
 IDs that map to training-normal inputs and use this entry point; they must not
 add method-specific acceptance thresholds.
 
+The core comparison scope is separately frozen in
+`configs/experiment_scope.json`. It excludes `metal_nut/flip` from real-support
+training, synthetic generation, and held-out evaluation for every method because
+it is a whole-object orientation change rather than a localized defect. The
+shared generation entry point rejects this stratum before generation starts;
+the downstream runner applies the same scope to real support and held-out rows.
+The frozen split manifest itself remains unchanged. This scope decision does
+not change QC v1 thresholds. Color remains in scope pending a support-mask
+compatibility audit performed before inspecting generated samples; that audit
+may define scope but must not tune QC thresholds.
+
 ## Allowed inputs
 
 QC may read only the generated image, its generated binary mask, and the

@@ -9,6 +9,7 @@ import numpy as np
 from scipy.ndimage import label
 
 from .base import GeneratedBatch, validate_batch
+from ..experiments.scope import require_in_scope
 
 
 @dataclass(frozen=True)
@@ -223,6 +224,17 @@ def filter_generated_batch(batch, foreground_by_source_id, target_count=None, po
 def generate_with_qc(generator, normal_images, source_image_ids, target_count,
                      defect_type=None, seed=42, **kwargs):
     """Generate up to target_count accepted samples with the shared 10x cap."""
+    category = kwargs.get("category")
+    if not isinstance(defect_type, str) or not defect_type:
+        raise ValueError("Shared-QC generation requires one explicit defect_type")
+    if category is None and source_image_ids:
+        categories = {PurePosixPath(source_id).parts[0] for source_id in source_image_ids
+                      if isinstance(source_id, str) and source_id}
+        if len(categories) == 1:
+            category = categories.pop()
+    if not isinstance(category, str) or not category:
+        raise ValueError("Shared-QC generation requires a category or category-scoped source IDs")
+    require_in_scope(category, defect_type)
     if type(target_count) is not int or target_count < 1:
         raise ValueError("target_count must be a positive integer")
     images = np.asarray(normal_images)
@@ -242,11 +254,13 @@ def generate_with_qc(generator, normal_images, source_image_ids, target_count,
     rejected_samples = []
     generation_seconds = 0.0
     qc_seconds = foreground_seconds
+    generation_kwargs = dict(kwargs)
+    generation_kwargs["category"] = category
     while accepted_count < target_count and attempted < attempt_budget:
         request = min(target_count - accepted_count, attempt_budget - attempted)
         generated = generator.generate(
             images, request, defect_type=defect_type, seed=seed + batch_number,
-            source_image_ids=source_image_ids, **kwargs,
+            source_image_ids=source_image_ids, **generation_kwargs,
         )
         validate_batch(generated, request)
         result = filter_generated_batch(generated, foregrounds, policy=policy)
