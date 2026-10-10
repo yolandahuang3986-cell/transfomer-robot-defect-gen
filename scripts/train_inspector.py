@@ -23,6 +23,7 @@ from src.inspection.data import RealDataset, generated_dataset
 from src.inspection.model import build_model
 from src.inspection.results import save_result
 from src.metrics.segmentation import evaluate
+from src.experiments.scope import excluded_rows, filter_in_scope, PROTOCOL_VERSION
 
 
 def train(args):
@@ -49,7 +50,8 @@ def train(args):
     for part in ('train_normal', 'test_normal', 'support', 'heldout'):
         if not rows(part):
             raise ValueError(f'Frozen split has no {part} samples for {args.category}')
-    train_rows = rows('train_normal') + rows('support')
+    train_rows = rows('train_normal') + filter_in_scope(rows('support'))
+    excluded_support = excluded_rows(rows('support'))
     train_set = RealDataset(args.root, train_rows, args.image_size)
     generated_seconds = 0.0
     if args.method == 'dummy':
@@ -70,7 +72,8 @@ def train(args):
     train_loader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True,
                               num_workers=args.num_workers, generator=generator,
                               pin_memory=args.device == 'cuda')
-    test_rows = rows('test_normal') + rows('heldout')
+    test_rows = rows('test_normal') + filter_in_scope(rows('heldout'))
+    excluded_heldout = excluded_rows(rows('heldout'))
     test_loader = DataLoader(RealDataset(args.root, test_rows, args.image_size),
                              batch_size=args.batch_size, shuffle=False,
                              num_workers=args.num_workers, pin_memory=args.device == 'cuda')
@@ -111,6 +114,9 @@ def train(args):
                   'image_size': args.image_size, 'steps': steps,
                   'learning_rate': args.learning_rate, 'loss': float(np.mean(losses))},
         evaluation={'source': 'heldout_real', 'count': len(test_rows), 'threshold': 0.5,
+                    'scope_protocol': PROTOCOL_VERSION,
+                    'excluded_support_count': len(excluded_support),
+                    'excluded_heldout_count': len(excluded_heldout),
                     'smoke_only': False, 'split_sha256': manifest['manifest_sha256']},
         provenance={'git_commit': git('rev-parse', 'HEAD'), 'git_dirty': bool(git('status', '--porcelain')),
                     'python': platform.python_version(), 'torch': torch.__version__, 'cuda': torch.version.cuda,

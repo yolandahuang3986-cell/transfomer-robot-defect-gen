@@ -167,13 +167,18 @@ Each generated sample must include metadata equivalent to:
   "category": "metal_nut",
   "defect_type": "scratch",
   "seed": 42,
-  "source_image_id": "...",
+  "source_image_id": "metal_nut/train/good/001.png",
   "generation_config": {},
   "generation_seconds": 0.0
 }
 ```
 
 B/C are free to use different upstream repositories internally, but they must normalize outputs to the same contract.
+
+All synthetic generators inherit `generate_with_qc(...)` from
+`DefectGenerator`. Phase 1 training must use this shared entry point so the
+same versioned QC rules and 10x attempt cap apply to every synthetic method.
+`source_image_id` must be a relative path into the MVTec `train/good` partition.
 
 ---
 
@@ -348,10 +353,28 @@ If no usable diffusion samples exist by the end of Phase 1, A triggers the agree
 
 Fallback priority:
 
-1. official released checkpoint/inference path;
-2. lower-resolution or reduced-category fine-tuning;
-3. reduced sample count for the technical comparison;
-4. alternative reproducible diffusion-based industrial anomaly generator.
+1. lower-resolution or reduced-category training/fine-tuning using the frozen project split;
+2. reduced synthetic sample count for the technical comparison;
+3. an alternative reproducible diffusion-based industrial anomaly generator.
+
+Official AnomalyDiffusion checkpoints are for feasibility validation only.
+The upstream checkpoint training data overlap with 60 of the 167 images in our
+frozen held-out set, so these weights must not be used to report formal E3
+metrics. Formal E3 must use weights trained/fine-tuned from the project's 45
+support images without initializing from the leaked official AnomalyDiffusion
+checkpoint, then evaluate on the full frozen held-out set. Any generic base
+checkpoint must have its provenance recorded and must not include MVTec held-out
+images.
+
+If the team later decides it must report an experiment using the official
+checkpoint, it must use the same 107 non-overlapping held-out images for every
+method and clearly label the restricted evaluation as a protocol deviation.
+This requires an explicit team decision; do not alter the frozen manifest or
+silently substitute this subset. Generated image-mask pairs must also pass
+the common synthetic-sample QC defined in [`docs/synthetic_qc.md`](docs/synthetic_qc.md)
+before they are admitted to training. The initial Diffusion audit found only
+about 3 of 16 pairs clearly usable, so C must fix method-specific generation or
+mask-placement problems while A maintains the shared acceptance rule.
 
 The fallback must preserve the research question: compare a diffusion-based generative method against procedural/GAN alternatives.
 

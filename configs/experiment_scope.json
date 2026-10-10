@@ -1,0 +1,18 @@
+{
+  "protocol_version": "local-defect-scope-v1",
+  "scope": "localized_defects_only",
+  "excluded_strata": [
+    {
+      "category": "metal_nut",
+      "defect_type": "flip",
+      "reason": "Whole-object orientation change is outside the shared local-defect generation and QC scope."
+    }
+  ],
+  "applies_to": [
+    "real_support_training",
+    "synthetic_generation",
+    "heldout_evaluation"
+  ],
+  "decision_timing": "Before inspecting any method-generated samples",
+  "qc_thresholds_changed": false
+}

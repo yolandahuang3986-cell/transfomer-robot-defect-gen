@@ -34,22 +34,40 @@ The split is frozen after Phase 0 and shared by all synthesis methods.
 Optional:
 - transistor
 
-## First commands
+## Current status — 6 October 2026
+
+- **Member A Phase 0:** complete. The `5-shot per defect type, seed 42`
+  manifest and freeze attestation are tracked under `data/splits/`; the
+  evaluator, result schema, dummy contract, and Gate 0 runner are in place.
+- **Shared synthetic QC and comparison scope:** implemented on the current PR
+  branch. All methods use the same QC thresholds. The core comparison excludes
+  `metal_nut/flip`; the frozen split itself is unchanged. `color` remains in
+  scope pending a support-mask compatibility audit before reviewing generated
+  outputs.
+- **Member B:** Procedural and GAN adapters/results are not yet present in this
+  repository; record feasibility only after the assigned member runs them.
+- **Member C:** the latest team update reported all nine support-trained mask
+  models complete and the anomaly model still training. Sample generation,
+  shared-QC results, and the project adapter remain to be added here.
+- **Next project stage:** finish B/C adapters and contract checks, run the
+  real-only baseline, then run the matched synthetic-data comparisons and
+  quality/cost analyses.
+
+Dataset images and weights stay outside Git. The frozen split manifest is the
+approved protocol artifact; do not recreate or overwrite it for routine runs.
+
+## Reproduce Phase 0
+
+Install the declared project dependencies in the environment used for testing:
+
 ```bash
-pip install -r requirements.txt
-
-python scripts/audit_mvtec.py \
-  --root data/raw/mvtec_ad \
-  --categories metal_nut screw \
-  --out results/metrics/dataset_audit.csv
-
-python scripts/build_fewshot_splits.py \
-  --root data/raw/mvtec_ad \
-  --categories metal_nut screw \
-  --n-support 5 \
-  --seed 42 \
-  --out-dir data/splits
+python -m pip install -r requirements.txt
+python -m pytest -q
 ```
+
+To audit a mounted dataset and run Gate 0 on TC2, use the commands below.
+Dataset archives and expanded images belong under `~/datasets/mvtec_ad`, never
+inside this repository.
 
 ## Scope lock
 Core:
@@ -77,7 +95,7 @@ See [TEAM_COLLABORATION.md](TEAM_COLLABORATION.md) for:
 - diffusion fallback rule;
 - collaboration and QA workflow.
 
-## Member A Phase 0
+## TC2 command reference
 
 Run on TC2 from the repository root using the isolated `robot-phase0` environment.
 Dataset archives and expanded images belong under `~/datasets/mvtec_ad` and are
@@ -100,9 +118,9 @@ benchmark.
 Split creation refuses to overwrite an existing manifest. Any future protocol
 change requires a new manifest filename and an explicit review record.
 
-After the freeze attestation exists, run a full reproducible baseline. The
-trainer rejects a missing or mismatched attestation and writes model weights
-only to the ignored checkpoint path:
+The full real-only baseline is a project experiment after the Phase 0 smoke
+test. The trainer checks the freeze attestation and writes model weights only
+to the ignored checkpoint path:
 
 ```bash
 srun --partition=MGPU-TC2 --qos=normal --gres=gpu:nvidia:1 --cpus-per-task=8 --mem=28G --time=06:00:00 \
