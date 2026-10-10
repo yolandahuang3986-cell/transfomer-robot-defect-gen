@@ -23,3 +23,6 @@ Scripts accept data/output paths; datasets, weights and environments stay outsid
 
 ## Main integration verification
 Synchronized main f26c5ce (A PR#2). Kept A scope-aware inspector and shared QC; retained B concrete GAN adapter. Full combined suite: 37 passed. Formal downstream metrics and legacy checkpoint adapter import remain outstanding.
+
+## Frozen protocol and acceptance candidate (latest)
+A has resolved the allocation/budget questions above: generic synthetic_patch, 75 metal_nut and125 screw, generation seed42 and shared10x cap. A owns downstream seeds42/43/44 with1500/2200 optimizer steps. Both target batches now pass automated validation, but screw is ON HOLD: fixed audit examples0009/0082 appear on shadows/background despite passing foreground QC. No samples were silently removed. See member_b_qc_handoff.md for current counts, archive checksum, reproduction and pending upload/access status. Old requests to decide these protocol parameters are superseded.
