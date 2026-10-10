@@ -1,8 +1,21 @@
+# Official defaults documented for later review; smoke CLI caps execution at 10 steps.
 method:
   name: gan
   upstream_repo: https://github.com/pasqualecoscia/SyntheticDefectGeneration
+  upstream_commit: 5a8099204bc0858da314f8e0b5e8b6770c298e98
+  model: cycle_gan_mask
   seed: 42
-
+training:
+  image_size: 256
+  batch_size: 1
+  learning_rate: 0.0002
+  epochs: 300
+  decay_epochs: 100
+  ngf: 64
+  netG: ResNet9
+  note: upstream defaults, not yet an approved project training budget
+  configuration_usage: documentation only; CLI flags control current runner
 generation:
   num_samples_per_category: 100
-  latent_dim: 128
+  mask_threshold: 0.2
+  diversity: different normal input images; no latent_dim control
