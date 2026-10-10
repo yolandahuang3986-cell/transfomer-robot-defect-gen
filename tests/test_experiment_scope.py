@@ -14,5 +14,5 @@ def test_metal_nut_flip_is_excluded_from_shared_core_scope():
         require_in_scope("metal_nut", "flip")
 
 
-def test_color_remains_in_scope_pending_support_mask_audit():
+def test_color_remains_in_approved_scope():
     require_in_scope("metal_nut", "color")

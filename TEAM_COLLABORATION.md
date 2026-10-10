@@ -1,5 +1,7 @@
 # Team Collaboration Plan — CA6127 Rare-Defect Generation
 
+Approved evaluation protocol: [Formal evaluation protocol v1.0-frozen](docs/formal_evaluation_protocol.md), confirmed by A on 2026-10-10. It takes precedence over conflicting sample counts, scope and training-budget examples below. A records Gate 1 failures explicitly; an unavailable E2 is not a completed four-chain Gate 2.
+
 ## 1. Project Goal
 
 Build a reproducible technical-review project that evaluates whether synthetic rare-defect data is useful for industrial inspection under data scarcity.
@@ -360,9 +362,9 @@ Fallback priority:
 Official AnomalyDiffusion checkpoints are for feasibility validation only.
 The upstream checkpoint training data overlap with 60 of the 167 images in our
 frozen held-out set, so these weights must not be used to report formal E3
-metrics. Formal E3 must use weights trained/fine-tuned from the project's 45
-support images without initializing from the leaked official AnomalyDiffusion
-checkpoint, then evaluate on the full frozen held-out set. Any generic base
+metrics. Formal E3 must use weights trained/fine-tuned from the project's in-scope 40
+support images (the unchanged manifest contains 45 before excluding flip) without initializing from the leaked official AnomalyDiffusion
+checkpoint, then evaluate on the frozen in-scope held-out set (149 anomaly images plus 63 normal images). Any generic base
 checkpoint must have its provenance recorded and must not include MVTec held-out
 images.
 

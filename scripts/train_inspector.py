@@ -21,15 +21,38 @@ from src.data.integrity import validate_manifest, validate_freeze_attestation
 from src.generation.dummy import DummyGenerator
 from src.inspection.data import RealDataset, generated_dataset
 from src.inspection.model import build_model
-from src.inspection.results import save_result
+from src.inspection.results import save_result, validate_result
 from src.metrics.segmentation import evaluate
+from src.experiments.formal import settings, fixed_step_loader
+from src.inspection.formal_bundle import load_formal_pool, require_acceptance
+from src.data.integrity import sha256
 from src.experiments.scope import excluded_rows, filter_in_scope, PROTOCOL_VERSION
 
 
 def train(args):
     start = time.perf_counter()
+    protocol = settings()
+    formal = getattr(args, 'formal', False)
+    if formal:
+        if args.category not in protocol['optimizer_steps'] or args.seed not in protocol['downstream_seeds']:
+            raise ValueError('Category/seed outside the frozen primary protocol')
+        if (args.image_size, args.batch_size, args.learning_rate) != (256, 8, 1e-4):
+            raise ValueError('Formal training requires 256px, batch 8, learning rate 1e-4')
+        if args.method == 'dummy':
+            raise ValueError('Dummy cannot be a formal experiment')
+        if subprocess.check_output(['git', '-C', str(ROOT), 'status', '--porcelain'], text=True).strip():
+            raise ValueError('Commit all implementation changes before formal training')
+    elif args.method not in {'real_only', 'dummy'}:
+        raise ValueError('Synthetic training requires --formal and accepted bundles')
+    if args.method in {'real_only', 'dummy'} and (getattr(args, 'bundle', None) or getattr(args, 'acceptance', None)):
+        raise ValueError('Real-only/dummy must not receive synthetic bundles or acceptance')
+    for output in (args.out, args.checkpoint):
+        if Path(output).exists():
+            raise FileExistsError(f'Refusing to overwrite output: {output}')
     manifest_path = Path(args.manifest)
     manifest = validate_manifest(json.loads(manifest_path.read_text()), args.root)
+    if formal and manifest['manifest_sha256'] != protocol['split_sha256']:
+        raise ValueError('Formal experiment requires the approved frozen manifest')
     freeze_path = manifest_path.with_suffix('.freeze.json')
     attestation = json.loads(freeze_path.read_text())
     validate_freeze_attestation(manifest, attestation)
@@ -54,6 +77,21 @@ def train(args):
     excluded_support = excluded_rows(rows('support'))
     train_set = RealDataset(args.root, train_rows, args.image_size)
     generated_seconds = 0.0
+    generator_config = {'fixture_only': args.method == 'dummy'}
+    synthetic_count = args.synthetic_count
+    if formal and args.method != 'real_only':
+        if args.synthetic_count:
+            raise ValueError('Formal quota is fixed by protocol, not --synthetic-count')
+        if not args.acceptance:
+            raise ValueError('Synthetic training requires --acceptance')
+        batch, identity, reports = load_formal_pool(args.bundle, manifest, args.category, args.method, args.root)
+        require_acceptance(args.acceptance, identity)
+        synthetic_count = len(batch.images)
+        train_set = ConcatDataset([train_set, generated_dataset(batch)])
+        generated_seconds = sum(r['generation_seconds'] for r in reports) / synthetic_count
+        generator_config = {'pool': identity, 'qc_reports': reports,
+                            'acceptance_sha256': sha256(args.acceptance),
+                            'cost_basis': 'reported generation seconds including shared-QC rejected attempts; not total wall time'}
     if args.method == 'dummy':
         if args.synthetic_count < 1:
             raise ValueError('dummy method requires --synthetic-count >= 1')
@@ -69,9 +107,13 @@ def train(args):
         raise ValueError('real_only method requires --synthetic-count 0')
 
     generator = torch.Generator().manual_seed(args.seed)
-    train_loader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True,
-                              num_workers=args.num_workers, generator=generator,
-                              pin_memory=args.device == 'cuda')
+    if formal:
+        train_loader = fixed_step_loader(train_set, protocol['optimizer_steps'][args.category],
+                                         args.batch_size, args.seed, args.num_workers, args.device == 'cuda')
+    else:
+        train_loader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True,
+                                  num_workers=args.num_workers, generator=generator,
+                                  pin_memory=args.device == 'cuda')
     test_rows = rows('test_normal') + filter_in_scope(rows('heldout'))
     excluded_heldout = excluded_rows(rows('heldout'))
     test_loader = DataLoader(RealDataset(args.root, test_rows, args.image_size),
@@ -81,7 +123,7 @@ def train(args):
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     losses = []
     steps = 0
-    for _ in range(args.epochs):
+    for _ in range(1 if formal else args.epochs):
         model.train()
         for x, y in train_loader:
             x, y = x.to(args.device, non_blocking=True), y.to(args.device, non_blocking=True)
@@ -106,17 +148,20 @@ def train(args):
         schema_version=1,
         experiment_id=f'{args.method}_{args.category}_support{manifest["n_support_requested_per_defect_type"]}_seed{args.seed}',
         category=args.category, method=args.method,
-        real_train_count=len(train_rows), synthetic_count=args.synthetic_count, seed=args.seed,
+        real_train_count=len(train_rows), synthetic_count=synthetic_count, seed=args.seed,
         generator={'generation_seconds_per_image': generated_seconds,
-                   'config': {'fixture_only': args.method == 'dummy'}},
+                   'config': generator_config},
         inspection=inspection,
         training={'architecture': 'unet', 'encoder': 'resnet18', 'encoder_weights': None,
                   'image_size': args.image_size, 'steps': steps,
-                  'learning_rate': args.learning_rate, 'loss': float(np.mean(losses))},
+                  'learning_rate': args.learning_rate, 'loss': float(np.mean(losses)),
+                  'batch_size': args.batch_size, 'sampler': 'uniform_with_replacement' if formal else 'epoch_shuffle',
+                  'checkpoint_selection': 'final_step'},
         evaluation={'source': 'heldout_real', 'count': len(test_rows), 'threshold': 0.5,
                     'scope_protocol': PROTOCOL_VERSION,
                     'excluded_support_count': len(excluded_support),
                     'excluded_heldout_count': len(excluded_heldout),
+                    'formal_protocol': protocol['version'] if formal else None,
                     'smoke_only': False, 'split_sha256': manifest['manifest_sha256']},
         provenance={'git_commit': git('rev-parse', 'HEAD'), 'git_dirty': bool(git('status', '--porcelain')),
                     'python': platform.python_version(), 'torch': torch.__version__, 'cuda': torch.version.cuda,
@@ -124,6 +169,7 @@ def train(args):
                     'runtime_seconds': time.perf_counter() - start,
                     'packages': {p: importlib.metadata.version(p) for p in
                                  ('segmentation-models-pytorch', 'torchvision', 'numpy', 'Pillow', 'scikit-learn', 'jsonschema')}})
+    validate_result(result)
     checkpoint = Path(args.checkpoint)
     checkpoint.parent.mkdir(parents=True, exist_ok=True)
     with checkpoint.open('xb') as f:
@@ -139,7 +185,10 @@ def main():
     p.add_argument('--root', required=True)
     p.add_argument('--manifest', required=True)
     p.add_argument('--category', required=True)
-    p.add_argument('--method', choices=['real_only', 'dummy'], default='real_only')
+    p.add_argument('--method', choices=['real_only', 'dummy', 'procedural', 'gan', 'diffusion'], default='real_only')
+    p.add_argument('--formal', action='store_true', help='Enforce frozen primary protocol and fixed optimizer budget')
+    p.add_argument('--bundle', action='append', default=[], help='Accepted bundle directory; repeat for conditional strata')
+    p.add_argument('--acceptance', help='A whole-pool acceptance JSON bound to exact artifact hashes')
     p.add_argument('--synthetic-count', type=int, default=0)
     p.add_argument('--epochs', type=int, default=50)
     p.add_argument('--batch-size', type=int, default=8)

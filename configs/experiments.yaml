@@ -9,6 +9,28 @@ experiments:
     training_data: real_plus_diffusion
 
 ablation:
-  real_support_counts: [5, 10, 20]
+  real_support_counts: [5]
   synthetic_ratios: [1, 5, 10]
   seeds: [42]
+
+# Frozen primary settings loaded by the formal trainer and admission checks.
+formal_protocol:
+  version: v1.0-frozen
+  document: docs/formal_evaluation_protocol.md
+  approved_on: '2026-10-10'
+  primary_synthetic_ratio: 5
+  ratio_denominator: in_scope_anomaly_support
+  generation_seed: 42
+  downstream_seeds: [42, 43, 44]
+  synthetic_counts: {metal_nut: 75, screw: 125}
+  conditional_samples_per_defect: 25
+  procedural_defect_type: synthetic_patch
+  max_shared_qc_attempt_multiplier: 10
+  optimizer_steps: {metal_nut: 1500, screw: 2200}
+  sampler: uniform_with_replacement
+  batch_size: 8
+  checkpoint_selection: final_step
+  manual_audit_per_method_category: 20
+  gan_additional_training: paused_pending_acceptance
+  implementation_status: implemented_pending_real_data_acceptance
+  split_sha256: 259a091b8681542704a69701473b03834440bc4da3371b5415e10f6b45be901c

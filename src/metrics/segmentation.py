@@ -21,4 +21,5 @@ def evaluate(probabilities, masks, threshold=0.5):
     return dict(pixel_auroc=float(roc_auc_score(y.ravel(), p.ravel())) if np.unique(y).size == 2 else None,
                 iou=tp/(tp+fp+fn) if tp+fp+fn else 1.0,
                 dice=2*tp/(2*tp+fp+fn) if 2*tp+fp+fn else 1.0,
-                defect_recall=float(predicted_defects[actual_defects].mean()) if actual_defects.any() else None)
+                defect_recall=float(predicted_defects[actual_defects].mean()) if actual_defects.any() else None,
+                image_false_positive_rate=float(predicted_defects[~actual_defects].mean()) if (~actual_defects).any() else None)

@@ -34,24 +34,18 @@ The split is frozen after Phase 0 and shared by all synthesis methods.
 Optional:
 - transistor
 
-## Current status — 6 October 2026
+## Current status — 10 October 2026
 
-- **Member A Phase 0:** complete. The `5-shot per defect type, seed 42`
-  manifest and freeze attestation are tracked under `data/splits/`; the
-  evaluator, result schema, dummy contract, and Gate 0 runner are in place.
-- **Shared synthetic QC and comparison scope:** implemented on the current PR
-  branch. All methods use the same QC thresholds. The core comparison excludes
-  `metal_nut/flip`; the frozen split itself is unchanged. `color` remains in
-  scope pending a support-mask compatibility audit before reviewing generated
-  outputs.
-- **Member B:** Procedural and GAN adapters/results are not yet present in this
-  repository; record feasibility only after the assigned member runs them.
-- **Member C:** the latest team update reported all nine support-trained mask
-  models complete and the anomaly model still training. Sample generation,
-  shared-QC results, and the project adapter remain to be added here.
-- **Next project stage:** finish B/C adapters and contract checks, run the
-  real-only baseline, then run the matched synthetic-data comparisons and
-  quality/cost analyses.
+- Phase 0 is complete; the frozen split and Gate 0 are tracked.
+- B's Procedural/GAN implementation is merged. Procedural has 30-sample-per-category
+  integration evidence; formal 75/125 sample pools and A acceptance remain pending.
+  GAN has documented quality failures. C's final delivery still requires verification.
+- A's primary evaluation infrastructure supports accepted synthetic bundles, shared
+  QC rechecks, equal optimization steps, three training seeds and result summaries.
+  Code validation is not evidence of downstream improvement.
+- The approved [formal protocol](docs/formal_evaluation_protocol.md) excludes only
+  flip and retains color. Follow the [execution runbook](docs/formal_evaluation_runbook.md)
+  for artifact requirements, acceptance, training and reporting.
 
 Dataset images and weights stay outside Git. The frozen split manifest is the
 approved protocol artifact; do not recreate or overwrite it for routine runs.
@@ -118,15 +112,15 @@ benchmark.
 Split creation refuses to overwrite an existing manifest. Any future protocol
 change requires a new manifest filename and an explicit review record.
 
-The full real-only baseline is a project experiment after the Phase 0 smoke
-test. The trainer checks the freeze attestation and writes model weights only
-to the ignored checkpoint path:
+The formal real-only baseline uses the frozen optimization-step budget after
+the Phase 0 smoke test. Run seeds 42/43/44 for both categories from a clean commit.
+The trainer checks the freeze attestation and writes weights to an ignored path:
 
 ```bash
 srun --partition=MGPU-TC2 --qos=normal --gres=gpu:nvidia:1 --cpus-per-task=8 --mem=28G --time=06:00:00 \
   ~/envs/robot-phase0/bin/python scripts/train_inspector.py \
   --root ~/datasets/mvtec_ad --manifest data/splits/fewshot_n5_seed42.json \
-  --category metal_nut --method real_only --epochs 50 --batch-size 8 \
+  --category metal_nut --method real_only --formal --seed 42 --batch-size 8 \
   --image-size 256 --device cuda \
   --out results/metrics/real_only_metal_nut_seed42.json \
   --checkpoint checkpoints/real_only_metal_nut_seed42.pt

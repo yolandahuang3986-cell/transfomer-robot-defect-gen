@@ -1,16 +1,22 @@
 {
   "project": "transfomer-robot-defect-gen",
-  "phase": "bootstrap",
+  "updated_on": "2026-10-10",
+  "phase": "formal_evaluation_preparation",
+  "protocol": "v1.0-frozen",
   "completed": [
-    "task_01_repository_skeleton",
-    "task_02_dataset_audit_tooling",
-    "fewshot_split_protocol_scaffold"
+    "phase0_frozen_split_and_gate0",
+    "shared_qc_and_scope",
+    "member_b_code_merged",
+    "formal_evaluation_runner",
+    "whole_pool_acceptance_checks",
+    "fixed_step_training_and_three_seed_summary"
   ],
-  "next": [
-    "download_or_mount_mvtec_ad",
-    "run_dataset_audit",
-    "validate_support_heldout_counts",
-    "integrate_gan_upstream",
-    "integrate_anomalydiffusion_upstream"
+  "pending": [
+    "member_b_primary_procedural_pools_and_manual_acceptance",
+    "member_c_primary_pools_and_training_provenance",
+    "gan_quality_gate_record",
+    "formal_primary_metrics",
+    "secondary_ratio_analysis",
+    "final_report_and_submission"
   ]
 }
