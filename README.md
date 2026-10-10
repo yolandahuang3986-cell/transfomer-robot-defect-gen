@@ -43,6 +43,9 @@ Optional:
 - A's primary evaluation infrastructure supports accepted synthetic bundles, shared
   QC rechecks, equal optimization steps, three training seeds and result summaries.
   Code validation is not evidence of downstream improvement.
+- Six E0 baseline runs completed on TC2 A40 (job 40765, exit 0).
+  [Results and limitations](docs/member_a_delivery.md) are recorded; synthetic
+  comparisons remain pending accepted B/C datasets.
 - The approved [formal protocol](docs/formal_evaluation_protocol.md) excludes only
   flip and retains color. Follow the [execution runbook](docs/formal_evaluation_runbook.md)
   for artifact requirements, acceptance, training and reporting.

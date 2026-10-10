@@ -9,7 +9,8 @@
     "member_b_code_merged",
     "formal_evaluation_runner",
     "whole_pool_acceptance_checks",
-    "fixed_step_training_and_three_seed_summary"
+    "fixed_step_training_and_three_seed_summary",
+    "e0_two_categories_three_seeds_tc2_job40765"
   ],
   "pending": [
     "member_b_primary_procedural_pools_and_manual_acceptance",
@@ -18,5 +19,14 @@
     "formal_primary_metrics",
     "secondary_ratio_analysis",
     "final_report_and_submission"
-  ]
+  ],
+  "baseline": {
+    "code_commit": "ec8fc9408e683360ebfb8fe3814891ace27e6c5d",
+    "slurm_job": 40765,
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "runs": 6,
+    "results": "results/metrics/e0_20261010",
+    "report": "docs/member_a_delivery.md"
+  }
 }

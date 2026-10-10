@@ -1,0 +1,169 @@
+{
+  "protocol_version": "v1.0-frozen",
+  "uncertainty": "sample SD across downstream seeds only; fixed synthetic pool",
+  "methods": [
+    {
+      "method": "real_only",
+      "categories": {
+        "metal_nut": {
+          "status": "complete",
+          "metrics": {
+            "pixel_auroc": {
+              "mean": 0.6558598410168398,
+              "std": 0.11768686763919377
+            },
+            "dice": {
+              "mean": 0.08213198910922205,
+              "std": 0.1391284281629613
+            },
+            "iou": {
+              "mean": 0.04665716138831345,
+              "std": 0.07924646149567614
+            },
+            "defect_recall": {
+              "mean": 1.0,
+              "std": 0.0
+            },
+            "image_false_positive_rate": {
+              "mean": 1.0,
+              "std": 0.0
+            }
+          },
+          "paired_delta_vs_real_only": {
+            "pixel_auroc": {
+              "mean": 0.0,
+              "std": 0.0
+            },
+            "dice": {
+              "mean": 0.0,
+              "std": 0.0
+            },
+            "iou": {
+              "mean": 0.0,
+              "std": 0.0
+            },
+            "defect_recall": {
+              "mean": 0.0,
+              "std": 0.0
+            },
+            "image_false_positive_rate": {
+              "mean": 0.0,
+              "std": 0.0
+            }
+          }
+        },
+        "screw": {
+          "status": "complete",
+          "metrics": {
+            "pixel_auroc": {
+              "mean": 0.5200764290093013,
+              "std": 0.2718321708958606
+            },
+            "dice": {
+              "mean": 0.0,
+              "std": 0.0
+            },
+            "iou": {
+              "mean": 0.0,
+              "std": 0.0
+            },
+            "defect_recall": {
+              "mean": 0.0,
+              "std": 0.0
+            },
+            "image_false_positive_rate": {
+              "mean": 0.2845528455284553,
+              "std": 0.492859985893583
+            }
+          },
+          "paired_delta_vs_real_only": {
+            "pixel_auroc": {
+              "mean": 0.0,
+              "std": 0.0
+            },
+            "dice": {
+              "mean": 0.0,
+              "std": 0.0
+            },
+            "iou": {
+              "mean": 0.0,
+              "std": 0.0
+            },
+            "defect_recall": {
+              "mean": 0.0,
+              "std": 0.0
+            },
+            "image_false_positive_rate": {
+              "mean": 0.0,
+              "std": 0.0
+            }
+          }
+        }
+      },
+      "equal_category_macro": {
+        "pixel_auroc": {
+          "mean": 0.5879681350130705,
+          "std": 0.17615906895782243
+        },
+        "dice": {
+          "mean": 0.041065994554611025,
+          "std": 0.06956421408148065
+        },
+        "iou": {
+          "mean": 0.023328580694156727,
+          "std": 0.03962323074783807
+        },
+        "defect_recall": {
+          "mean": 0.5,
+          "std": 0.0
+        },
+        "image_false_positive_rate": {
+          "mean": 0.6422764227642276,
+          "std": 0.24642999294679144
+        }
+      }
+    },
+    {
+      "method": "procedural",
+      "categories": {
+        "metal_nut": {
+          "status": "incomplete",
+          "available_seeds": []
+        },
+        "screw": {
+          "status": "incomplete",
+          "available_seeds": []
+        }
+      },
+      "equal_category_macro": null
+    },
+    {
+      "method": "gan",
+      "categories": {
+        "metal_nut": {
+          "status": "incomplete",
+          "available_seeds": []
+        },
+        "screw": {
+          "status": "incomplete",
+          "available_seeds": []
+        }
+      },
+      "equal_category_macro": null
+    },
+    {
+      "method": "diffusion",
+      "categories": {
+        "metal_nut": {
+          "status": "incomplete",
+          "available_seeds": []
+        },
+        "screw": {
+          "status": "incomplete",
+          "available_seeds": []
+        }
+      },
+      "equal_category_macro": null
+    }
+  ]
+}

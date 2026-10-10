@@ -369,10 +369,12 @@ checkpoint must have its provenance recorded and must not include MVTec held-out
 images.
 
 If the team later decides it must report an experiment using the official
-checkpoint, it must use the same 107 non-overlapping held-out images for every
-method and clearly label the restricted evaluation as a protocol deviation.
-This requires an explicit team decision; do not alter the frozen manifest or
-silently substitute this subset. Generated image-mask pairs must also pass
+checkpoint, it requires a new explicit team decision and the same restricted
+evaluation set for every method. The historical 107 non-overlapping images
+were counted before the flip exclusion; any proposed restricted set must also
+intersect the current scope, with counts and image IDs re-audited. Clearly label
+such an experiment as a protocol deviation. Do not alter the frozen manifest or
+silently substitute a subset. Generated image-mask pairs must also pass
 the common synthetic-sample QC defined in [`docs/synthetic_qc.md`](docs/synthetic_qc.md)
 before they are admitted to training. The initial Diffusion audit found only
 about 3 of 16 pairs clearly usable, so C must fix method-specific generation or
