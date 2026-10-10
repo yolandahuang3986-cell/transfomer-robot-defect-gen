@@ -9,10 +9,13 @@
     }
   ],
   "applies_to": [
-    "real_support_training",
+    "support_used_to_fit_generators",
+    "support_used_to_train_inspector",
     "synthetic_generation",
     "heldout_evaluation"
   ],
-  "decision_timing": "Before inspecting any method-generated samples",
-  "qc_thresholds_changed": false
+  "decision_timing": "Formal scope confirmed on 2026-10-10 after initial generation reports; no claim of pre-generation registration",
+  "qc_thresholds_changed": false,
+  "formal_protocol": "v1.0-frozen",
+  "included_color_confirmed": true
 }

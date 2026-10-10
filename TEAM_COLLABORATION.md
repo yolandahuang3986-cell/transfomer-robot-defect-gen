@@ -1,5 +1,7 @@
 # Team Collaboration Plan — CA6127 Rare-Defect Generation
 
+Approved evaluation protocol: [Formal evaluation protocol v1.0-frozen](docs/formal_evaluation_protocol.md), confirmed by A on 2026-10-10. It takes precedence over conflicting sample counts, scope and training-budget examples below. A records Gate 1 failures explicitly; an unavailable E2 is not a completed four-chain Gate 2.
+
 ## 1. Project Goal
 
 Build a reproducible technical-review project that evaluates whether synthetic rare-defect data is useful for industrial inspection under data scarcity.
@@ -360,17 +362,19 @@ Fallback priority:
 Official AnomalyDiffusion checkpoints are for feasibility validation only.
 The upstream checkpoint training data overlap with 60 of the 167 images in our
 frozen held-out set, so these weights must not be used to report formal E3
-metrics. Formal E3 must use weights trained/fine-tuned from the project's 45
-support images without initializing from the leaked official AnomalyDiffusion
-checkpoint, then evaluate on the full frozen held-out set. Any generic base
+metrics. Formal E3 must use weights trained/fine-tuned from the project's in-scope 40
+support images (the unchanged manifest contains 45 before excluding flip) without initializing from the leaked official AnomalyDiffusion
+checkpoint, then evaluate on the frozen in-scope held-out set (149 anomaly images plus 63 normal images). Any generic base
 checkpoint must have its provenance recorded and must not include MVTec held-out
 images.
 
 If the team later decides it must report an experiment using the official
-checkpoint, it must use the same 107 non-overlapping held-out images for every
-method and clearly label the restricted evaluation as a protocol deviation.
-This requires an explicit team decision; do not alter the frozen manifest or
-silently substitute this subset. Generated image-mask pairs must also pass
+checkpoint, it requires a new explicit team decision and the same restricted
+evaluation set for every method. The historical 107 non-overlapping images
+were counted before the flip exclusion; any proposed restricted set must also
+intersect the current scope, with counts and image IDs re-audited. Clearly label
+such an experiment as a protocol deviation. Do not alter the frozen manifest or
+silently substitute a subset. Generated image-mask pairs must also pass
 the common synthetic-sample QC defined in [`docs/synthetic_qc.md`](docs/synthetic_qc.md)
 before they are admitted to training. The initial Diffusion audit found only
 about 3 of 16 pairs clearly usable, so C must fix method-specific generation or

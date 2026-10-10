@@ -10,14 +10,16 @@ add method-specific acceptance thresholds.
 
 The core comparison scope is separately frozen in
 `configs/experiment_scope.json`. It excludes `metal_nut/flip` from real-support
-training, synthetic generation, and held-out evaluation for every method because
-it is a whole-object orientation change rather than a localized defect. The
-shared generation entry point rejects this stratum before generation starts;
-the downstream runner applies the same scope to real support and held-out rows.
-The frozen split manifest itself remains unchanged. This scope decision does
-not change QC v1 thresholds. Color remains in scope pending a support-mask
-compatibility audit performed before inspecting generated samples; that audit
-may define scope but must not tune QC thresholds.
+used to fit generators or the inspector, synthetic generation, and held-out
+evaluation for every method. Flip is a whole-object orientation change rather
+than a localized defect. The shared generation entry point rejects this
+stratum before generation starts; the downstream runner applies the same scope
+to support and held-out rows. Generator adapters must apply the scope when
+selecting support data for fitting as well. The frozen split manifest remains
+unchanged. This scope decision does not change QC v1 thresholds. Color remains in scope under the approved
+[formal evaluation protocol](formal_evaluation_protocol.md) (2026-10-10).
+Compatibility audits may report limitations but cannot silently remove color or
+tune shared thresholds.
 
 ## Allowed inputs
 
@@ -30,6 +32,10 @@ algorithm for every method. Its inputs and any parameters may be calibrated only
 training-normal images. Never read support-defect or held-out images to derive
 foreground masks or tune QC thresholds. In particular, do not use test-normal
 images; they belong to the frozen held-out evaluation partition.
+
+The support-mask compatibility audit is a separate, pre-generation scope
+check. Any subsequent scope change requires a versioned A-approved amendment; the audit must not
+change QC thresholds or use held-out masks.
 
 The current estimator takes the median RGB value in a border band 5% of the
 shorter image side wide as background color. It marks pixels as foreground
@@ -67,8 +73,11 @@ reason before downstream evaluation.
 
 ## Fair comparison and audit record
 
-Use the same accepted synthetic count per category/defect type and cap each
-method at 10 attempts per requested accepted sample for that stratum. Do not
+Use the same accepted synthetic count per category: 75 for metal_nut and 125
+for screw in the primary comparison. Procedural uses synthetic_patch; GAN and
+Diffusion request 25 per included defect type. Cap each method at 10 shared-QC
+attempts per requested accepted sample for its category/type allocation.
+Record method-internal filtering counts and costs separately. Do not
 lower the thresholds, top up selectively, or choose samples based on held-out
 metrics. If a method cannot reach the target within the 10x budget, record an
 underfilled condition rather than relaxing QC. Count rejected attempts in

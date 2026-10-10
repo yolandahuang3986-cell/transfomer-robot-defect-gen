@@ -27,9 +27,9 @@ def test_contract_rejects_wrong_mask_shape():
 
 def test_metrics_and_undefined_values():
     y = np.array([[[[0, 1], [0, 1]]]], dtype=np.float32)
-    assert evaluate(y, y) == dict(pixel_auroc=1., iou=1., dice=1., defect_recall=1.)
+    assert evaluate(y, y) == dict(pixel_auroc=1., iou=1., dice=1., defect_recall=1., image_false_positive_rate=None)
     zeros = np.zeros_like(y)
-    assert evaluate(zeros, zeros) == dict(pixel_auroc=None, iou=1., dice=1., defect_recall=None)
+    assert evaluate(zeros, zeros) == dict(pixel_auroc=None, iou=1., dice=1., defect_recall=None, image_false_positive_rate=0.)
 
 
 def test_result_schema_rejects_nonfinite_values():
