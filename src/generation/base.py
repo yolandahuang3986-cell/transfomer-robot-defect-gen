@@ -51,3 +51,13 @@ class DefectGenerator(ABC):
     def generate(self, normal_images, num_samples, defect_type=None, seed=42, **kwargs):
         """Return GeneratedBatch. Metadata must identify each source image."""
         ...
+
+    def generate_with_qc(self, normal_images, source_image_ids, target_count,
+                         defect_type=None, seed=42, **kwargs):
+        """Generate a fixed accepted count through the shared project QC."""
+        from .qc import generate_with_qc
+
+        return generate_with_qc(
+            self, normal_images, source_image_ids, target_count,
+            defect_type=defect_type, seed=seed, **kwargs,
+        )
