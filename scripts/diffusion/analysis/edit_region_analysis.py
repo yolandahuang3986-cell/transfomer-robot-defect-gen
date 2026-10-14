@@ -19,7 +19,10 @@ req = json.load(open(os.path.join(out, "request.json")))
 res = json.load(open(os.path.join(out, "result.json")))
 done = {int(r["index"]) for r in res["samples"]}
 vis = {v["index"]: v["ratio"] for v in json.load(open(os.path.join(out, "visibility.json")))}
-A, B = lab["annotator_yuchen"], lab["annotator_claude_not_blind"]
+names = sorted(k for k in lab if k.startswith("annotator_"))   # exactly two annotators expected
+assert len(names) == 2, f"need two annotator_* keys, got {names}"
+A, B = lab[names[0]], lab[names[1]]
+print("annotators:", names[0], "(Y column) vs", names[1], "(C column)")
 r32 = transforms.Resize((32, 32))
 rows = []
 print(f"{'#':>3} {'Y':>2} {'C':>2} {'old':>5} | {'mask':>5} {'fp-mask':>7} {'far':>5} | {'new':>5} | fp_px mask_px")
