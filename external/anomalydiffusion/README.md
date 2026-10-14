@@ -12,7 +12,8 @@ same way as the GAN worker. Upstream code is never imported by project code.
 
 ## Environment (`Anomalydiffusion` conda env)
 
-- Python 3.8, torch 1.12.1+cu113, run on TC2 A40 (CUDA driver 570).
+- Python 3.8, torch 1.12.1+cu113, torchvision 0.13.1, Pillow 9.5.0, numpy 1.23.1; run on TC2 A40 (CUDA driver 570).
+- `torchvision` matters: the latent-cell rule calls the same `transforms.Resize((32, 32))` as upstream inference, so it must run in this environment.
 - Pins needed to build/run on TC2 (`PIP_CONSTRAINT`):
   `lmdb==1.4.1`, `opencv-python<4.9`, `opencv-python-headless<4.9`, `numpy==1.23.1`, `Pillow==9.5.0`.
 - Extra installs: `clip` (git, `--no-deps`), `imgaug==0.4.0`,

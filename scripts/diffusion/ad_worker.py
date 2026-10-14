@@ -138,6 +138,10 @@ def main():
     out = req["out_dir"]
     os.makedirs(os.path.join(out, "images"), exist_ok=True)
     os.makedirs(os.path.join(out, "masks"), exist_ok=True)
+    save_rejects = bool(req.get("save_rejects", False))     # keep every rejected stage-1 mask as evidence
+    rejects = []
+    if save_rejects:
+        os.makedirs(os.path.join(out, "rejects"), exist_ok=True)
     dev = torch.device("cuda")
     setup_seed(int(req["seed"]))
 
@@ -194,12 +198,21 @@ def main():
                 info["latent_cells"] = cells
                 if cells < int(mfilter["min_latent_cells"]):
                     reason = "latent_too_small"
+            info["mask_attempt"] = mask_attempts
             if reason is None:
                 masks.append(m)
                 place_info.append(info)
             else:
                 mask_rejected += 1
                 reject_reasons[reason] = reject_reasons.get(reason, 0) + 1
+                if save_rejects:                      # raw grey sample + the binary mask the rule judged
+                    stem = f"{mask_attempts:05d}_{reason}"
+                    grey = ((g.clamp(-1, 1) + 1) / 2 * 255).round().byte().numpy()
+                    Image.fromarray(grey).save(os.path.join(out, "rejects", stem + "_raw.png"))
+                    Image.fromarray((m[0].numpy() > 0.5).astype(np.uint8) * 255).save(
+                        os.path.join(out, "rejects", stem + "_mask.png"))
+                    rejects.append({"attempt": mask_attempts, "reason": reason,
+                                    "target_index": int(samples[len(masks)]["index"]), **info})
     requested = n
     underfilled = len(masks) < n
     if underfilled:                                   # keep what we have + all statistics, do not throw them away
@@ -208,6 +221,8 @@ def main():
         n = len(masks)
         samples = samples[:n]
     masks = masks[:n]
+    if save_rejects:
+        json.dump(rejects, open(os.path.join(out, "rejects.json"), "w"), indent=2)
     if n == 0:
         json.dump({"name": name, "status": "underfilled", "requested": requested, "n": 0,
                    "mask_attempts": mask_attempts, "mask_reject_reasons": reject_reasons,
@@ -273,6 +288,9 @@ def main():
                "mask_sampling_seconds_total": mask_s,
                "provenance": {"upstream_commit": commit, "upstream_patches": patched,
                               "torch": torch.__version__, "cuda": torch.version.cuda,
+                              "torchvision": __import__("torchvision").__version__,
+                              "pillow": Image.__version__, "numpy": np.__version__,
+                              "worker_sha256": __import__("hashlib").sha256(open(__file__, "rb").read()).hexdigest(),
                               "gpu": torch.cuda.get_device_name(0), "ckpt": ck, "sampling": sp,
                               "seed": int(req["seed"])},
                "samples": records}, open(os.path.join(out, "result.json"), "w"), indent=2)
