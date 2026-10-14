@@ -1,0 +1,96 @@
+diff --git a/ldm/data/personalized.py b/ldm/data/personalized.py
+index 18ecfd1..cafde1f 100644
+--- a/ldm/data/personalized.py
++++ b/ldm/data/personalized.py
+@@ -133,6 +133,40 @@ per_img_token_list = [
+     'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת',
+ ]
+ 
++def _support_files(mvtec_path, sample_name, anomaly_name):
++    """Local patch: read the frozen project support list when SUPPORT_LIST is set.
++
++    Returns (image_paths, mask_paths) or None when SUPPORT_LIST is unset
++    (upstream behaviour). Fails loudly on a missing group or file.
++    """
++    import json
++    list_path = os.environ.get("SUPPORT_LIST")
++    if not list_path:
++        return None
++    groups = json.load(open(list_path))["groups"]
++    key = sample_name + "+" + anomaly_name
++    if key not in groups:
++        raise KeyError(f"[patch] {key} not in SUPPORT_LIST {list_path}")
++    imgs = [os.path.join(mvtec_path, r["image"]) for r in groups[key]]
++    masks = [os.path.join(mvtec_path, r["mask"]) for r in groups[key]]
++    for f in imgs + masks:
++        if not os.path.isfile(f):
++            raise FileNotFoundError(f"[patch] support file missing: {f}")
++    return imgs, masks
++
++
++def _support_pairs():
++    """Local patch: (sample, anomaly) pairs from SUPPORT_LIST, or None."""
++    import json
++    list_path = os.environ.get("SUPPORT_LIST")
++    if not list_path:
++        return None
++    groups = json.load(open(list_path))["groups"]
++    print(f"[patch] SUPPORT_LIST {list_path}: {len(groups)} groups, "
++          f"{sum(len(v) for v in groups.values())} images")
++    return [tuple(k.split("+")) for k in sorted(groups)]
++
++
+ class Personalized_mvtec_encoder(Dataset):
+     def __init__(self,
+                  mvtec_path,
+@@ -154,12 +188,14 @@ class Personalized_mvtec_encoder(Dataset):
+         if data_enhance:
+             self.data_enhance=random_transform()
+         self.data_root=mvtec_path
+-        sample_anomaly_pairs=[]
+-        with open(os.path.join('name-anomaly.txt'),'r') as f:
+-            data=f.read().split('\n')
+-            for i in data:
+-                sample_name,anomaly_name=i.split('+')
+-                sample_anomaly_pairs.append((sample_name,anomaly_name))
++        sample_anomaly_pairs=_support_pairs()  # local patch
++        if sample_anomaly_pairs is None:
++            sample_anomaly_pairs=[]
++            with open(os.path.join('name-anomaly.txt'),'r') as f:
++                data=f.read().split('\n')
++                for i in data:
++                    sample_name,anomaly_name=i.split('+')
++                    sample_anomaly_pairs.append((sample_name,anomaly_name))
+         self.data=[]
+         if data_enhance:
+             size=512
+@@ -181,10 +217,16 @@ class Personalized_mvtec_encoder(Dataset):
+             mask_files.sort(key=lambda x: int(x[:3]))
+             img_files=[os.path.join(img_path,file_name) for file_name in img_files]
+             mask_files=[os.path.join(mask_path,file_name) for file_name in mask_files]
++            support = _support_files(self.data_root, sample_name, anomaly_name)  # local patch
++            if support is not None:
++                img_files, mask_files = support
+             for idx in range(len(img_files)):
+-                if set=='train' and idx>len(img_files)//3:
++                if support is not None:
++                    if set!='train' and idx>0:  # val: first support image only
++                        break
++                elif set=='train' and idx>len(img_files)//3:
+                     break
+-                if set!='train':
++                elif set!='train':
+                     if idx<len(img_files)//3:
+                         continue
+                     elif idx>len(img_files)//3+1:
+@@ -286,6 +328,10 @@ class Personalized_mvtec_mask(Dataset):
+         l=len(mask_files)//3
+         self.img_files=[os.path.join(self.img_path,file_name) for file_name in img_files[:l]]
+         self.mask_files=[os.path.join(self.mask_path,file_name) for file_name in mask_files[:l]]
++        support = _support_files(self.data_root, sample_name, anomaly_name)  # local patch
++        if support is not None:
++            self.img_files, self.mask_files = support
++            print(f"[patch] mask dataset {sample_name}+{anomaly_name}: {len(self.mask_files)} support masks")
+         self.num_images = len(self.img_files)
+         self._length = len(mask_files)
+ 

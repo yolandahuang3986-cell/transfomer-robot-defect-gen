@@ -1,0 +1,15 @@
+{
+  "rules_version": "mask_filter_v1",
+  "frozen_on": "2026-10-08",
+  "scope": "Diffusion-internal stage-1 mask filter. Applied after upstream check_mask, before inpainting. Does not change shared QC.",
+  "derived_from": "mask_probe_v2 on screw+thread_side (64 samples each: official, gs999, gs2999, gs4999). No held-out data used.",
+  "area_window": {
+    "basis": "support mask areas at 256x256 (computed per defect type from the frozen support list)",
+    "min_factor_of_smallest_support": 0.25,
+    "max_factor_of_largest_support": 4.0
+  },
+  "max_area_abs_pct": 20.0,
+  "max_border_frac": 0.25,
+  "max_bg_median": -0.8,
+  "binarise": "mean over RGB of samples_scaled > 0.8 (upstream rule, unchanged)"
+}

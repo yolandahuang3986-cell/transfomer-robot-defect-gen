@@ -1,0 +1,13 @@
+diff --git a/ldm/models/diffusion/ddpm.py b/ldm/models/diffusion/ddpm.py
+index df32d4a..0a44a0b 100644
+--- a/ldm/models/diffusion/ddpm.py
++++ b/ldm/models/diffusion/ddpm.py
+@@ -1659,6 +1659,8 @@ class LatentDiffusion(DDPM):
+         if os.path.isdir(self.trainer.checkpoint_callback.dirpath):
+             if self.spatial_encoder:
+                 torch.save(self.embedding_manager.spatial_encoder_model.state_dict(),os.path.join(self.trainer.checkpoint_callback.dirpath, "spatial_encoder.pt"))
++                # local patch: keep a per-step copy so intermediate checkpoints are fully restorable
++                torch.save(self.embedding_manager.spatial_encoder_model.state_dict(),os.path.join(self.trainer.checkpoint_callback.dirpath, f"spatial_encoder_gs-{self.global_step}.pt"))
+             self.embedding_manager.save(os.path.join(self.trainer.checkpoint_callback.dirpath, "embeddings.pt"))
+             self.embedding_manager.save(os.path.join(self.trainer.checkpoint_callback.dirpath, f"embeddings_gs-{self.global_step}.pt"))
+ 
