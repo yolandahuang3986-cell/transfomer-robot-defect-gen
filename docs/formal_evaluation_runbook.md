@@ -25,6 +25,41 @@ Procedural 每类别一个 bundle。GAN/Diffusion 每个有效缺陷一个 25 �
 - `provenance.json`：`category`、基础 `seed: 42`、`num_samples`、`split_sha256`、`file_sha256`（batch.npz 和 metadata.json 的 SHA-256）、`shared_qc`（原始完整 QC report）。
 - 另附生成器训练数据/权重来源、配置、上游与项目 commit、内部过滤统计、总 wall time、环境和失败说明，供 A 检查训练泄漏及成本。
 
+### 用途校验与历史 B bundle
+
+新交付的 `provenance.json` 应明确写入 `"purpose": "formal"`。任何显式的
+`validation`、未知值或 null 都拒绝进入正式池，即使数量、来源和 QC 全部合格。
+Diffusion 必须包含该字段。`formal` 只允许继续检查，不代表 A 已验收。
+开发或验证数据不得通过编辑用途字段改名为正式数据。
+
+B 的历史 Procedural/GAN 导出可能没有用途字段。该类文件默认拒绝；A 核实
+原始生成目的、规则制定时序及用途后，可在同一 bundle 目录另写
+`legacy_purpose_review.json`，保留三个原始文件不变：
+
+```json
+{
+  "schema_version": 1,
+  "purpose": "formal",
+  "reviewer": "A",
+  "reviewed_at": "填写实际审查日期",
+  "notes": "填写原始用途依据；若用于开发或验证，不得批准",
+  "file_sha256": {
+    "batch.npz": "实际 SHA-256",
+    "metadata.json": "实际 SHA-256",
+    "provenance.json": "实际 SHA-256"
+  }
+}
+```
+
+这是填写格式，不是已批准记录。哈希必须对应完整原文件；可用
+`sha256sum batch.npz metadata.json provenance.json` 读取（macOS 用
+`shasum -a 256`）。此兼容路径只处理缺字段的历史 B 格式，不能覆盖显式的
+验证用途，也不适用于缺字段的 Diffusion。用途审查不能替代训练来源和质量审查。
+
+用途审查文件的哈希会进入 pool identity。修改数据、provenance 或用途审查后，
+需要重新审查；旧 `acceptance.json` 不能继续复用。记录与整批验收一样是
+可追溯的团队决定，不是加密签名。原始生成目的无法确认时，保留待交付状态。
+
 共享 QC 必须在生成的 256px 网格上运行，源 train/good 使用 RGB 双线性缩放至相同网格；不得裁剪或改变几何对齐。A 用相同方式重算前景和 QC。全池只做通过/拒绝判断，不在读取阶段悄悄筛掉坏样本。
 
 B 的现有脚本可直接生成所需格式，必须显式启用共享 QC。示例（将输出路径换成新的共享目录）：

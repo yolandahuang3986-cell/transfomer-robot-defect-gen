@@ -27,11 +27,36 @@ def _integer(value):
     return type(value) is int
 
 
+def _purpose_review(directory, provenance, method, artifacts):
+    """Require formal intent; legacy B exports need a separate, hash-bound A review."""
+    if 'purpose' in provenance:
+        if provenance['purpose'] != 'formal':
+            raise ValueError("Formal pool requires purpose='formal'; validation or unknown purpose is not allowed")
+        return {}
+    if method not in {'procedural', 'gan'}:
+        raise ValueError("Diffusion formal bundles must explicitly declare purpose='formal'")
+    path = directory / 'legacy_purpose_review.json'
+    if not path.is_file():
+        raise ValueError("Legacy B bundle missing purpose requires A's legacy_purpose_review.json")
+    review = json.loads(path.read_text())
+    if (not isinstance(review, dict) or not _integer(review.get('schema_version'))
+            or review['schema_version'] != 1 or review.get('purpose') != 'formal'
+            or review.get('reviewer') != 'A'
+            or any(not isinstance(review.get(key), str) or not review[key].strip()
+                   for key in ('reviewed_at', 'notes'))):
+        raise ValueError('Invalid legacy purpose review: explicit dated Member A decision required')
+    if review.get('file_sha256') != artifacts:
+        raise ValueError('Legacy purpose review does not match bundle checksums')
+    return {path.name: sha256(path)}
+
+
 def load_formal_pool(directories, manifest, category, method, root):
     """Validate artifacts and re-run shared QC; never silently filter the pool.
 
     Every directory contains batch.npz, metadata.json and provenance.json.
     The provenance follows B's bundle format, extended to any generator method.
+    Explicit purpose must be formal. Legacy B exports without the field require
+    a separate A purpose review; this never replaces whole-pool acceptance.
     Sources use the exporter's RGB bilinear resize to the native generated grid.
     """
     protocol = settings()
@@ -58,6 +83,9 @@ def load_formal_pool(directories, manifest, category, method, root):
         for name in ('batch.npz', 'metadata.json'):
             if sha256(directory / name) != provenance.get('file_sha256', {}).get(name):
                 raise ValueError('Bundle checksum mismatch')
+        artifact = {name: sha256(directory / name) for name in
+                    ('batch.npz', 'metadata.json', 'provenance.json')}
+        artifact.update(_purpose_review(directory, provenance, method, artifact))
         with np.load(directory / 'batch.npz', allow_pickle=False) as arrays:
             batch = GeneratedBatch(arrays['images'], arrays['masks'],
                                    json.loads((directory / 'metadata.json').read_text()))
@@ -103,8 +131,7 @@ def load_formal_pool(directories, manifest, category, method, root):
         if checked.report.accepted_count != count:
             raise ValueError('Shared QC recheck failed; whole bundle must be reviewed')
         images.append(batch.images); masks.append(batch.masks); metadata.extend(batch.metadata)
-        artifacts.append({name: sha256(directory / name) for name in
-                          ('batch.npz', 'metadata.json', 'provenance.json')})
+        artifacts.append(artifact)
         reports.append(report)
     counts = Counter(row['defect_type'] for row in metadata)
     expected = ({'synthetic_patch': protocol['synthetic_counts'][category]} if method == 'procedural'
