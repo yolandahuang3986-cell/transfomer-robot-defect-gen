@@ -36,7 +36,7 @@ def pool(tmp_path, monkeypatch):
                     generation_config={'donor_image_id': source}) for _ in range(2)]
     np.savez_compressed(directory / 'batch.npz', images=images, masks=masks)
     (directory / 'metadata.json').write_text(json.dumps(records))
-    provenance = dict(category='metal_nut', split_sha256='frozen', seed=42, num_samples=2,
+    provenance = dict(purpose='formal', category='metal_nut', split_sha256='frozen', seed=42, num_samples=2,
                       file_sha256={n: sha256(directory/n) for n in ('batch.npz', 'metadata.json')},
                       shared_qc=dict(policy_version='synthetic-qc-v1', target_met=True, target_count=2,
                                      accepted_count=2, attempted_count=3, generation_seconds=.3, qc_seconds=.1))
