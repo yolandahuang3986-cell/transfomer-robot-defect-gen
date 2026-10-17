@@ -81,6 +81,16 @@ loader's convention (RGB bilinear to 256) so the export QC equals A's recheck.
 Shape-passing masks that then failed placement: 87 % (run 1) and 88 % (run 2).
 Placement onto the thin screw core is the largest single cost driver.
 
+> **Note added after commit `741d235` (text above unchanged).** Every run above, and every run
+> before `741d235`, used a stage-1 budget of 50 x per requested sample. From `741d235` on the
+> budget is 130 x for all categories (`sampling.mask_attempt_factor` in
+> `configs/diffusion/generation.json`; 4 samples -> 520 attempts). Reason: validation job 43273
+> (seed 1042) underfilled screw/thread_side 3/4 at 200/200 attempts (yield 1.5 %, 95 % CI
+> 0.3–4.3 %). Only the budget changed; `placement_v2`, `mask_filter_v2` and shared QC are
+> unchanged. Evidence: `~/outputs/diffusion/raw_runs/validation/screw_thread_side/seed1042/`
+> (`result.json`, `rejects.json`, `rejects/`). First run at 130 x: job 43341 (seed 2042),
+> screw/thread_side and screw/scratch_head both 4/4, raw runs in `.../seed2042/`.
+
 ### Human visibility (separate from QC)
 
 Scale: V visible without comparing / B only when compared to the source / N not visible.
