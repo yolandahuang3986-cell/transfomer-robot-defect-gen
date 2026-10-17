@@ -1,0 +1,13 @@
+diff --git a/train_mask.py b/train_mask.py
+index 5903fb7..2dcaa03 100644
+--- a/train_mask.py
++++ b/train_mask.py
+@@ -815,7 +815,7 @@ if __name__ == "__main__":
+             callbacks_cfg.ignore_keys_callback.params['ckpt_path'] = trainer_opt.resume_from_checkpoint
+         elif 'ignore_keys_callback' in callbacks_cfg:
+             del callbacks_cfg['ignore_keys_callback']
+-        trainer_opt.max_steps=30001
++        trainer_opt.max_steps=int(os.environ.get("MASK_MAX_STEPS", "30001"))  # local patch: was hard-coded 30001
+         trainer_kwargs["callbacks"] = [instantiate_from_config(callbacks_cfg[k]) for k in callbacks_cfg]
+         trainer_kwargs["max_steps"] = trainer_opt.max_steps
+         trainer = Trainer.from_argparse_args(trainer_opt, **trainer_kwargs)

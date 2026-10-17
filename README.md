@@ -44,8 +44,9 @@ Optional:
   runs completed on TC2 A40 (job 43178, exit 0). Screw remains on hold for
   shadow/background placement.
   See the [fixed review sheets and findings](docs/reviews/b_delivery_20261017/README.md).
-  GAN has documented quality failures. C's validation-stage [PR #5](https://github.com/yolandahuang3986-cell/transfomer-robot-defect-gen/pull/5)
-  remains under review; its formal delivery is pending.
+  GAN has documented quality failures. C's adapter and validation evidence were
+  merged in [PR #5](https://github.com/yolandahuang3986-cell/transfomer-robot-defect-gen/pull/5);
+  its complete formal delivery is still pending.
 - A's primary evaluation infrastructure supports accepted synthetic bundles, shared
   QC rechecks, equal optimization steps, three training seeds and result summaries.
   Code validation is not evidence of downstream improvement.

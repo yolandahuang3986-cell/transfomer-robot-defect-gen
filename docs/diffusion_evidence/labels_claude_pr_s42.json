@@ -1,0 +1,31 @@
+{
+  "annotator": "claude",
+  "blind": "labelled from zoom_review.png without ratios, before seeing Yuchen's labels",
+  "change_extends_outside_mask": [
+    "2",
+    "10",
+    "12",
+    "13"
+  ],
+  "labels": {
+    "0": "B",
+    "1": "B",
+    "10": "V",
+    "11": "B",
+    "12": "V",
+    "13": "V",
+    "14": "B",
+    "15": "N",
+    "2": "V",
+    "3": "V",
+    "4": "B",
+    "5": "V",
+    "6": "N",
+    "7": "V",
+    "8": "N",
+    "9": "V"
+  },
+  "nonce": "9f95d2eab09b8c79211669ff941d2539",
+  "run": "raw_runs/screw_thread_side/seed42 (job 42144)",
+  "scale": "V visible without comparing / B only when compared / N not visible"
+}

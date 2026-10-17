@@ -1,0 +1,21 @@
+{
+  "rules_version": "mask_filter_v2",
+  "status": "FROZEN 2026-10-10, approved by A",
+  "supersedes": "mask_filter_v1 (kept unchanged; v1/v2-placement results stay in the report as the reason for v2)",
+  "scope": "Diffusion-internal stage-1 mask filter. Does not change shared QC.",
+  "derived_from": "v1 rules: mask_probe_v2 (screw+thread_side). New latent rule: support_latent_cells.py on the frozen support masks (train split only) + the generation mechanism (ddpm.log_images resizes the mask to 32x32 and thresholds at 0.5; DDIM keeps the original latent outside it).",
+  "area_window": {
+    "basis": "support mask areas at 256x256 (computed per defect type from the frozen support list)",
+    "min_factor_of_smallest_support": 0.25,
+    "max_factor_of_largest_support": 4.0
+  },
+  "max_area_abs_pct": 20.0,
+  "max_border_frac": 0.25,
+  "max_bg_median": -0.8,
+  "min_latent_cells": {
+    "rule": "after placement, cells of torchvision Resize((32,32))(mask) >= 0.5 must be >= max(floor, min latent cells over the support masks of this defect type)",
+    "floor": 2,
+    "floor_reason": "a 1-cell latent mask is smoothed away: in v1+v2 test runs 0/9 samples with <=1 cell had visibility ratio > 2 (observation on generated samples; disclosed as such)"
+  },
+  "binarise": "mean over RGB of samples_scaled > 0.8 (upstream rule, unchanged)"
+}

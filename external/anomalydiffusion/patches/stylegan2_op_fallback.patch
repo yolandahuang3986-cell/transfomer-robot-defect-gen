@@ -1,0 +1,74 @@
+diff --git a/ldm/models/psp_encoder/stylegan2/op/fused_act.py b/ldm/models/psp_encoder/stylegan2/op/fused_act.py
+index 973a84f..218735f 100644
+--- a/ldm/models/psp_encoder/stylegan2/op/fused_act.py
++++ b/ldm/models/psp_encoder/stylegan2/op/fused_act.py
+@@ -6,13 +6,17 @@ from torch.autograd import Function
+ from torch.utils.cpp_extension import load
+ 
+ module_path = os.path.dirname(__file__)
+-fused = load(
+-    'fused',
+-    sources=[
+-        os.path.join(module_path, 'fused_bias_act.cpp'),
+-        os.path.join(module_path, 'fused_bias_act_kernel.cu'),
+-    ],
+-)
++try:
++    fused = load(
++        'fused',
++        sources=[
++            os.path.join(module_path, 'fused_bias_act.cpp'),
++            os.path.join(module_path, 'fused_bias_act_kernel.cu'),
++        ],
++    )
++except Exception as e:  # local patch: JIT CUDA build unavailable; op unused by AnomalyDiffusion inference path
++    print(f"[patch] fused_bias_act not compiled ({type(e).__name__}); fused_leaky_relu will raise if called")
++    fused = None
+ 
+ 
+ class FusedLeakyReLUFunctionBackward(Function):
+@@ -82,4 +86,6 @@ class FusedLeakyReLU(nn.Module):
+ 
+ 
+ def fused_leaky_relu(input, bias, negative_slope=0.2, scale=2 ** 0.5):
++    if fused is None:
++        raise RuntimeError("fused_leaky_relu called but CUDA extension was not compiled (see local patch)")
+     return FusedLeakyReLUFunction.apply(input, bias, negative_slope, scale)
+diff --git a/ldm/models/psp_encoder/stylegan2/op/upfirdn2d.py b/ldm/models/psp_encoder/stylegan2/op/upfirdn2d.py
+index 7bc5a1e..e07cf72 100644
+--- a/ldm/models/psp_encoder/stylegan2/op/upfirdn2d.py
++++ b/ldm/models/psp_encoder/stylegan2/op/upfirdn2d.py
+@@ -5,13 +5,17 @@ from torch.autograd import Function
+ from torch.utils.cpp_extension import load
+ 
+ module_path = os.path.dirname(__file__)
+-upfirdn2d_op = load(
+-    'upfirdn2d',
+-    sources=[
+-        os.path.join(module_path, 'upfirdn2d.cpp'),
+-        os.path.join(module_path, 'upfirdn2d_kernel.cu'),
+-    ],
+-)
++try:
++    upfirdn2d_op = load(
++        'upfirdn2d',
++        sources=[
++            os.path.join(module_path, 'upfirdn2d.cpp'),
++            os.path.join(module_path, 'upfirdn2d_kernel.cu'),
++        ],
++    )
++except Exception as e:  # local patch: JIT CUDA build unavailable; op unused by AnomalyDiffusion inference path
++    print(f"[patch] upfirdn2d not compiled ({type(e).__name__}); upfirdn2d will raise if called")
++    upfirdn2d_op = None
+ 
+ 
+ class UpFirDn2dBackward(Function):
+@@ -140,6 +144,8 @@ class UpFirDn2d(Function):
+ 
+ 
+ def upfirdn2d(input, kernel, up=1, down=1, pad=(0, 0)):
++    if upfirdn2d_op is None:
++        raise RuntimeError("upfirdn2d called but CUDA extension was not compiled (see local patch)")
+     out = UpFirDn2d.apply(
+         input, kernel, (up, up), (down, down), (pad[0], pad[1], pad[0], pad[1])
+     )
