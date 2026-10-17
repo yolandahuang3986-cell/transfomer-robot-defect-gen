@@ -1,0 +1,67 @@
+{
+ "annotator": "yuchen",
+ "study": "steps_study (job 43442), blind zoom_review rows",
+ "scale": "V visible without comparing / B only when compared to the source / N not visible",
+ "sheets": {
+  "metal_nut_bent": "~/outputs/diffusion/steps_study/blind/metal_nut_bent/zoom_review.png",
+  "screw_scratch_neck": "~/outputs/diffusion/steps_study/blind/screw_scratch_neck/zoom_review.png"
+ },
+ "labels_raw": {
+  "metal_nut_bent": "0 V, 1 V, 2 B, 3 V, 4 V, 5 B, 6 B, 7 V, 8 B, 9 B, 10 B, 11 V, 12 V, 13 B, 14 B, 15 V, 16 B, 17 V, 18 B, 19 V, 20 V, 21 B, 22 B, 23 V",
+  "screw_scratch_neck": "0 V, 1 V, 2 B, 3 B, 4 B, 5 V, 6 B, 7 B, 8 B, 9 B, 10 B, 11 V, 12 V, 13 B, 14 V, 15 V, 16 V, 17 V, 18 B, 19 V, 20 V, 21 B, 22 V, 23 V"
+ },
+ "labels": {
+  "metal_nut_bent": {
+   "0": "V",
+   "1": "V",
+   "2": "B",
+   "3": "V",
+   "4": "V",
+   "5": "B",
+   "6": "B",
+   "7": "V",
+   "8": "B",
+   "9": "B",
+   "10": "B",
+   "11": "V",
+   "12": "V",
+   "13": "B",
+   "14": "B",
+   "15": "V",
+   "16": "B",
+   "17": "V",
+   "18": "B",
+   "19": "V",
+   "20": "V",
+   "21": "B",
+   "22": "B",
+   "23": "V"
+  },
+  "screw_scratch_neck": {
+   "0": "V",
+   "1": "V",
+   "2": "B",
+   "3": "B",
+   "4": "B",
+   "5": "V",
+   "6": "B",
+   "7": "B",
+   "8": "B",
+   "9": "B",
+   "10": "B",
+   "11": "V",
+   "12": "V",
+   "13": "B",
+   "14": "V",
+   "15": "V",
+   "16": "V",
+   "17": "V",
+   "18": "B",
+   "19": "V",
+   "20": "V",
+   "21": "B",
+   "22": "V",
+   "23": "V"
+  }
+ }
+}

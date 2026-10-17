@@ -15,6 +15,7 @@ None of these change generation or shared QC. Outputs go outside Git.
 | `edit_region_analysis.py` | Anomalydiffusion | Change inside the saved mask vs inside its latent footprint vs far background; compares old/new visibility ratios against human labels (AUC). |
 | `zoom_review.py` | any | x4 crops for blind human labelling (ratio hidden unless `--show_ratio`). |
 | `make_contact_sheet.py` | any | Source / mask / generated / outline sheet for a worker output dir. |
+| `bundle_contact_sheet.py` | any | Same sheet, read-only from an exported bundle (`batch.npz` + `metadata.json`): exactly the bundle's pairs, in bundle order. |
 | `rejects_sheet.py` | any | First k rejected stage-1 masks per reason (raw + judged mask); needs `save_rejects`. |
 | `run_summary.py` | any | Cost, stage-1 yield and shared-QC outcome of one exported bundle. |
 
