@@ -22,10 +22,10 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from src.data.integrity import sha256, validate_freeze_attestation, validate_manifest
 from src.experiments.scope import require_in_scope
-from src.generation.diffusion_adapter import DiffusionDefectGenerator, DiffusionUnderfilledError
+from src.generation.diffusion_adapter import DiffusionDefectGenerator, DiffusionUnderfilledError, summarize_runs
 from src.generation.qc import QCUnderfilledError
 
-CODE = ['scripts/diffusion/ad_worker.py', 'scripts/diffusion/support_stats.py', 'scripts/generate_diffusion.py',
+CODE = ['scripts/diffusion/ad_worker.py', 'scripts/diffusion/stage1.py', 'scripts/diffusion/support_stats.py', 'scripts/generate_diffusion.py',
         'src/generation/diffusion_adapter.py', 'src/generation/diffusion_foreground.py', 'src/generation/qc.py']
 
 
@@ -75,15 +75,10 @@ def main():
     wall = time.perf_counter() - start
 
     out.mkdir(parents=True)
-    internal = {'note': 'Diffusion-internal stage 1 (mask filter + placement). Not shared QC.',
-                'runs': generator.runs,
-                'totals': {'mask_attempts': sum(r['mask_attempts'] for r in generator.runs),
-                           'produced_pairs_sent_to_shared_qc': sum(r['produced'] for r in generator.runs),
-                           'rejected_by_reason': {}}}
-    for r in generator.runs:
-        for reason, n in {**(r['internal_rejected'] or {}),
-                          'check_mask': r['upstream_check_mask_rejected'] or 0}.items():
-            internal['totals']['rejected_by_reason'][reason] = internal['totals']['rejected_by_reason'].get(reason, 0) + n
+    internal = {'note': 'Diffusion-internal stage 1 (mask filter + placement). Not shared QC. '
+                        'generation_seconds_total includes rejected attempts and QC-rejected pairs; '
+                        'model loads are separate.',
+                'runs': generator.runs, 'totals': summarize_runs(generator.runs)}
     (out / 'diffusion_internal.json').write_text(json.dumps(internal, indent=2) + '\n')
     if qc_report is not None:
         (out / 'qc_report.json').write_text(json.dumps(qc_report, indent=2) + '\n')
@@ -103,6 +98,7 @@ def main():
     (out / 'provenance.json').write_text(json.dumps(provenance, indent=2, allow_nan=False) + '\n')
     print(json.dumps({'output': str(out), 'status': status, 'purpose': a.purpose,
                       'mask_attempts': internal['totals']['mask_attempts'],
+                      'generation_seconds_total': round(internal['totals']['generation_seconds_total'], 1),
                       'shared_qc_accepted': qc_report and qc_report['accepted_count'],
                       'shared_qc_attempted': qc_report and qc_report['attempted_count']}))
     if status != 'ok':

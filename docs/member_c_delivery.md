@@ -126,6 +126,17 @@ acceptance relies on A's human audit.
 6. Placement is object-aware, not part-aware (thread vs head), and translation only.
 7. Metal_nut types have not been run yet; no cost or quality claim is made for them.
 
+### Fixed after the PR #5 review (accounting only; sampling and rules unchanged)
+
+| Review finding | Cause | Fix | Effect on the two validation runs |
+|---|---|---|---|
+| Budget 50, 56 masks judged | The budget was checked once per 8-mask batch | `stage1.run_stage1` checks it before every judged mask; unjudged outputs of the last batch are `mask_surplus_discarded` | None: 562 and 705 attempts, both below the 16 x 50 = 800 budget |
+| Zero-output run lost reasons and load cost | The zero-output path wrote a smaller `result.json` | Both paths write `stage1.stage1_result`; the adapter reads the keys strictly | None: both runs produced 16 pairs |
+| Cost summary missed QC-rejected pairs | `run_summary.py` summed accepted metadata only | `summarize_runs` totals every worker call; the summary uses it and keeps the old sum only as a cross-check | None: shared QC accepted 16/16 in both runs |
+
+The worker hash changes with this fix; formal runs use the new worker and record
+`worker_sha256` and `stage1_sha256`.
+
 ## 6. Evidence on TC2 (outside Git)
 
 Home `/home/mcaai/yuchen027`:
