@@ -159,3 +159,6 @@ python scripts/diffusion/analysis/run_summary.py <that dir>
 ```
 
 A formal bundle uses `--num-samples 25 --purpose formal`, one bundle per in-scope defect type.
+Raw worker runs go to `<work_dir>/<purpose>/<category>_<defect>/seed<seed>`, so validation and
+formal runs with the same seed never share a directory. (The two runs in section 4 predate this
+and sit directly under `<work_dir>/`.)

@@ -46,6 +46,9 @@ def main():
     if out.is_relative_to(ROOT) or out.exists():
         p.error('Use a new output directory outside the repository')
     config = json.loads((ROOT / a.config).read_text())
+    # raw worker runs are keyed by category/defect/seed; separate them by purpose so a formal
+    # run with seed 42 never collides with (or reuses) a validation run with the same seed
+    config['work_dir'] = str(Path(config['work_dir']).expanduser() / a.purpose)
     root = Path(config['root']).expanduser()
     mpath = ROOT / a.manifest
     manifest = validate_manifest(json.loads(mpath.read_text()), root)
