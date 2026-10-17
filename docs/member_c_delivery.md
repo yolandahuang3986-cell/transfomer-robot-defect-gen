@@ -172,3 +172,62 @@ A formal bundle uses `--num-samples 25 --purpose formal`, one bundle per in-scop
 Raw worker runs go to `<work_dir>/<purpose>/<category>_<defect>/seed<seed>`, so validation and
 formal runs with the same seed never share a directory. (The two runs in section 4 predate this
 and sit directly under `<work_dir>/`.)
+
+## 8. Formal run (seed 42, 8 types x 25)
+
+SLURM jobs 43375 (screw/thread_side, screw/scratch_head) and 43376 (other 6 types), partition
+MGPU-TC2, QoS normal, run one after the other (1 GPU per user). Code `6e2d490`, recorded in
+every bundle with `code_dirty: false` and `purpose: formal`. Stage-1 budget 130 x, `placement_v2`,
+`mask_filter_v2`, shared QC `synthetic-qc-v1`; `--num-samples 25 --seed 42 --purpose formal`.
+Every bundle is kept; nothing was rerun or selected.
+
+| Type | Status | Worker calls | Stage-1 attempts / budget | Shared QC accepted / attempted | Generation s | Model load s |
+|---|---|---|---|---|---|---|
+| metal_nut/bent | ok | 1 | 56 / 3250 | 25 / 25 | 212.3 | 155.9 |
+| metal_nut/color | ok | 1 | 225 / 3250 | 25 / 25 | 635.9 | 62.7 |
+| metal_nut/scratch | ok | 6 | 186 / 4680 | **25 / 36** | 620.8 | **382.0** |
+| screw/manipulated_front | ok | 1 | 147 / 3250 | 25 / 25 | 443.0 | 65.3 |
+| screw/scratch_head | ok | 1 | 645 / 3250 | 25 / 25 | 1651.2 | 63.3 |
+| screw/scratch_neck | ok | 1 | 102 / 3250 | 25 / 25 | 328.0 | 65.1 |
+| screw/thread_side | ok | 1 | 1025 / 3250 | 25 / 25 | 2582.4 | 72.6 |
+| screw/thread_top | ok | 1 | 44 / 3250 | 25 / 25 | 193.3 | 65.4 |
+| **Total** | 8/8 ok | 13 | 2430 / 27430 | 200 / 211 | **6666.9** | **932.3** |
+
+Generation s includes all rejected stage-1 attempts and QC-rejected pairs; model loads are
+separate (`diffusion_internal.json`, `totals`). Mean per accepted pair: **33.3 s**
+(**38.0 s** including model loads), over 200 pairs. No type underfilled.
+
+**The 130 x budget did not affect the formal pool.** Every one of the 13 worker calls stayed
+within 50 x its request (closest: screw/thread_side, 1025 of 1250). Stage 1 stops as soon as
+the request is filled, so a 50 x cap would not have stopped any call.
+
+**metal_nut/scratch: shared QC 25/36, 11 x `mask_too_large`.** The diffusion-internal
+`too_large` rule limits mask area as a share of the whole 256 x 256 image (<= 4 x the largest
+support mask, `mask_filter_v2`). Shared QC limits mask area relative to the estimated object
+foreground (<= 0.20, `src/generation/qc.py`). A mask can pass the first and fail the second.
+The adapter refilled the 11 rejected pairs with 5 more worker calls (requests 5, 3, 1, 1, 1),
+each with its own model load. That raised the load time to 382 s, against 63–73 s for the
+other single-call types. (metal_nut/bent, the first call of job 43376, loaded in 156 s.)
+36 attempts are within the protocol cap of 250 per type. No rule was changed.
+
+**Known issue: thread_side mask fragments on the background.** In the thread_side contact sheet
+(e.g. row #0), small mask fragments lie on the background next to the screw. `placement_v2`
+only requires >= 95 % of the mask area inside the placement foreground, and thread_side masks
+are fragmented (§5 and `docs/proposals/placement_v3.md` §7), so a few small fragments can
+lie outside. Recorded, not filtered.
+
+Outputs on TC2 (home `/home/mcaai/yuchen027`, outside Git):
+
+- Bundles: `outputs/diffusion/formal_s42/<category>_<defect>/` (`batch.npz`, `metadata.json`,
+  `provenance.json`, `qc_report.json`, `diffusion_internal.json`, `summary.json`)
+- Raw worker runs: `outputs/diffusion/raw_runs/formal/<category>_<defect>/seed42/`
+  (request, result, worker log, foregrounds, `rejects/`, `rejects.json`). For metal_nut/scratch,
+  the 5 refill calls are in `seed43/` to `seed47/` (`generate_with_qc` passes seed 42 + call number).
+- Contact sheets, all 25 pairs per type, none selected:
+  `outputs/diffusion/formal_s42/contact_sheets/<category>_<defect>.png`. 7 types were made with
+  `make_contact_sheet.py` on a copy of the single worker run dir, after checking pixel by pixel
+  that it holds exactly the bundle's 25 pairs. metal_nut/scratch was made with
+  `bundle_contact_sheet.py`, because its worker dirs also hold the QC-rejected pairs.
+- Job scripts and logs: `jobs/p3_formal_body.sh`, `jobs/p3_formal_{slow,rest}.sbatch`,
+  `jobs/logs/formal_slow_43375.out`, `jobs/logs/formal_rest_43376.out`
+
