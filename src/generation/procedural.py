@@ -25,6 +25,22 @@ def estimate_foreground(image, category):
     score[valid] = (moment[-1] * weight[valid] - moment[valid] * weight[-1])**2 / denominator[valid]
     threshold = int(np.argmax(score))
     foreground = gray > threshold if category == "metal_nut" else gray <= threshold
+    if category == "screw":
+        # Development correction after v1 shadow-placement review. A global
+        # threshold includes cast shadows; split that dark population again
+        # and place only on its darkest material core. No held-out inputs.
+        dark = gray[foreground]
+        if int(dark.max()) > int(dark.min()):
+            core_hist = np.bincount(dark, minlength=256).astype(float)
+            core_weight = np.cumsum(core_hist)
+            core_moment = np.cumsum(core_hist * np.arange(256))
+            core_denom = core_weight * (core_weight[-1] - core_weight)
+            core_score = np.full(256, -np.inf)
+            valid_core = core_denom > 0
+            core_score[valid_core] = (core_moment[-1] * core_weight[valid_core] -
+                core_moment[valid_core] * core_weight[-1])**2 / core_denom[valid_core]
+            threshold = int(np.argmax(core_score))
+            foreground = gray <= threshold
     # Stay away from estimated object edges, and explicitly exclude image borders.
     foreground = np.asarray(Image.fromarray(foreground.astype(np.uint8)*255).filter(ImageFilter.MinFilter(5))) > 0
     foreground = foreground.copy()
@@ -109,7 +125,7 @@ class ProceduralGenerator(DefectGenerator):
             images.append(output); masks.append(mask)
             metadata.append(dict(method="procedural",category=category,defect_type="synthetic_patch",
                 seed=seed,source_image_id=ids[si],generation_seconds=0.,
-                generation_config=dict(algorithm="foreground_colored_polygon_cutpaste_v2",area_range=list(self.area_range),
+                generation_config=dict(algorithm=("screw_dark_core_colored_polygon_v3" if category=="screw" and self.placement=="foreground" else "foreground_colored_polygon_cutpaste_v2"),area_range=list(self.area_range),
                     opacity=self.opacity,donor_image_id=ids[di],target_box=[top,left,ph,pw],
                     donor_box=[dt,dl,ph,pw],placement=self.placement, foreground_threshold=threshold,
                     area_reference="estimated_foreground_pixels", foreground_pixels=reference_area)))
