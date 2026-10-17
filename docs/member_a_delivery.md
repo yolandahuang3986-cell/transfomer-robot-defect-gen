@@ -78,7 +78,19 @@ significance. No protocol was changed after observing these results.
 Weights remain outside Git in A's TC2 result storage; acceptance and run records
 are also saved in the OneDrive project review folder.
 
-## 5. Remaining work
+## 5. Completed analysis and report integration
+
+The [analysis index](analysis/README.md) links the paired seed table/figure, GAN
+failure and matched bent-ablation evidence, and the quality/cost ledger. The
+English working report on OneDrive retains the four-part ownership structure.
+The metal_nut E0/E1 result, current GAN evidence and current quality/cost account
+are marked finalized within their stated scope; missing B/C experiments are not.
+
+The analysis preserves raw result precision and source hashes, identifies
+Codex-assisted visual review explicitly, and leaves unavailable costs null.
+C's adapter/validation PR is merged; its formal candidate pools remain pending.
+
+## 6. Remaining work
 
 - **B:** Fix screw placement and deliver a new complete 125-pair pool with
   provenance, QC/cost records and fixed review evidence. The current pool is on

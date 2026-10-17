@@ -1,0 +1,26 @@
+{
+  "source_sha256": "994a4a91f5c6eadddc2c95fd1aed6aae484ec2ac3da5549a537146ca95bd5492",
+  "output_sha256": "09dfb4d2d272af2015ec9bd59a709df2026fe3e8445c5412268cfe3501ca4715",
+  "updated_at": "2026-10-17T03:31:35.717508+00:00",
+  "new_finalized_sections": [
+    "4.5 metal_nut E0/E1",
+    "4.6.1 current GAN evidence",
+    "4.6.2 current quality/cost ledger"
+  ],
+  "unchanged_section_structure": "Four main parts, B leads 2 and C leads 3",
+  "finalized_label_count": 14,
+  "native_table_count": 8,
+  "figure_count": 2,
+  "pending": [
+    "B repaired complete screw pool",
+    "C complete formal Diffusion pools",
+    "Overall method comparison and ratio analysis"
+  ],
+  "render_status": "passed",
+  "rendered_pages": 8,
+  "all_pages_visually_reviewed": true,
+  "styles_preserved": true,
+  "report_layout": "A4; retained source typography and four-part structure",
+  "source_backup": "CA6127_Report_Before_A_E1_20261017.docx",
+  "completed_at": "2026-10-17T03:33:12.776969+00:00"
+}

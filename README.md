@@ -59,6 +59,10 @@ Optional:
   flip and retains color. Follow the [execution runbook](docs/formal_evaluation_runbook.md)
   for artifact requirements, acceptance, training and reporting.
 
+A's [paired analysis, GAN failure evidence and quality/cost ledger](docs/analysis/README.md)
+are available. B still needs to redeliver the screw pool; C's merged adapter does
+not constitute a formal-pool handoff.
+
 Full datasets, generated batches and weights stay outside Git. The eight fixed
 review illustrations linked above include their own image attribution and license.
 The frozen split manifest is the approved protocol artifact; do not recreate or
