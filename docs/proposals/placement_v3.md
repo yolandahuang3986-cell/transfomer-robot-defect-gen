@@ -1,10 +1,26 @@
 # Proposal: placement_v3 (rotation-aligned placement)
 
-**Status: DRAFT, for A's approval. Nothing is implemented or frozen. `placement_v2` stays in use.**
+**Status: DRAFT for A. Conclusion: v3 is NOT recommended for adoption now (§0).
+Nothing is implemented or frozen; `placement_v2` stays in use.**
 Author: Member C. Branch `fix/diffusion-review`.
 
-The design and the adoption criteria (§1–§5) were written before the s2042 result (job 43341);
-§6 was added afterwards.
+The design and criteria C1–C4 (§1–§5) were written before the s2042 result (job 43341).
+§0, C5 (revised), §6 and §7 were written afterwards, before any v3 run.
+
+## 0. Conclusion: do not adopt v3 now
+
+1. **The 130 x budget already solves the underfill.** Pooled over s1042 and s2042 (v2),
+   thread_side yields 7/366 = 1.9 %. At that rate the chance of filling fewer than 4 of 4 is
+   about 47 % with 200 attempts (old 50 x) and about 1 % with 520 attempts (130 x). Job 43341
+   (seed 2042) filled both screw/thread_side and screw/scratch_head 4/4 (§6).
+2. **v3 is expected to make placed masks more fragmented, and to fail C5.** Under v2,
+   placement already filters out the most fragmented masks: placed masks have a median of
+   7 components, failed ones 11. The masks that rotation rescues have a median of 9 (s1042
+   probe, 38 masks). So v3 would add mostly fragmented masks and push the median above the
+   C5 limit of 7.
+3. Kept for the record: problem, mechanism and probe results (§1–§2), the design (§3) and
+   the criteria (§5), in case placement becomes the bottleneck again. The underlying issue,
+   fragmented thread_side masks, is a separate known limit (§7) and is left for A to decide.
 
 ## 1. Problem
 
@@ -117,7 +133,7 @@ Decisions for A (my recommendation first):
   Recommendation: 200 + 200.
 - **D2, scope:** screw only, metal_nut keeps v2 (recommended, because metal_nut's axis is
   ill-defined), or all categories.
-- **D3, fragmented masks (§1.3.1):** out of scope here; flag it in the report as a known
+- **D3, fragmented masks (§1.3.1, §7):** out of scope here; flag it in the report as a known
   limit; decide separately whether to propose `mask_filter_v3`.
 
 Disclosure: rotation is not in upstream AnomalyDiffusion. It changes the orientation
@@ -156,18 +172,23 @@ v3 is adopted only if **all** of these hold in the GPU validation run of §4.3:
 - **C4:** the share of placed masks rejected by `latent_too_small` is not more than
   10 percentage points above v2 (pooled), so rotation does not just move the loss
   downstream.
-- **C5:** the share of accepted thread_side masks with more than 3 connected components
-  (8-connectivity, 256 px; 3 = the maximum over the 5 thread_side support masks) is not
-  higher than under v2, pooled over s1042 and s2042. Reason: §1.3.1 shows that rotation
-  mainly rescues fragmented masks, and C1–C4 measure pass rates only, so they cannot
-  detect a shift towards more fragmented accepted masks.
+- **C5:** among thread_side masks that pass placement (before `latent_too_small`), the
+  median number of connected components (8-connectivity, 256 px) under v3 is **<= 7**, the
+  v2 median pooled over s1042 and s2042 (28 masks). Reason: §1.3.1 shows that rotation
+  mainly rescues fragmented masks, and C1–C4 measure pass rates only, so they cannot detect
+  this. Placed masks are used instead of accepted ones because the sample is larger (28 vs 7)
+  and the measure isolates the placement step.
+  _Revision note: C5 was first written as "share of accepted masks with > 3 components not
+  higher than v2". The s2042 data gave a v2 baseline of 7/7 = 100 %, so that version could
+  not fail. It was replaced after s2042 and before any v3 run._
 
 If any criterion fails, v3 is not adopted and v2 stays. The rotation rule is not re-tuned
 on the same runs. Any further change becomes a new proposal with new seeds.
 
 ## 6. s2042 results (job 43341, budget 130 x, placement_v2)
 
-Filled in after job 43341. Sections 1–5 were written before this result and are unchanged.
+Filled in after job 43341. §1–§5 were written before this result; only C5 was revised
+afterwards (see its revision note).
 Run: commit `741d235`, `code_dirty: false`, factor 130, seed 2042, 4 pairs per type, elapsed 18 min.
 
 Pre-declared rule (written before the result): both types fill -> formal runs use 130 x;
@@ -198,8 +219,17 @@ Notes:
    0.28 and 0.001.
 2. v2 baselines for the proposed criteria (thread_side, pooled s1042 + s2042):
    placement pass rate 28/175 = 16 %; `latent_too_small` share of placed masks 21/28 = 75 %;
-   accepted masks with > 3 components 7/7 = 100 %. **With a 100 % baseline, C5 cannot fail.**
-   A different measure may be needed. Open for A, not changed here.
+   connected components per mask (8-connectivity, 256 px):
+
+   | thread_side | n | median (p25–p75) | > 3 components |
+   |---|---|---|---|
+   | Support masks (ground truth) | 5 | 2 (1–3) | 0 % |
+   | v2 accepted | 7 | 10 (9–11) | 100 % |
+   | v2 placed (accepted + `latent_too_small`), **C5 baseline** | 28 | **7** (6–8) | 89 % |
+   | v2 `placement_failed` | 147 | 11 (9–13) | 100 % |
+   | Rescued by rotation in the s1042 probe | 38 | 9 | — |
+
+   For comparison, scratch_head: ground truth 1 component each; v2 accepted median 1.5, 1/8 > 3.
 3. Offline v3 probe on the s2042 thread_side `placement_failed` masks (probe parameters, not
    frozen v3 parameters; 2 x 200 tries, 5 RNG seeds): translation only 0–1 / 71,
    rotation-aligned 45 / 71 (elongation >= 4: 40 / 40; < 4: 5 / 31). Output:
@@ -208,3 +238,25 @@ Notes:
 
 Raw evidence: `~/outputs/diffusion/raw_runs/validation/screw_{thread_side,scratch_head}/seed2042/`;
 bundles: `~/outputs/diffusion/smallbatch_s2042_budget130/`; log `~/jobs/logs/budget130_43341.out`.
+
+## 7. Known limit: thread_side masks are too fragmented
+
+The mask model produces thread_side masks that are much more fragmented than the real
+defects. The 5 support masks have a median of **2** connected components (max 3); the
+masks accepted under v2 have a median of **10** (6–15, n = 7). This affects the masks that
+are delivered today under v2, independently of v3.
+
+A possible fix is a component-count rule in a future `mask_filter_v3`. Its cost depends on
+the threshold (thread_side, v2, pooled s1042 + s2042):
+
+| Threshold | Accepted masks that would pass | Placed masks that would pass |
+|---|---|---|
+| <= 6 components (2 x support max) | 1/7, about **1/7** (95 % CI 0–58 %) | 11/28 = 39 % (22–59 %) |
+| <= 3 components (support max) | 0/7 (0–41 %) | 3/28 = 11 % (2–28 %) |
+
+So at <= 6 the stage-1 yield would fall to roughly 1/7 of today's 1.9 % (very uncertain,
+7 masks). At <= 3 it would fall further, possibly close to zero. A lower yield needs a
+higher budget, or else thread_side underfills again. **Decision for A:** accept and
+report this limit, or ask for a `mask_filter_v3` proposal (new version, new seeds,
+criteria fixed in advance).
+
