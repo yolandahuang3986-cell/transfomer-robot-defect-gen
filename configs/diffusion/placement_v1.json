@@ -1,0 +1,10 @@
+{
+  "rules_version": "placement_v1",
+  "frozen_on": "2026-10-08",
+  "scope": "Diffusion-internal mask placement. Applied after the stage-1 mask filter, before inpainting. Does not change shared QC.",
+  "method": "translation only: crop the mask to its bounding box, pick a random foreground pixel as the box centre (clipped to the image), accept the first position whose mask-on-foreground overlap >= min_overlap",
+  "foreground": "shared QC estimate_object_foreground() on the same training-normal source image, nearest-resized with the QC's own _resize_binary_mask() to the 256x256 output grid",
+  "min_overlap": 0.95,
+  "max_tries_per_mask": 200,
+  "known_limits": "object-aware but not part-aware (does not know thread vs head) and no rotation to follow the object axis"
+}

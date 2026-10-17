@@ -1,0 +1,41 @@
+{
+  "run": "worker_mf2_s42/screw-thread_side",
+  "scale": "V = visible without comparing, B = borderline (only when compared), N = not visible",
+  "annotator_yuchen": {
+    "0": "V",
+    "1": "V",
+    "2": "B",
+    "3": "B",
+    "4": "V",
+    "5": "N",
+    "6": "B",
+    "7": "V",
+    "8": "V",
+    "9": "V",
+    "10": "V",
+    "11": "V",
+    "12": "V",
+    "13": "V",
+    "14": "B",
+    "15": "B"
+  },
+  "note": "Run 42012 (pre-PR scripts). Yuchen labelled without ratios; Claude saw ratios before labelling (NOT blind).",
+  "annotator_claude": {
+    "0": "V",
+    "1": "V",
+    "2": "V",
+    "3": "N",
+    "4": "B",
+    "5": "N",
+    "6": "V",
+    "7": "B",
+    "8": "V",
+    "9": "V",
+    "10": "V",
+    "11": "V",
+    "12": "V",
+    "13": "V",
+    "14": "B",
+    "15": "V"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "note": "Member C generation config on TC2. Paths outside Git; '~' is expanded. Change only by commit.",
+  "upstream": "~/external/anomalydiffusion",
+  "python": "~/.conda/envs/Anomalydiffusion/bin/python",
+  "root": "~/datasets/mvtec_ad",
+  "work_dir": "~/outputs/diffusion/raw_runs",
+  "checkpoints": {
+    "ldm": "~/external/anomalydiffusion/models/ldm/text2img-large/model.ckpt",
+    "anomaly_embeddings": "~/outputs/diffusion/p1_anomaly_core_s42/anomaly-checkpoints/checkpoints/embeddings_gs-9999.pt",
+    "spatial_encoder": "~/outputs/diffusion/p1_anomaly_core_s42/anomaly-checkpoints/checkpoints/spatial_encoder_gs-9999.pt",
+    "mask_embeddings_template": "~/outputs/diffusion/p1_masks_s42/mask-checkpoints/{category}-{defect_type}/checkpoints/embeddings_gs-2999.pt"
+  },
+  "sampling": {
+    "mask_ddim_steps": 100,
+    "image_ddim_steps": 200,
+    "eta": 1.0,
+    "adaptive_mask": true,
+    "batch_size": 8,
+    "mask_attempt_factor": 50
+  },
+  "mask_filter_rules": "configs/diffusion/mask_filter_v2.json",
+  "placement_rules": "configs/diffusion/placement_v2.json",
+  "save_rejects": true,
+  "training_provenance": {
+    "support_list": "~/external/diffusion_support/support_core_n5_seed42.json",
+    "support_scope": "8 in-scope groups x 5 frozen support pairs; metal_nut/flip excluded",
+    "anomaly_model": "joint training on the 8 groups, 10000 steps, SLURM job 40227, log ~/jobs/logs/",
+    "mask_models": "one per defect type on its 5 support masks, 5000 steps, step 2999 used, logs ~/jobs/logs/",
+    "official_defect_checkpoints_used": false
+  }
+}

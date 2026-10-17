@@ -1,0 +1,14 @@
+{
+  "rules_version": "placement_v2",
+  "status": "FROZEN 2026-10-10, approved by A",
+  "supersedes": "placement_v1 (kept unchanged; its results stay in the report as the reason for v2)",
+  "reason": "v1 used the shared-QC foreground, which on screw includes a soft shadow halo (24-33% of the image); v1 placed defects on background inside that halo. QC v1 passed them 8/8, so v2 is not about QC pass rate but about defects lying on the object.",
+  "scope": "Diffusion-internal mask placement. Shared QC is unchanged and still decides acceptance.",
+  "method": "same as v1: translation only, random foreground pixel as box centre, accept first position with overlap >= min_overlap",
+  "foreground_variant": "core_thr3_fill_and_qc",
+  "foreground": "(shared-QC estimator with the final distance threshold x3, largest component, enclosed holes filled) AND (shared-QC foreground), at native resolution; nearest-resized with QC _resize_binary_mask to 256x256. The AND keeps it a subset of the QC foreground, so a through-hole that QC excludes (metal_nut) is never filled in.",
+  "derived_from": "fg_probe on train/good images only: screw 000-007 (removes the shadow halo, core ~45-56% of QC), metal_nut 000-007 (no halo; plain fill would add the centre hole, ~7% outside QC; the AND removes it)",
+  "min_overlap": 0.95,
+  "max_tries_per_mask": 200,
+  "known_limits": "object-aware but not part-aware; no rotation; threshold multiplier chosen visually on 8 images per category"
+}
