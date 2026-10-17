@@ -42,7 +42,7 @@ def test_foreground_placement_stays_inside_object(category, background, object_v
     x[:,:,12:52,20:44]=object_value
     from src.generation.procedural import estimate_foreground
     fg,_=estimate_foreground(x[0],category)
-    batch=ProceduralGenerator().generate(x,15,category=category,source_image_ids=["normal"])
+    batch=ProceduralGenerator().generate(x,15,category=category,source_image_ids=[f"{category}/train/good/fixture.png"])
     assert not batch.masks[:,0,:, :][:,~fg].any()
     assert (batch.masks.sum(axis=(1,2,3))>0).all()
     np.testing.assert_array_equal(batch.images[:,:,~fg],np.broadcast_to(x[:,:,~fg],batch.images[:,:,~fg].shape))
@@ -50,7 +50,7 @@ def test_foreground_placement_stays_inside_object(category, background, object_v
 
 def test_foreground_does_not_silently_fallback_on_uniform_image():
     with pytest.raises(ValueError,match="foreground"):
-        ProceduralGenerator().generate(np.ones((1,3,64,64),np.float32),1,category="metal_nut",source_image_ids=["normal"])
+        ProceduralGenerator().generate(np.ones((1,3,64,64),np.float32),1,category="metal_nut",source_image_ids=["metal_nut/train/good/fixture.png"])
 
 
 def test_screw_dark_core_excludes_cast_shadow():

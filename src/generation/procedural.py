@@ -88,6 +88,12 @@ class ProceduralGenerator(DefectGenerator):
             estimates = [estimate_foreground(x, category) for x in a]
         else:
             estimates = [(np.ones((h,w), dtype=bool), None) for x in a]
+        # Patch scale and placement support are separate: a conservative material
+        # core must not shrink the requested patch area to nearly zero.
+        size_reference = None
+        if category == "screw" and self.placement == "foreground":
+            from .qc import estimate_foregrounds
+            size_reference = estimate_foregrounds(a, ids)
         images, masks, metadata=[],[],[]
         for _ in range(num_samples):
             si,di = rng.integers(len(a),size=2)
@@ -95,11 +101,11 @@ class ProceduralGenerator(DefectGenerator):
             foreground, threshold = estimates[si]
             donor_foreground, _ = estimates[di]
             area=float(rng.uniform(*self.area_range))
-            reference_area = int(foreground.sum())
+            reference_area = int(size_reference[ids[si]].sum()) if size_reference is not None else int(foreground.sum())
             aspect=float(np.exp(rng.uniform(np.log(.3),np.log(3))))
             ph=max(3,min(h,int(np.sqrt(area*reference_area/aspect))))
             pw=max(3,min(w,int(np.sqrt(area*reference_area*aspect))))
-            cy,cx=np.argwhere(foreground)[int(rng.integers(reference_area))]
+            cy,cx=np.argwhere(foreground)[int(rng.integers(int(foreground.sum())))]
             top,left=int(np.clip(cy-ph//2,0,h-ph)),int(np.clip(cx-pw//2,0,w-pw))
             donor_points=np.argwhere(donor_foreground)
             dy,dx=donor_points[int(rng.integers(len(donor_points)))]
@@ -125,9 +131,9 @@ class ProceduralGenerator(DefectGenerator):
             images.append(output); masks.append(mask)
             metadata.append(dict(method="procedural",category=category,defect_type="synthetic_patch",
                 seed=seed,source_image_id=ids[si],generation_seconds=0.,
-                generation_config=dict(algorithm=("screw_dark_core_colored_polygon_v3" if category=="screw" and self.placement=="foreground" else "foreground_colored_polygon_cutpaste_v2"),area_range=list(self.area_range),
+                generation_config=dict(algorithm=("screw_dark_core_colored_polygon_v4" if category=="screw" and self.placement=="foreground" else "foreground_colored_polygon_cutpaste_v2"),area_range=list(self.area_range),
                     opacity=self.opacity,donor_image_id=ids[di],target_box=[top,left,ph,pw],
                     donor_box=[dt,dl,ph,pw],placement=self.placement, foreground_threshold=threshold,
-                    area_reference="estimated_foreground_pixels", foreground_pixels=reference_area)))
+                    area_reference=("shared_normal_foreground_pixels" if size_reference is not None else "estimated_foreground_pixels"), area_reference_pixels=reference_area, foreground_pixels=int(foreground.sum()))))
         for m in metadata:m["generation_seconds"]=(time.perf_counter()-start)/num_samples
         return validate_batch(GeneratedBatch(np.stack(images),np.stack(masks),metadata),num_samples)
