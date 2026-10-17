@@ -41,3 +41,9 @@ python scripts/generate_procedural.py --root "$HOME/datasets/mvtec_ad" --manifes
 MVTec-derived illustrations/data: MVTec AD, CC BY-NC-SA4.0. Data stays outside Git.
 
 Tests:94 passed using the existing environment via a no-space symlink path. Two initial diffusion fixture subprocess failures were due to spaces in its shebang interpreter path; no diffusion source was changed.
+
+## Uploaded artifact
+OneDrive: transfomer/CA6127_Technical_Review/b_screw_revised_20261017.tar.gz
+Upload confirmed17October2026.22,589,576bytes;285checksum entries.
+SHA256:17838774afb4604d19a6f231ec4a141c01ba23e70a3d3a40b303b4e82a88e4a1
+A must independently review and issue acceptance; no E1 screw run is claimed.
