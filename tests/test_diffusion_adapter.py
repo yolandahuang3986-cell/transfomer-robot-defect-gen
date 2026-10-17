@@ -15,6 +15,7 @@ from src.generation.diffusion_foreground import _thresholded_foreground, placeme
 from src.generation.qc import estimate_object_foreground
 
 ROOT = Path(__file__).resolve().parents[1]
+GEN_CONFIG = json.loads((ROOT / 'configs/diffusion/generation.json').read_text())
 sys.path.insert(0, str(ROOT / 'scripts/diffusion'))
 from stage1 import run_stage1, stage1_result
 
@@ -48,7 +49,7 @@ for s in samples:
                  "inpaint_seconds": 0.5, "generation_seconds": 1.5, "mask_attempt": 3,
                  "placement_tries": 1, "placement_overlap": 1.0, "latent_cells": 4}})
 n = len(req["samples"])
-s1 = {{"masks": [None] * len(recs), "attempts": 30, "budget": 50 * n, "surplus": 2,
+s1 = {{"masks": [None] * len(recs), "attempts": 30, "budget": int(req["sampling"]["mask_attempt_factor"]) * n, "surplus": 2,
       "seconds": 1.0 * len(recs) if recs else 2.0, "reasons": {{"inverted": 5, "check_mask": 2}}}}
 stats = stage1_result(n, s1, 1.0, 1.0 if recs else 0.0, 0.5 * len(recs), {{"rules_version": "mask_filter_v2"}})
 json.dump({{"name": "x", **stats, "provenance": {{"worker_sha256": "fake"}}, "samples": recs}},
@@ -90,7 +91,7 @@ def setup(tmp_path):
                               'spatial_encoder': str(ckpt / 'enc.pt'),
                               'mask_embeddings_template': str(ckpt / '{category}-{defect_type}.pt')},
               'sampling': {'mask_ddim_steps': 100, 'image_ddim_steps': 200, 'eta': 1.0, 'adaptive_mask': True,
-                           'batch_size': 8, 'mask_attempt_factor': 50},
+                           'batch_size': 8, 'mask_attempt_factor': GEN_CONFIG['sampling']['mask_attempt_factor']},
               'mask_filter_rules': 'configs/diffusion/mask_filter_v2.json',
               'placement_rules': 'configs/diffusion/placement_v2.json', 'save_rejects': True}
     images = np.stack([np.asarray(Image.open(data / r['image_path']).convert('RGB').resize((256, 256)),
@@ -114,6 +115,15 @@ def test_generate_with_shared_qc_contract_and_provenance(setup):
     assert request['save_rejects'] is True
     assert request['placement_rules']['rules_version'] == 'placement_v2'
     assert len(g.runs) == 1 and result.report.accepted_count == 3
+    assert g.runs[0]['mask_attempt_budget'] == 130 * g.runs[0]['requested']
+
+
+def test_stage1_budget_is_130_masks_per_sample_for_every_category():
+    """Raised from 50 after validation job 43273 (seed 1042): screw/thread_side underfilled 3/4
+    at 200/200 attempts (1.5 % yield). One factor for all categories; internal rules unchanged."""
+    assert GEN_CONFIG['sampling']['mask_attempt_factor'] == 130
+    assert GEN_CONFIG['mask_filter_rules'].endswith('mask_filter_v2.json')
+    assert GEN_CONFIG['placement_rules'].endswith('placement_v2.json')
 
 
 def test_flip_and_foreign_sources_are_rejected(setup):
