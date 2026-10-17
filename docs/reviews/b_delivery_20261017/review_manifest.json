@@ -2,7 +2,7 @@
   "review_date": "2026-10-17",
   "method": "procedural",
   "defect_label": "synthetic_patch",
-  "status": "technical_recheck_complete_not_final_acceptance",
+  "status": "metal_nut_accepted_screw_on_hold",
   "archive_name": "b_delivery_20261010_v1.tar.gz",
   "archive_bytes": 52401531,
   "archive_sha256": "4e62995040b589fba306180f2993d61ced0c9f883c2ff1d83b12d3ae629b589d",
@@ -12,11 +12,11 @@
   "generator_code_commit": "bf798afa499086aed98997168cbc486dda999243",
   "audit_code_commit": "fd122946c35c8f7efbab5876638039567c80c0ec",
   "shared_qc_sha256": "e0bed11f5f5d6c6eb03bcf60ccc0e15b7ffadbaf4860b53313b063465384f62e",
-  "visual_review": "Codex-assisted preliminary review; not independent human sign-off",
+  "visual_review": "Codex-assisted visual review; not an additional independent human rating",
   "categories": {
     "metal_nut": {
       "num_samples": 75,
-      "status": "pending_final_A_review",
+      "status": "accepted",
       "dtype": "float32",
       "images_shape": [
         75,
@@ -125,7 +125,42 @@
           ],
           "sha256": "7fc2acb00a1451116ac204f99b01b452cd416f810ab2cc039213e048026ea499"
         }
-      ]
+      ],
+      "formal_acceptance": {
+        "reviewer": "A",
+        "reviewed_at": "2026-10-17T02:39:51.261596+00:00",
+        "pool_sha256": "336ba90340c07bb3d403563077a2472702bace8b96dffd28adeef98ee4ae93c4",
+        "acceptance_sha256": "a6cafe7c54aaf6786eb67240e323df8d3ddfb1454806c4533bbe2a241061376c",
+        "legacy_purpose_review_sha256": "66c975c4b9b5e75c60c54088326b799a13e62a4d0e3732e4b95379222bacfa5b",
+        "decision_authority": "User instruction to start formal training, 17 October 2026",
+        "visual_review_method": "Codex-assisted review of the fixed 20-pair sample",
+        "independent_human_visual_rating": false,
+        "complete_original_pool_unchanged": true,
+        "records_location": "OneDrive project review folder and Member A TC2 storage"
+      },
+      "e1_launch": {
+        "job_id": "43178",
+        "status": "completed",
+        "gpu": "NVIDIA A40",
+        "node": "TC2N02",
+        "code_commit": "77ebf7f5870cc21a97d98373c2f03ac83871219b",
+        "downstream_seeds": [
+          42,
+          43,
+          44
+        ],
+        "optimizer_steps_per_seed": 1500,
+        "batch_size": 8,
+        "image_size": 256,
+        "cpu_tests_passed": 88,
+        "e0_rerun": false,
+        "cuda_gate0_passed": true,
+        "training_only_seconds_per_step": 0.047008081478998064,
+        "exit_code": "0:0",
+        "elapsed_seconds": 285,
+        "results": "../../../results/metrics/e1_metal_nut_20261017/README.md",
+        "summary": "../../../results/metrics/e1_metal_nut_20261017/summary.json"
+      }
     },
     "screw": {
       "num_samples": 125,

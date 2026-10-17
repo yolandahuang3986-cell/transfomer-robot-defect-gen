@@ -40,20 +40,28 @@ Optional:
 - B's Procedural/GAN implementation is merged. The 75/125 Procedural candidate pools
   have been received and independently rechecked: all 200 pairs pass shared QC and
   mask/change alignment checks. Technical and Codex-assisted visual reviews are
-  complete. Metal_nut is recommended for acceptance, with its formal acceptance
-  record still outstanding; screw is on hold for shadow/background placement.
+  complete. Metal_nut's original 75-pair pool has been accepted, and all three E1
+  runs completed on TC2 A40 (job 43178, exit 0). Screw remains on hold for
+  shadow/background placement.
   See the [fixed review sheets and findings](docs/reviews/b_delivery_20261017/README.md).
-  GAN has documented quality failures. C's validation-stage [PR #5](https://github.com/yolandahuang3986-cell/transfomer-robot-defect-gen/pull/5)
-  remains under review; its formal delivery is pending.
+  GAN has documented quality failures. C's adapter and validation evidence were
+  merged in [PR #5](https://github.com/yolandahuang3986-cell/transfomer-robot-defect-gen/pull/5);
+  its complete formal delivery is still pending.
 - A's primary evaluation infrastructure supports accepted synthetic bundles, shared
   QC rechecks, equal optimization steps, three training seeds and result summaries.
   Code validation is not evidence of downstream improvement.
 - Six E0 baseline runs completed on TC2 A40 (job 40765, exit 0).
-  [Results and limitations](docs/member_a_delivery.md) are recorded; synthetic
-  comparisons remain pending accepted B/C datasets.
+  [E0 results and limitations](docs/member_a_delivery.md) and the
+  [completed metal_nut E1 comparison](results/metrics/e1_metal_nut_20261017/README.md)
+  are recorded. E1 increases mean pixel AUROC, while thresholded Dice decreases
+  and normal-image FPR remains 1.0. The remaining comparisons await accepted pools.
 - The approved [formal protocol](docs/formal_evaluation_protocol.md) excludes only
   flip and retains color. Follow the [execution runbook](docs/formal_evaluation_runbook.md)
   for artifact requirements, acceptance, training and reporting.
+
+A's [paired analysis, GAN failure evidence and quality/cost ledger](docs/analysis/README.md)
+are available. B still needs to redeliver the screw pool; C's merged adapter does
+not constitute a formal-pool handoff.
 
 Full datasets, generated batches and weights stay outside Git. The eight fixed
 review illustrations linked above include their own image attribution and license.

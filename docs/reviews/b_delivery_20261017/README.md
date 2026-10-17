@@ -7,7 +7,7 @@ remain in external project storage.
 
 | Category | Delivered pairs | Generation attempts | A's shared-QC recheck | Review outcome |
 |---|---:|---:|---:|---|
-| metal_nut | 75 | 83 | 75/75 | Technical review complete; recommended for acceptance; formal record not yet issued |
+| metal_nut | 75 | 83 | 75/75 | Accepted as the complete 75-pair pool; E1 complete: three seeds; job 43178, exit 0 |
 | screw | 125 | 136 | 125/125 | Technical review complete; batch on hold for placement problems |
 
 The archive SHA-256 matches the delivery record, and all 500 package-file checksums
@@ -34,19 +34,43 @@ checks does not establish realistic defect quality or downstream benefit.
 
 - **metal_nut:** No clear systematic placement onto the background was observed
   in A's fixed 20 pairs. Some patches are small, low contrast, or close to an
-  object edge. The current recommendation is to accept this category's batch.
+  object edge. The original complete 75-pair pool has been accepted for E1 following the
+  user's instruction to start formal training on 17 October 2026.
 - **screw:** B's supplementary samples 0009 and 0082 show shadow/background
   patches. A's samples 0077 and 0065 also raise edge/shadow concerns. The entire
   batch remains on hold. Do not remove individual samples, refill the pool, or
   relax shared QC. Samples 0009 and 0082 are not in A's fixed set below.
 - **Review completed:** Package integrity, provenance checks, mask alignment,
   shared-QC rechecks, and Codex-assisted visual review have been completed.
-- **Record still outstanding:** No formal-purpose review or batch-acceptance
-  record has been issued, and E1 training has not started. The visual review was
-  assisted by Codex and must not be represented as an additional independent
-  human review. These outstanding records do not mean that the completed
-  technical checks need to be repeated. Legacy B provenance is handled under
-  the [A execution runbook](../../formal_evaluation_runbook.md#用途校验与历史-b-bundle).
+- **Acceptance recorded:** A has issued the hash-bound legacy-purpose review
+  and whole-batch acceptance for metal_nut. This delegated decision follows the
+  user's instruction to start training and the documented review findings. The
+  visual review was assisted by Codex; it is not an additional independent human
+  rating or a claim that the user personally rated each image. The original
+  complete batch is unchanged. See the
+  [A execution runbook](../../formal_evaluation_runbook.md#用途校验与历史-b-bundle)
+  for legacy-purpose handling.
+
+## E1 completion — 17 October 2026
+
+TC2 job **43178** completed on **NVIDIA A40**, TC2N02, with **exit code 0:0**
+and total elapsed time **4:45**. Clean main commit:
+`77ebf7f5870cc21a97d98373c2f03ac83871219b`. All **88 CPU tests** and CUDA Gate 0
+passed. Three formal runs completed at **seeds 42/43/44, 1,500 optimizer steps
+per seed, batch 8, 256-pixel inputs**, using the same accepted 75-pair pool.
+Existing E0 runs were preserved; screw remains on hold.
+
+[Results, paired E0 comparison and execution evidence](../../../results/metrics/e1_metal_nut_20261017/README.md)
+show mean pixel AUROC of **0.8202 ± 0.0995**, versus E0 **0.6559 ± 0.1177**.
+Mean Dice decreases to **0.0591 ± 0.0644**, and normal-image FPR remains **1.0**.
+These results do not establish improved segmentation or usable image-level
+detection. No two-category Procedural macro score is reported while screw is
+on hold. No threshold, seed or training-budget changes were made after observing
+these results.
+
+Detailed acceptance and execution records are retained in the OneDrive project
+review folder and A's TC2 storage. Their hashes are recorded in the
+[machine-readable summary](review_manifest.json).
 
 ## Metal nut
 
