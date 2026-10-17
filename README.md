@@ -34,12 +34,17 @@ The split is frozen after Phase 0 and shared by all synthesis methods.
 Optional:
 - transistor
 
-## Current status — 10 October 2026
+## Current status — 17 October 2026
 
 - Phase 0 is complete; the frozen split and Gate 0 are tracked.
-- B's Procedural/GAN implementation is merged. Procedural has 30-sample-per-category
-  integration evidence; formal 75/125 sample pools and A acceptance remain pending.
-  GAN has documented quality failures. C's final delivery still requires verification.
+- B's Procedural/GAN implementation is merged. The 75/125 Procedural candidate pools
+  have been received and independently rechecked: all 200 pairs pass shared QC and
+  mask/change alignment checks. Technical and Codex-assisted visual reviews are
+  complete. Metal_nut is recommended for acceptance, with its formal acceptance
+  record still outstanding; screw is on hold for shadow/background placement.
+  See the [fixed review sheets and findings](docs/reviews/b_delivery_20261017/README.md).
+  GAN has documented quality failures. C's validation-stage [PR #5](https://github.com/yolandahuang3986-cell/transfomer-robot-defect-gen/pull/5)
+  remains under review; its formal delivery is pending.
 - A's primary evaluation infrastructure supports accepted synthetic bundles, shared
   QC rechecks, equal optimization steps, three training seeds and result summaries.
   Code validation is not evidence of downstream improvement.
@@ -50,8 +55,10 @@ Optional:
   flip and retains color. Follow the [execution runbook](docs/formal_evaluation_runbook.md)
   for artifact requirements, acceptance, training and reporting.
 
-Dataset images and weights stay outside Git. The frozen split manifest is the
-approved protocol artifact; do not recreate or overwrite it for routine runs.
+Full datasets, generated batches and weights stay outside Git. The eight fixed
+review illustrations linked above include their own image attribution and license.
+The frozen split manifest is the approved protocol artifact; do not recreate or
+overwrite it for routine runs.
 
 ## Reproduce Phase 0
 

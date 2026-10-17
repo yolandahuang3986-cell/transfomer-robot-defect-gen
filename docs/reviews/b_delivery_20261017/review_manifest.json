@@ -1,0 +1,244 @@
+{
+  "review_date": "2026-10-17",
+  "method": "procedural",
+  "defect_label": "synthetic_patch",
+  "status": "technical_recheck_complete_not_final_acceptance",
+  "archive_name": "b_delivery_20261010_v1.tar.gz",
+  "archive_bytes": 52401531,
+  "archive_sha256": "4e62995040b589fba306180f2993d61ced0c9f883c2ff1d83b12d3ae629b589d",
+  "checked_files": 500,
+  "checksum_mismatches": [],
+  "split_sha256": "259a091b8681542704a69701473b03834440bc4da3371b5415e10f6b45be901c",
+  "generator_code_commit": "bf798afa499086aed98997168cbc486dda999243",
+  "audit_code_commit": "fd122946c35c8f7efbab5876638039567c80c0ec",
+  "shared_qc_sha256": "e0bed11f5f5d6c6eb03bcf60ccc0e15b7ffadbaf4860b53313b063465384f62e",
+  "visual_review": "Codex-assisted preliminary review; not independent human sign-off",
+  "categories": {
+    "metal_nut": {
+      "num_samples": 75,
+      "status": "pending_final_A_review",
+      "dtype": "float32",
+      "images_shape": [
+        75,
+        3,
+        256,
+        256
+      ],
+      "masks_shape": [
+        75,
+        1,
+        256,
+        256
+      ],
+      "source_and_donor_membership_verified": true,
+      "source_code_hashes_verified": true,
+      "mask_changed_pixel_mismatches": [],
+      "png_export_mismatches": [],
+      "qc_recheck_accepted": 75,
+      "original_attempts": 83,
+      "a_fixed_indices": [
+        8,
+        65,
+        36,
+        66,
+        13,
+        14,
+        53,
+        12,
+        47,
+        64,
+        35,
+        19,
+        22,
+        46,
+        41,
+        60,
+        11,
+        71,
+        38,
+        6
+      ],
+      "b_supplementary_indices": [
+        4,
+        5,
+        6,
+        9,
+        12,
+        25,
+        33,
+        34,
+        36,
+        37,
+        43,
+        44,
+        50,
+        52,
+        55,
+        59,
+        62,
+        65,
+        68,
+        69
+      ],
+      "sheets": [
+        {
+          "file": "images/metal_nut_1.png",
+          "indices": [
+            8,
+            65,
+            36,
+            66,
+            13
+          ],
+          "sha256": "20f0c2b0883b295f3ed7ab267fa4ec3eb3e16768af23d1c5cde799370578dd94"
+        },
+        {
+          "file": "images/metal_nut_2.png",
+          "indices": [
+            14,
+            53,
+            12,
+            47,
+            64
+          ],
+          "sha256": "9b981c2ec43d6325dea65a2490511ef3372831f16a3572592d2d8de31067e878"
+        },
+        {
+          "file": "images/metal_nut_3.png",
+          "indices": [
+            35,
+            19,
+            22,
+            46,
+            41
+          ],
+          "sha256": "35e4ee8311f116986d0bc8bde63069c70ad03454ac72a6a75fa5daa09ab04b83"
+        },
+        {
+          "file": "images/metal_nut_4.png",
+          "indices": [
+            60,
+            11,
+            71,
+            38,
+            6
+          ],
+          "sha256": "7fc2acb00a1451116ac204f99b01b452cd416f810ab2cc039213e048026ea499"
+        }
+      ]
+    },
+    "screw": {
+      "num_samples": 125,
+      "status": "hold_pending_placement_fix",
+      "dtype": "float32",
+      "images_shape": [
+        125,
+        3,
+        256,
+        256
+      ],
+      "masks_shape": [
+        125,
+        1,
+        256,
+        256
+      ],
+      "source_and_donor_membership_verified": true,
+      "source_code_hashes_verified": true,
+      "mask_changed_pixel_mismatches": [],
+      "png_export_mismatches": [],
+      "qc_recheck_accepted": 125,
+      "original_attempts": 136,
+      "a_fixed_indices": [
+        8,
+        77,
+        65,
+        97,
+        36,
+        66,
+        13,
+        14,
+        107,
+        53,
+        12,
+        109,
+        47,
+        64,
+        35,
+        19,
+        22,
+        41,
+        116,
+        11
+      ],
+      "b_supplementary_indices": [
+        9,
+        10,
+        15,
+        22,
+        47,
+        56,
+        61,
+        62,
+        70,
+        78,
+        82,
+        86,
+        90,
+        95,
+        104,
+        109,
+        111,
+        114,
+        119,
+        120
+      ],
+      "sheets": [
+        {
+          "file": "images/screw_1.png",
+          "indices": [
+            8,
+            77,
+            65,
+            97,
+            36
+          ],
+          "sha256": "53e8ebb2151919e097437c59436372abcafda5113828e062e60a5953989be60b"
+        },
+        {
+          "file": "images/screw_2.png",
+          "indices": [
+            66,
+            13,
+            14,
+            107,
+            53
+          ],
+          "sha256": "d487fd5dff632a2d406ece71f3127daad3e3fa2d205863e2526ef6d5f8a3aff0"
+        },
+        {
+          "file": "images/screw_3.png",
+          "indices": [
+            12,
+            109,
+            47,
+            64,
+            35
+          ],
+          "sha256": "067af040afd7e8a71fe3e41cdd5cdfb858134b48bf03cf4750c7dce4ef48534e"
+        },
+        {
+          "file": "images/screw_4.png",
+          "indices": [
+            19,
+            22,
+            41,
+            116,
+            11
+          ],
+          "sha256": "cc6815ceb59582084eb9918f2d17f34df98b418987b00dcabab5f94f6caef84e"
+        }
+      ]
+    }
+  }
+}
