@@ -306,3 +306,123 @@ raw runs `~/outputs/diffusion/steps_study/raw_steps<N>/validation/`, blind sheet
 `~/outputs/diffusion/steps_study/blind/<category>_<defect>/zoom_review.png`, job script
 `~/jobs/p4_steps_study.sbatch`, log `~/jobs/logs/steps_study_43442.out`.
 
+## 10. Failure taxonomy
+
+Read-only analysis of existing evidence (formal run §8, validation runs §4, steps study §9);
+nothing was rerun. **No rule was changed in this round**; every "direction" below is a
+possible next step, not implemented.
+
+### 10.1 Stage-1 rejections in the formal run
+
+Source: `totals.rejected_by_reason` in each bundle's `diffusion_internal.json`. "Produced" is
+the number of pairs sent to shared QC (metal_nut/scratch: 36, of which 25 passed, §8).
+Stage-1 yield = produced / attempts.
+
+| Type | Attempts | Produced | Yield | check_mask | placement_failed | too_small_or_empty | dirty_bg | inverted | latent_too_small | too_large |
+|---|---|---|---|---|---|---|---|---|---|---|
+| metal_nut/bent | 56 | 25 | 44.6 % | 9 | 11 | 0 | 0 | 5 | 3 | 3 |
+| metal_nut/color | 225 | 25 | 11.1 % | 174 | 25 | 0 | 0 | 0 | 1 | 0 |
+| metal_nut/scratch | 186 | 36 | 19.4 % | 22 | 87 | 0 | 0 | 35 | 6 | 0 |
+| screw/manipulated_front | 147 | 25 | 17.0 % | 14 | 5 | 33 | 30 | 0 | 40 | 0 |
+| screw/scratch_head | 645 | 25 | 3.9 % | 431 | 57 | 62 | 56 | 0 | 8 | 6 |
+| screw/scratch_neck | 102 | 25 | 24.5 % | 57 | 7 | 4 | 1 | 3 | 3 | 2 |
+| screw/thread_side | 1025 | 25 | 2.4 % | 118 | 415 | 206 | 161 | 60 | 29 | 11 |
+| screw/thread_top | 44 | 25 | 56.8 % | 2 | 1 | 13 | 1 | 0 | 2 | 0 |
+| **Total** | **2430** | **211** | **8.7 %** | **827** | **608** | **318** | **249** | **103** | **92** | **22** |
+
+**Where the cost goes.** Stage 1 is 90 % of the generation time (5977 of 6667 s; thread_side
+97 %, scratch_head 95 %). Every stage-1 attempt costs about the same sampling time whatever its
+fate, so each reason's share of attempts approximates its share of the stage-1 cost:
+`check_mask` 34 % of all attempts (827), `placement_failed` 25 % (608), `too_small_or_empty`
+13 %, `dirty_bg` 10 %, `inverted` 4 %, `latent_too_small` 4 %, `too_large` 1 %. The two largest
+sources are concentrated: `check_mask` mostly in scratch_head (431) and metal_nut/color (174),
+`placement_failed` mostly in thread_side (415). Those three types use 78 % of all attempts.
+
+**Examples** (first 6 rejected masks per reason in attempt order, no selection; each tile is
+raw grey sample | judged mask). Made with `scripts/diffusion/analysis/rejects_sheet.py` (unchanged,
+k = 6) on copies of the formal raw runs, so the raw runs were not written to:
+`~/outputs/diffusion/formal_s42/rejects_sheets/screw_thread_side.png` and
+`~/outputs/diffusion/formal_s42/rejects_sheets/screw_scratch_head.png` (outside Git).
+
+Directions: `check_mask` — find out why the scratch_head and metal_nut/color mask models
+produce masks covering the image border (mask-model training or guidance). `placement_failed` —
+rotation-aligned placement (`docs/proposals/placement_v3.md`, not adopted: it would admit more
+fragmented masks).
+
+### 10.2 Problems that remain in accepted pairs
+
+**a) Shared QC and the internal area rule disagree.** metal_nut/scratch: shared QC 25/36,
+11 x `mask_too_large` (§8). The internal `too_large` rule limits mask area as a share of the
+whole image (<= 4 x the largest support mask, `mask_filter_v2`); shared QC limits it relative
+to the object foreground (<= 0.20, `src/generation/qc.py`). The 11 rejected pairs cost 5 extra
+worker calls and 382 s of model loads. Evidence: `formal_s42/metal_nut_scratch/qc_report.json`,
+`diffusion_internal.json`. Rule not changed in this round. Direction: an object-relative area
+check inside the generator (a future `mask_filter_v3`), so these masks are rejected before
+inpainting.
+
+**b) Masks are more fragmented than the real defects.** Connected components per mask
+(8-connectivity, 256 px), formal pool vs the 5 support masks of the same type:
+
+| Type | Support masks (median; values) | Formal pool, 25 masks (median; range) |
+|---|---|---|
+| metal_nut/bent | 1; 1,1,1,2,2 | 2; 1–4 |
+| metal_nut/color | 1; 1,1,1,2,2 | **6; 1–14** |
+| metal_nut/scratch | 1; 1,1,1,2,3 | 2; 1–5 |
+| screw/manipulated_front | 1; all 1 | 2; 1–4 |
+| screw/scratch_head | 1; all 1 | 2; 1–10 |
+| screw/scratch_neck | 1; all 1 | 2; 1–7 |
+| screw/thread_side | 2; 1,1,2,3,3 | **7; 3–19** |
+| screw/thread_top | 1; all 1 | 3; 1–6 |
+
+Every type is more fragmented than its support masks; thread_side and metal_nut/color most.
+Rule not changed in this round (accepted as a known limit, see the proposal §7).
+Direction: a component-count rule in `mask_filter_v3` (large yield cost, proposal §7) or
+mask-model changes.
+
+**c) Mask fragments on the background.** `placement_v2` needs >= 95 % of the mask inside the
+placement foreground (the shared-QC foreground minus the shadow halo), so up to 5 % may lie
+outside it. Share of each accepted mask's area outside:
+
+| Type | Outside placement foreground: masks with any / max | Outside shared-QC foreground: masks with any / max |
+|---|---|---|
+| metal_nut/bent | 18/25 / 4.8 % | 18/25 / 4.0 % |
+| metal_nut/color | 16/25 / 4.9 % | 15/25 / 4.0 % |
+| metal_nut/scratch | 22/25 / 5.0 % | 22/25 / 4.7 % |
+| screw/manipulated_front | 14/25 / 4.7 % | 1/25 / 1.1 % |
+| screw/scratch_head | 12/25 / 4.9 % | 0/25 / 0 % |
+| screw/scratch_neck | 10/25 / 4.8 % | 1/25 / 0.8 % |
+| screw/thread_side | 19/25 / 4.9 % | 4/25 / 4.7 % |
+| screw/thread_top | 12/25 / 2.9 % | 1/25 / 0.4 % |
+
+No mask is more than 5 % outside either foreground. On screw, most of the outside area lies on
+the shadow halo: it is outside the placement foreground but inside the shared-QC foreground.
+This is the halo visible around the screw in the thread_side contact sheet (§8). Shared-QC
+foreground: `estimate_object_foreground` on the source with the formal loader's convention;
+placement foreground: `foregrounds/` in each raw run. Rule not changed in this round.
+Direction: require 100 % inside the placement foreground, or drop fragments outside it (this
+changes the defect shape and needs its own validation).
+
+**d) The edited region extends beyond the mask.** Upstream inpaints whole 32 x 32-latent cells
+(8 x 8 px), so the edit is larger than the saved pixel mask (§5.1; run 2 annotators saw it in
+#2, #10, #12, #13, `labels_claude_pr_s42.json`). §9 gives a quantitative sign: outside the mask,
+the 50- and 100-step results differ from the 200-step result by 1.4–3.6 (0–255). If the outside
+region were untouched, it would equal the source in every run and that difference would be 0.
+Saved masks therefore under-label part of the change. Rule not changed in this round.
+Direction: snap the mask to its latent cells before inpainting, so the label equals the
+editable region (§5.1).
+
+**e) Labelled pairs whose defect is not clearly visible.** Same annotator (yuchen), same scale:
+
+| | Not V (B or N) | N |
+|---|---|---|
+| thread_side, validation run 2 (§4) | 8/16 = 50 % | 2/16 |
+| bent + scratch_neck, steps study (§9) | 23/48 = 48 % | 0/48 |
+
+(With both annotators, 6/16 thread_side pairs got no V from either, §4.) The share of pairs that
+are visible only when compared with the source (B) is about the same, around half, in all three
+types, so this is not specific to thread_side. Pairs with no visible defect (N) appeared only in
+thread_side, but 2/16 vs 0/48 is weak evidence (Fisher p = 0.06), and the steps-study rows are
+3 versions of 8 pairs per type, not 48 independent pairs. Recorded, not filtered (the agreed
+rule for this round). Direction: more annotators and pairs per type before any visibility
+filter; the automatic visibility measure is not validated (§4).
+
