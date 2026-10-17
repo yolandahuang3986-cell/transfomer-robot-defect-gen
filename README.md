@@ -39,8 +39,10 @@ Optional:
 - Phase 0 is complete; the frozen split and Gate 0 are tracked.
 - B's Procedural/GAN implementation is merged. The 75/125 Procedural candidate pools
   have been received and independently rechecked: all 200 pairs pass shared QC and
-  mask/change alignment checks. Metal_nut awaits final A acceptance; screw is on hold
-  for shadow/background placement. See the [fixed review sheets and findings](docs/reviews/b_delivery_20261017/README.md).
+  mask/change alignment checks. Technical and Codex-assisted visual reviews are
+  complete. Metal_nut is recommended for acceptance, with its formal acceptance
+  record still outstanding; screw is on hold for shadow/background placement.
+  See the [fixed review sheets and findings](docs/reviews/b_delivery_20261017/README.md).
   GAN has documented quality failures. C's validation-stage [PR #5](https://github.com/yolandahuang3986-cell/transfomer-robot-defect-gen/pull/5)
   remains under review; its formal delivery is pending.
 - A's primary evaluation infrastructure supports accepted synthetic bundles, shared

@@ -1,93 +1,112 @@
-# B 交接包审阅图与复核结果
+# B delivery review sheets and verification results
 
-2026-10-17，Procedural 候选池。完整交接包已取得并在 A 的 TC2 账号独立复核。
-本页仅收录固定抽样审阅图，不包含完整训练池、数据集压缩包或权重。
+17 October 2026 — Procedural candidate pools. The full delivery package has been
+received and independently rechecked under A's TC2 account. This page contains
+fixed review sheets; the complete training pools, dataset archive and weights
+remain in external project storage.
 
-| 类别 | 交付数量 | 生成尝试 | A 独立 QC 重验 | 当前状态 |
+| Category | Delivered pairs | Generation attempts | A's shared-QC recheck | Review outcome |
 |---|---:|---:|---:|---|
-| metal_nut | 75 | 83 | 75/75 | 技术初验通过，待 A 最终验收 |
-| screw | 125 | 136 | 125/125 | 放置质量暂停，待 B 修复 |
+| metal_nut | 75 | 83 | 75/75 | Technical review complete; recommended for acceptance; formal record not yet issued |
+| screw | 125 | 136 | 125/125 | Technical review complete; batch on hold for placement problems |
 
-整包 SHA-256 与交接记录一致，500 个文件校验通过。冻结清单、原始数据哈希、
-来源和 donor 归属均已核对；200 对 mask 均与 canonical float32 图像的实际修改像素一致。
-PNG 导出与 canonical 数据一致。生成相关三个源码文件的哈希与交付 provenance 一致。
+The archive SHA-256 matches the delivery record, and all 500 package-file checksums
+pass. The frozen manifest, original-data hashes, and source/donor membership have
+been verified. For all 200 pairs, masks match the pixels changed in the canonical
+float32 images, and PNG exports match the canonical data. Hashes of the three
+generation source files match the delivery provenance.
 
-## 如何读图
+## How to read the sheets
 
-每张图五行，每行依次为 **正常源图、生成图、mask、mask 叠加图**。
-仅正常源图来自冻结清单的 train/good；没有展示 held-out 图像。
-每类别 20 对由 A 既定脚本的 seed 42、shuffle 后依次 pop 顺序确定，没有删样或补数。
-这是 A 的固定集合，与 B 使用不同抽样方式提供的审阅集合分开记录。
+Each sheet has five rows. From left to right, each row shows the **normal source
+image, generated image, mask, and mask overlay**. Source images come from the
+frozen manifest's train/good partition; no held-out images are displayed.
 
-这批生成标签为通用 synthetic_patch，不声称具备 bent、scratch 等指定缺陷语义。
-自动 QC 和像素对齐通过不等于真实缺陷质量合格，也不是下游效果结果。
+The 20 pairs per category follow A's existing audit script: seed 42, shuffle, then
+successive pop operations. No samples were removed or replaced. B's supplementary
+review set uses a different sampling procedure and is recorded separately.
 
-## 初审意见
+The generated label is generic `synthetic_patch`; it does not establish named
+defect semantics such as bent or scratch. Passing automated QC and pixel-alignment
+checks does not establish realistic defect quality or downstream benefit.
 
-- metal_nut：固定 20 对未见明显背景错放；部分贴片小、低对比或靠近物体边缘。
-- screw：B 原图的 0009、0082 显示阴影／背景贴片；A 集合中的 0077、0065 等也有边缘／阴影疑点。
-  整批继续暂停，不据此逐张删除、补数或放宽共享 QC。0009、0082 不在下面的 A 固定集合内。
-- 本次视觉检查由 Codex 辅助完成，不作为新增独立人工评审。尚未签发正式用途审查或整批验收，
-  也未启动 E1。历史 B 格式的用途审查按 [A 执行说明](../../formal_evaluation_runbook.md#用途校验与历史-b-bundle) 处理。
+## Findings and acceptance status
+
+- **metal_nut:** No clear systematic placement onto the background was observed
+  in A's fixed 20 pairs. Some patches are small, low contrast, or close to an
+  object edge. The current recommendation is to accept this category's batch.
+- **screw:** B's supplementary samples 0009 and 0082 show shadow/background
+  patches. A's samples 0077 and 0065 also raise edge/shadow concerns. The entire
+  batch remains on hold. Do not remove individual samples, refill the pool, or
+  relax shared QC. Samples 0009 and 0082 are not in A's fixed set below.
+- **Review completed:** Package integrity, provenance checks, mask alignment,
+  shared-QC rechecks, and Codex-assisted visual review have been completed.
+- **Record still outstanding:** No formal-purpose review or batch-acceptance
+  record has been issued, and E1 training has not started. The visual review was
+  assisted by Codex and must not be represented as an additional independent
+  human review. These outstanding records do not mean that the completed
+  technical checks need to be repeated. Legacy B provenance is handled under
+  the [A execution runbook](../../formal_evaluation_runbook.md#用途校验与历史-b-bundle).
 
 ## Metal nut
 
-### 图 1
+### Sheet 1
 
-样本编号：0008, 0065, 0036, 0066, 0013。
+Sample IDs: 0008, 0065, 0036, 0066, 0013.
 
-![metal_nut 固定审阅图 1](images/metal_nut_1.png)
+![metal_nut fixed review sheet 1](images/metal_nut_1.png)
 
-### 图 2
+### Sheet 2
 
-样本编号：0014, 0053, 0012, 0047, 0064。
+Sample IDs: 0014, 0053, 0012, 0047, 0064.
 
-![metal_nut 固定审阅图 2](images/metal_nut_2.png)
+![metal_nut fixed review sheet 2](images/metal_nut_2.png)
 
-### 图 3
+### Sheet 3
 
-样本编号：0035, 0019, 0022, 0046, 0041。
+Sample IDs: 0035, 0019, 0022, 0046, 0041.
 
-![metal_nut 固定审阅图 3](images/metal_nut_3.png)
+![metal_nut fixed review sheet 3](images/metal_nut_3.png)
 
-### 图 4
+### Sheet 4
 
-样本编号：0060, 0011, 0071, 0038, 0006。
+Sample IDs: 0060, 0011, 0071, 0038, 0006.
 
-![metal_nut 固定审阅图 4](images/metal_nut_4.png)
+![metal_nut fixed review sheet 4](images/metal_nut_4.png)
 
 ## Screw
 
-### 图 1
+### Sheet 1
 
-样本编号：0008, 0077, 0065, 0097, 0036。
+Sample IDs: 0008, 0077, 0065, 0097, 0036.
 
-![screw 固定审阅图 1](images/screw_1.png)
+![screw fixed review sheet 1](images/screw_1.png)
 
-### 图 2
+### Sheet 2
 
-样本编号：0066, 0013, 0014, 0107, 0053。
+Sample IDs: 0066, 0013, 0014, 0107, 0053.
 
-![screw 固定审阅图 2](images/screw_2.png)
+![screw fixed review sheet 2](images/screw_2.png)
 
-### 图 3
+### Sheet 3
 
-样本编号：0012, 0109, 0047, 0064, 0035。
+Sample IDs: 0012, 0109, 0047, 0064, 0035.
 
-![screw 固定审阅图 3](images/screw_3.png)
+![screw fixed review sheet 3](images/screw_3.png)
 
-### 图 4
+### Sheet 4
 
-样本编号：0019, 0022, 0041, 0116, 0011。
+Sample IDs: 0019, 0022, 0041, 0116, 0011.
 
-![screw 固定审阅图 4](images/screw_4.png)
+![screw fixed review sheet 4](images/screw_4.png)
 
-## 来源与复核记录
+## Sources and verification records
 
-- [机器可读摘要与图像哈希](review_manifest.json)
-- [图像署名与许可](ATTRIBUTION.md)
-- [B 代码交付记录](../../member_b_delivery.md)
-- [正式评估协议](../../formal_evaluation_protocol.md)
+- [Machine-readable summary and image hashes](review_manifest.json)
+- [Image attribution and license](ATTRIBUTION.md)
+- [B code-delivery record](../../member_b_delivery.md)
+- [Formal evaluation protocol](../../formal_evaluation_protocol.md)
 
-生成代码 bf798af；独立复核代码 fd12294。完整批次及原始日志保留在项目的外部存储，
-本页的 8 张抽样图不代替完整交付或正式验收。
+Generation code: `bf798af`. Independent verification code: `fd12294`.
+The full batches and original logs remain in external project storage. These
+eight review sheets do not replace the full delivery or formal acceptance record.
