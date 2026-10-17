@@ -1,0 +1,46 @@
+{
+  "experiment": "E1",
+  "category": "metal_nut",
+  "method": "procedural",
+  "job_id": "43178",
+  "state": "COMPLETED",
+  "exit_code": "0:0",
+  "elapsed_seconds": 285,
+  "node": "TC2N02",
+  "device": "NVIDIA A40",
+  "code_commit": "77ebf7f5870cc21a97d98373c2f03ac83871219b",
+  "code_dirty": false,
+  "protocol_version": "v1.0-frozen",
+  "split_sha256": "259a091b8681542704a69701473b03834440bc4da3371b5415e10f6b45be901c",
+  "downstream_seeds": [
+    42,
+    43,
+    44
+  ],
+  "optimizer_steps_per_seed": 1500,
+  "real_train_count": 235,
+  "synthetic_count": 75,
+  "evaluation_count": 77,
+  "pool_sha256": "336ba90340c07bb3d403563077a2472702bace8b96dffd28adeef98ee4ae93c4",
+  "acceptance_sha256": "a6cafe7c54aaf6786eb67240e323df8d3ddfb1454806c4533bbe2a241061376c",
+  "cpu_tests_passed": 88,
+  "cuda_gate0_passed": true,
+  "original_pool_unchanged": true,
+  "independent_human_visual_rating": false,
+  "e0_model_budget_and_environment_match": true,
+  "training_code_unchanged_since_e0": true,
+  "files_sha256": {
+    "gate0.json": "16c3b5ab5fdb4a3cc9225bfe34a1d33c65541a7702f2fea78d1c5db61fee0bca",
+    "procedural_metal_nut_seed42.json": "404e153a8bee107f5a8b5dc90639e3aa95de30f937a9fbdd9aa4bf9ecc954e8d",
+    "procedural_metal_nut_seed43.json": "2deef7992f6f2188f731a172565564a0f48c1102a3ba96c0cc5cc0019d9b5d56",
+    "procedural_metal_nut_seed44.json": "e2b70783a4d31e2a6c2ae5464b3852fd5591d25d116be6ea58a17614869b6f36",
+    "summary.json": "339ec87a132141fc22724e72b98235442f0e18ecc244402c061efd72353266d8",
+    "timing.json": "add04e956647cbc1ef8bb70e4a355a0862789b8e85a2adf3edd651a5dd4d175a"
+  },
+  "not_run": {
+    "procedural_screw": "placement quality hold",
+    "gan": "no accepted formal training pool",
+    "diffusion": "formal delivery pending"
+  },
+  "notes": "Weights, full generated pools, detailed acceptance records and logs remain outside Git. No parameters were tuned using these results."
+}

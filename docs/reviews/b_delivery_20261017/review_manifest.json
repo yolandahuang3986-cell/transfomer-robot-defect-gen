@@ -140,7 +140,7 @@
       },
       "e1_launch": {
         "job_id": "43178",
-        "status": "running",
+        "status": "completed",
         "gpu": "NVIDIA A40",
         "node": "TC2N02",
         "code_commit": "77ebf7f5870cc21a97d98373c2f03ac83871219b",
@@ -155,7 +155,11 @@
         "cpu_tests_passed": 88,
         "e0_rerun": false,
         "cuda_gate0_passed": true,
-        "training_only_seconds_per_step": 0.047008081478998064
+        "training_only_seconds_per_step": 0.047008081478998064,
+        "exit_code": "0:0",
+        "elapsed_seconds": 285,
+        "results": "../../../results/metrics/e1_metal_nut_20261017/README.md",
+        "summary": "../../../results/metrics/e1_metal_nut_20261017/summary.json"
       }
     },
     "screw": {

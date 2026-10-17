@@ -1,6 +1,6 @@
-# Member A 正式评估交付与 E0 基线
+# Member A evaluation delivery: E0 and metal_nut E1
 
-日期：2026-10-10。对应 [冻结协议](formal_evaluation_protocol.md) 与 [执行说明](formal_evaluation_runbook.md)。
+更新：2026-10-17；E0 完成于 2026-10-10。对应 [冻结协议](formal_evaluation_protocol.md) 与 [执行说明](formal_evaluation_runbook.md)。
 
 ## 1. 已完成
 
@@ -48,9 +48,46 @@ metal_nut：235 张真实训练图、77 张测试图、1500 优化步；screw：
 
 模型权重、日志和完整任务计划保留在 A 的 TC2 目录 `/home/mcaai/yuanyuan010/robot-evaluation/e0-ec8fc94/`。该路径位于个人账户，不宣称 B/C 已有访问权限；Git 中只保留小型指标和说明文件。
 
-## 4. 尚待完成
+## 4. Completed metal_nut E1 — 17 October 2026
 
-- B：提供 Procedural 75/125 张正式合成池、QC/成本记录及 A 可读取路径。原每类 30 张记录不足以替代主配额。
-- C：提供每有效缺陷 25 张的正式合成池、共享 QC 统计、训练数据和 checkpoint 来源证据。
-- A：对实际合成池做统一 20 对人工审计和训练来源验收，随后运行 E1/E3，并对通过验收的 GAN 运行 E2；无合格 GAN 数据时记录未执行，不补零分。
-- 主比较完成后开展比例分析、质量/成本汇总和报告。当前不宣称四条链 Gate 2 完成，也不宣称 A 全部项目职责已结束。
+The original complete 75-pair Procedural metal_nut pool has been accepted after
+technical checks and Codex-assisted visual review, following the user's
+instruction to start formal training. The record does not claim an additional
+independent human rating. The hash-bound legacy-purpose review preserves the
+original data and provenance. Screw remains on hold for placement quality.
+
+Job **43178** completed on NVIDIA A40 with **exit 0:0**, elapsed **4:45**. Seeds
+42/43/44 each completed the frozen 1,500 optimizer steps using the same accepted
+pool. All 88 tests and CUDA Gate 0 passed. Model settings, training budgets,
+evaluation partitions and recorded package versions match E0. E0 was not rerun.
+
+| Metric | E0 metal_nut | E1 metal_nut |
+|---|---:|---:|
+| Pixel AUROC | 0.6559 ± 0.1177 | 0.8202 ± 0.0995 |
+| Dice | 0.0821 ± 0.1391 | 0.0591 ± 0.0644 |
+| IoU | 0.0467 ± 0.0792 | 0.0312 ± 0.0345 |
+| Normal-image FPR | 1.0000 ± 0.0000 | 1.0000 ± 0.0000 |
+
+The average AUROC gain does not establish improved segmentation: Dice and IoU
+fall at the fixed 0.5 threshold, and every normal test image still triggers at
+least one positive pixel. Three downstream seeds with one fixed synthetic pool
+and one completed category do not establish overall superiority or statistical
+significance. No protocol was changed after observing these results.
+
+[Full results, paired differences and execution evidence](../results/metrics/e1_metal_nut_20261017/README.md).
+Weights remain outside Git in A's TC2 result storage; acceptance and run records
+are also saved in the OneDrive project review folder.
+
+## 5. Remaining work
+
+- **B:** Fix screw placement and deliver a new complete 125-pair pool with
+  provenance, QC/cost records and fixed review evidence. The current pool is on
+  hold. The GAN failure/ablation evidence has been received; it is not qualified
+  formal E2 training data.
+- **C:** Deliver 25 samples per in-scope defect type, with shared QC, training-data
+  and checkpoint provenance, and the required formal-purpose declaration.
+- **A:** Review new complete pools and execute the remaining accepted comparisons.
+  No accepted GAN pool means E2 remains unrun, not a zero score.
+- Complete ratio analysis, quality/utility/cost comparisons and the report once
+  the required primary comparisons are available. E0 and metal_nut E1 completion
+  do not mean that all four experiment chains or all A responsibilities are done.

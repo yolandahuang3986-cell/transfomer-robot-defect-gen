@@ -7,7 +7,7 @@ remain in external project storage.
 
 | Category | Delivered pairs | Generation attempts | A's shared-QC recheck | Review outcome |
 |---|---:|---:|---:|---|
-| metal_nut | 75 | 83 | 75/75 | Accepted as the complete 75-pair pool; E1 job 43178 running |
+| metal_nut | 75 | 83 | 75/75 | Accepted as the complete 75-pair pool; E1 complete: three seeds; job 43178, exit 0 |
 | screw | 125 | 136 | 125/125 | Technical review complete; batch on hold for placement problems |
 
 The archive SHA-256 matches the delivery record, and all 500 package-file checksums
@@ -51,20 +51,26 @@ checks does not establish realistic defect quality or downstream benefit.
   [A execution runbook](../../formal_evaluation_runbook.md#用途校验与历史-b-bundle)
   for legacy-purpose handling.
 
-## E1 launch — 17 October 2026
+## E1 completion — 17 October 2026
 
-TC2 job **43178** was submitted for metal_nut only and allocated an **NVIDIA A40**
-on TC2N02. Clean main commit: `77ebf7f5870cc21a97d98373c2f03ac83871219b`.
-All **88 CPU tests passed** before submission. CUDA Gate 0 passed and
-training-only timing measured approximately **0.047 seconds per step**. Formal
-training has started with **seeds 42/43/44, 1,500 optimizer steps
+TC2 job **43178** completed on **NVIDIA A40**, TC2N02, with **exit code 0:0**
+and total elapsed time **4:45**. Clean main commit:
+`77ebf7f5870cc21a97d98373c2f03ac83871219b`. All **88 CPU tests** and CUDA Gate 0
+passed. Three formal runs completed at **seeds 42/43/44, 1,500 optimizer steps
 per seed, batch 8, 256-pixel inputs**, using the same accepted 75-pair pool.
-Existing E0 runs are preserved; screw remains on hold.
+Existing E0 runs were preserved; screw remains on hold.
 
-The acceptance and execution records are retained in the OneDrive project review
-folder and A's TC2 storage. Their hashes are recorded in the
-[machine-readable summary](review_manifest.json). Job submission is not evidence
-of completed training or downstream improvement.
+[Results, paired E0 comparison and execution evidence](../../../results/metrics/e1_metal_nut_20261017/README.md)
+show mean pixel AUROC of **0.8202 ± 0.0995**, versus E0 **0.6559 ± 0.1177**.
+Mean Dice decreases to **0.0591 ± 0.0644**, and normal-image FPR remains **1.0**.
+These results do not establish improved segmentation or usable image-level
+detection. No two-category Procedural macro score is reported while screw is
+on hold. No threshold, seed or training-budget changes were made after observing
+these results.
+
+Detailed acceptance and execution records are retained in the OneDrive project
+review folder and A's TC2 storage. Their hashes are recorded in the
+[machine-readable summary](review_manifest.json).
 
 ## Metal nut
 
