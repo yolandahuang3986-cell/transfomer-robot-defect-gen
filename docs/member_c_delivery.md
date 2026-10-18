@@ -1,9 +1,10 @@
-# Member C delivery: AnomalyDiffusion generator (validation stage)
+# Member C delivery: AnomalyDiffusion generator (formal pool generated)
 
-Status on 2026-10-14: code path complete and run end to end on TC2 for one defect type
-(screw/thread_side, 16 validation samples). **No formal pool has been generated** and
-no downstream (E3) result exists. The 16 samples are evidence only and must not enter
-any formal pool.
+Status on 2026-10-18: formal pool generated, 8 types x 25 = 200 pairs (§8). Inpaint
+sampling-steps study (§9) and failure taxonomy (§10) complete. **The formal pool is waiting
+for A's leakage review and human audit, and must not enter training until the audit has
+passed and is recorded in `acceptance.json`.** No downstream (E3) result exists. The 16
+screw/thread_side validation samples (§4) are evidence only and must not enter any formal pool.
 
 ## 1. What is implemented
 

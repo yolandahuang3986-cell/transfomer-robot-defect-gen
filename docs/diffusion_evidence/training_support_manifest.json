@@ -1,0 +1,606 @@
+{
+  "schema": "training_support_manifest/v1",
+  "dataset_root": "~/datasets/mvtec_ad",
+  "note": "sha256 values are computed from file contents on disk at manifest build time; paths are relative to dataset_root.",
+  "anomaly_model": {
+    "job": 40227,
+    "output_dir": "~/outputs/diffusion/p1_anomaly_core_s42",
+    "support_list": "~/external/diffusion_support/support_core_n5_seed42.json",
+    "support_list_sha256": "c324673b62bd3c01c7def90be045553ccecdc7a827e98ffffe1bdd8e40bc7793",
+    "source": "SUPPORT_LIST env in ~/jobs/p1_train_anomaly_core.sh; job log prints \"[patch] SUPPORT_LIST ...: 8 groups, 40 images\"",
+    "n_records": 40,
+    "records": [
+      {
+        "category": "metal_nut",
+        "defect_type": "bent",
+        "image_path": "metal_nut/test/bent/009.png",
+        "mask_path": "metal_nut/ground_truth/bent/009_mask.png",
+        "image_sha256": "e7a0eea2460d01a665f4e72418c827fbf5e167d8955f159a77f97490897821e2",
+        "mask_sha256": "dba2d92821aaccb41fcccff924848d5486fe162a6327b9501a247ac9be0a3e77"
+      },
+      {
+        "category": "metal_nut",
+        "defect_type": "bent",
+        "image_path": "metal_nut/test/bent/012.png",
+        "mask_path": "metal_nut/ground_truth/bent/012_mask.png",
+        "image_sha256": "169349f89c55ea017c8660f5461fcbaf6a110e88cf58f06a45f9b7a93ce75ccc",
+        "mask_sha256": "91234e7581c0c27134753581bff2f5cf965b2d844032a92f1ec7fbf4e5ccc0f0"
+      },
+      {
+        "category": "metal_nut",
+        "defect_type": "bent",
+        "image_path": "metal_nut/test/bent/016.png",
+        "mask_path": "metal_nut/ground_truth/bent/016_mask.png",
+        "image_sha256": "b8a8d2cce881015c4b244f940292ac5e81e69856c78fd39655a54a0a36bd35b8",
+        "mask_sha256": "39e37cf5d5480ab9f7b93e3a8ce381cdfdb22a2614fe61580f97fee5d312f10c"
+      },
+      {
+        "category": "metal_nut",
+        "defect_type": "bent",
+        "image_path": "metal_nut/test/bent/018.png",
+        "mask_path": "metal_nut/ground_truth/bent/018_mask.png",
+        "image_sha256": "07158ed16ef5a4ddd335fde97e6218cbe58f8d3233e105e229f21c92746028e0",
+        "mask_sha256": "c84b722f6e2c9608aed34a4bf2628087808a17b63bbaba04cf6c3024d09a3679"
+      },
+      {
+        "category": "metal_nut",
+        "defect_type": "bent",
+        "image_path": "metal_nut/test/bent/019.png",
+        "mask_path": "metal_nut/ground_truth/bent/019_mask.png",
+        "image_sha256": "fabf0e9c4d13a422fbdcc01d15776b7bf683f023f8c33d9f7570824f5b5333d9",
+        "mask_sha256": "f9ba14d7fae636772881b9e8228a70e1947629b19b090c22740231ce38bb206b"
+      },
+      {
+        "category": "metal_nut",
+        "defect_type": "color",
+        "image_path": "metal_nut/test/color/004.png",
+        "mask_path": "metal_nut/ground_truth/color/004_mask.png",
+        "image_sha256": "4443ec9e57407e3710711790ecc73187a9cbff96c4f981c12ce77ea57a5683c0",
+        "mask_sha256": "e9cb0450cbeb1f5fbe6895ece89f098cbcdbcfa454ab62e6ac2b7a83c198aade"
+      },
+      {
+        "category": "metal_nut",
+        "defect_type": "color",
+        "image_path": "metal_nut/test/color/007.png",
+        "mask_path": "metal_nut/ground_truth/color/007_mask.png",
+        "image_sha256": "b1141d9e3e1b70ef5cc4f3ac4d64362f96167d3afa32c0b3c48a75ad6c097412",
+        "mask_sha256": "239680d5801c0ddd9d3ef1f415640028124c2b050a37974f891bc4d493d92325"
+      },
+      {
+        "category": "metal_nut",
+        "defect_type": "color",
+        "image_path": "metal_nut/test/color/011.png",
+        "mask_path": "metal_nut/ground_truth/color/011_mask.png",
+        "image_sha256": "dfaa40a71fc6fed8a6130d23e46b4f15bd4c60964aa64536b657ddba837be351",
+        "mask_sha256": "99b4ff8b46317aef22e183a3d01deac5a29c92a86338716a3d92c19fd26a3233"
+      },
+      {
+        "category": "metal_nut",
+        "defect_type": "color",
+        "image_path": "metal_nut/test/color/017.png",
+        "mask_path": "metal_nut/ground_truth/color/017_mask.png",
+        "image_sha256": "79c8354ea55c6eb1731d236e8c71bec56278195519da3b16932ba79ae88a392f",
+        "mask_sha256": "1e452486cc5b9f6bbe0f231bfe0e382a5aba0741713ba8a66bb1d23f6f2b9452"
+      },
+      {
+        "category": "metal_nut",
+        "defect_type": "color",
+        "image_path": "metal_nut/test/color/019.png",
+        "mask_path": "metal_nut/ground_truth/color/019_mask.png",
+        "image_sha256": "c3ce4176173fbb5aff08185b4c4c16589ea7fee299d4d5f144be3c247875665c",
+        "mask_sha256": "ebf3be71cd65c453e2371c60387ce9ae8300b106272a9f30e5638b9451fba930"
+      },
+      {
+        "category": "metal_nut",
+        "defect_type": "scratch",
+        "image_path": "metal_nut/test/scratch/001.png",
+        "mask_path": "metal_nut/ground_truth/scratch/001_mask.png",
+        "image_sha256": "9d0fb31fac7ab42ddce02f5d1fd27940b04dfb10e28a1ab76c7ce010ba7bd772",
+        "mask_sha256": "4c04756e8a91fdf5528a836f26709eecef0d88ac45ae67d3bce0fcf912634924"
+      },
+      {
+        "category": "metal_nut",
+        "defect_type": "scratch",
+        "image_path": "metal_nut/test/scratch/009.png",
+        "mask_path": "metal_nut/ground_truth/scratch/009_mask.png",
+        "image_sha256": "e6a9665e625620c44705fea0cb2bbd54274ad0700b144ffe32b35c042f47c6fb",
+        "mask_sha256": "bbd74beeda58c839d6dc140ebcdb8d0d384b37311d82336afffa868a716d5bac"
+      },
+      {
+        "category": "metal_nut",
+        "defect_type": "scratch",
+        "image_path": "metal_nut/test/scratch/013.png",
+        "mask_path": "metal_nut/ground_truth/scratch/013_mask.png",
+        "image_sha256": "d73e85aae5b2cd15c81b3c22c53c0b298a526accd6f5e4806b121ec54bbff7eb",
+        "mask_sha256": "e02eeae9486458032a6af82624e2be89e961330360c9e32efd986ddfd2b45ac8"
+      },
+      {
+        "category": "metal_nut",
+        "defect_type": "scratch",
+        "image_path": "metal_nut/test/scratch/014.png",
+        "mask_path": "metal_nut/ground_truth/scratch/014_mask.png",
+        "image_sha256": "dc93797233be441cb2196aca9dddf3280d66fd90c66bef7b77983772819e40d1",
+        "mask_sha256": "e6875f65a19f2ba1883e8e950d478bb2c16e6b32373f6a27163ef286aff4e340"
+      },
+      {
+        "category": "metal_nut",
+        "defect_type": "scratch",
+        "image_path": "metal_nut/test/scratch/020.png",
+        "mask_path": "metal_nut/ground_truth/scratch/020_mask.png",
+        "image_sha256": "37a381925d0e317e66323fd5c44dd27d871b5caddb68082401a04da5c4c89b10",
+        "mask_sha256": "41719ecc139fca974c8e0aa346e18cf1646c53dafc5266637fef54c17ef4d5c2"
+      },
+      {
+        "category": "screw",
+        "defect_type": "manipulated_front",
+        "image_path": "screw/test/manipulated_front/000.png",
+        "mask_path": "screw/ground_truth/manipulated_front/000_mask.png",
+        "image_sha256": "e9bdcdd0ef90d82b13a97a0b6b2ab0e0bf0c894408a9bc4dbb8c4b6503186eab",
+        "mask_sha256": "46db61f53968c876a733697fdaa33f7ef8f8a2913c09a38df93ef2089a6bcc0e"
+      },
+      {
+        "category": "screw",
+        "defect_type": "manipulated_front",
+        "image_path": "screw/test/manipulated_front/001.png",
+        "mask_path": "screw/ground_truth/manipulated_front/001_mask.png",
+        "image_sha256": "91d89f66c4db3ec0104682f37e580f6c11fbd1bfe14f249346dc74760bf4eef8",
+        "mask_sha256": "a9a326a2c450361e780e36a0cc27a8bd04f883a51c0afcd21c2785e2a6e72217"
+      },
+      {
+        "category": "screw",
+        "defect_type": "manipulated_front",
+        "image_path": "screw/test/manipulated_front/005.png",
+        "mask_path": "screw/ground_truth/manipulated_front/005_mask.png",
+        "image_sha256": "fbcee2e29e97e54feb3f222e0dd17adf58776872d721350a1a8c52e9615ee30d",
+        "mask_sha256": "8aee6893d32ba6a69a1b58b9de4c8c36ec9f9850c751d65dac12bce1b50e8289"
+      },
+      {
+        "category": "screw",
+        "defect_type": "manipulated_front",
+        "image_path": "screw/test/manipulated_front/007.png",
+        "mask_path": "screw/ground_truth/manipulated_front/007_mask.png",
+        "image_sha256": "c43884f30cf2c9a00d65fc97fd7eb4e9ee95315c763cee9af0cf1a0e77e51229",
+        "mask_sha256": "cda3464ca5ce7ab73a1d745ee96c92e455583f72f0461846eb512f676aefd823"
+      },
+      {
+        "category": "screw",
+        "defect_type": "manipulated_front",
+        "image_path": "screw/test/manipulated_front/016.png",
+        "mask_path": "screw/ground_truth/manipulated_front/016_mask.png",
+        "image_sha256": "009fc237ec9be42a173fa9ee7bd78a01d90579cb66756e59f5e1910318876d4d",
+        "mask_sha256": "3811b148d9f361863d02652e4992911003f67dd0e74f7e21586c797085abfc3c"
+      },
+      {
+        "category": "screw",
+        "defect_type": "scratch_head",
+        "image_path": "screw/test/scratch_head/010.png",
+        "mask_path": "screw/ground_truth/scratch_head/010_mask.png",
+        "image_sha256": "5c364a035829211026a8a4820b418bf4d868bec2af191f1d79e92f63140889a3",
+        "mask_sha256": "abaa144d08d816f0baa324ee14e8c8d4ca9eee6c883a42c107362cd6b5eef69d"
+      },
+      {
+        "category": "screw",
+        "defect_type": "scratch_head",
+        "image_path": "screw/test/scratch_head/014.png",
+        "mask_path": "screw/ground_truth/scratch_head/014_mask.png",
+        "image_sha256": "36a262d9f6506f292ddfbf0d2ff2dca1d5c363101563c1460e5cf3d3cbdc824a",
+        "mask_sha256": "293b01b4ef68b95d2fb006d17af1058d27446297f52f8be4aba95953b4ab66cf"
+      },
+      {
+        "category": "screw",
+        "defect_type": "scratch_head",
+        "image_path": "screw/test/scratch_head/017.png",
+        "mask_path": "screw/ground_truth/scratch_head/017_mask.png",
+        "image_sha256": "71af3338f394b7ea8807aae88f5729c2da7eb8a22596a04dc12e07084bf1667e",
+        "mask_sha256": "b48ffa1f70d317729e5f3ff887db06548c3fd428a4beb2921485199ef8309f4d"
+      },
+      {
+        "category": "screw",
+        "defect_type": "scratch_head",
+        "image_path": "screw/test/scratch_head/018.png",
+        "mask_path": "screw/ground_truth/scratch_head/018_mask.png",
+        "image_sha256": "d1fb36b1f8b2544149631c68f86b5448f1422a939792f85d35c12360596959bb",
+        "mask_sha256": "1c71157ccc6d0f7d4af91b868170b8149792ff10d9927d6d8a9ab216526c6710"
+      },
+      {
+        "category": "screw",
+        "defect_type": "scratch_head",
+        "image_path": "screw/test/scratch_head/021.png",
+        "mask_path": "screw/ground_truth/scratch_head/021_mask.png",
+        "image_sha256": "9222a45524e5ef3506e989942f837da5a2c9082a5caa1a4b1a11d819d8fd400b",
+        "mask_sha256": "5213e667c40ea94d14a4b149deca9895f4f1661b647c715f099c179f458aa29c"
+      },
+      {
+        "category": "screw",
+        "defect_type": "scratch_neck",
+        "image_path": "screw/test/scratch_neck/001.png",
+        "mask_path": "screw/ground_truth/scratch_neck/001_mask.png",
+        "image_sha256": "157b0ff4c96d000b740a1a66c91acd8eb8005401e571ed1b9738f5322400a885",
+        "mask_sha256": "c8ee7b4eed9db9f6e8312a5476b48abe860b0c81ae350f9c8d1b085adcd8df17"
+      },
+      {
+        "category": "screw",
+        "defect_type": "scratch_neck",
+        "image_path": "screw/test/scratch_neck/004.png",
+        "mask_path": "screw/ground_truth/scratch_neck/004_mask.png",
+        "image_sha256": "b3209843d937411e7898a9bfb4784c7eccb99d6565d0c503fa7d8fc9016fb3a8",
+        "mask_sha256": "94ffc879f72d1b3ff4934e2ca08ec138b0bf9f53b14e0dc0dfe383e7563150ea"
+      },
+      {
+        "category": "screw",
+        "defect_type": "scratch_neck",
+        "image_path": "screw/test/scratch_neck/007.png",
+        "mask_path": "screw/ground_truth/scratch_neck/007_mask.png",
+        "image_sha256": "a1dd88767f9497abbd55b53e8d14d01b64eddad383b055a0189d66e1e10183a1",
+        "mask_sha256": "965b6b7b786982d7808669b21336a8ac966e236640972da1a7b470f3c68f6cff"
+      },
+      {
+        "category": "screw",
+        "defect_type": "scratch_neck",
+        "image_path": "screw/test/scratch_neck/011.png",
+        "mask_path": "screw/ground_truth/scratch_neck/011_mask.png",
+        "image_sha256": "e8a5aa925741f7e5c67dd39eb158983cadd0113f6d5176502ee802a656bfb21d",
+        "mask_sha256": "3f6831d5dd346cefda1652f7613768637b168c2eeb165ceedca082002c83c8d1"
+      },
+      {
+        "category": "screw",
+        "defect_type": "scratch_neck",
+        "image_path": "screw/test/scratch_neck/015.png",
+        "mask_path": "screw/ground_truth/scratch_neck/015_mask.png",
+        "image_sha256": "4d9afe467087e5a99e886bd3f2978a6f02717db1ef8a420b06176d860762a219",
+        "mask_sha256": "b02df3389de7d6ace187466f386e56098665e5416e7ab6d862cab0bc0dd4c6ea"
+      },
+      {
+        "category": "screw",
+        "defect_type": "thread_side",
+        "image_path": "screw/test/thread_side/000.png",
+        "mask_path": "screw/ground_truth/thread_side/000_mask.png",
+        "image_sha256": "5c647f0782864e6a95a3345b4b5094c6c7f0f442fd340267155a5f2794a2ee61",
+        "mask_sha256": "3b8ff48be93b534703735bcb0d12760bc79d773eaebd344dfcded026185479f2"
+      },
+      {
+        "category": "screw",
+        "defect_type": "thread_side",
+        "image_path": "screw/test/thread_side/003.png",
+        "mask_path": "screw/ground_truth/thread_side/003_mask.png",
+        "image_sha256": "d280670b38eb475a4cc781876a108b2ef7b5569e78b54c4f8dbf6c46713ec506",
+        "mask_sha256": "398da14b1ad687a8a696fea7855dbeaf3c58681fcbd8d8eedb81c94a89c39f64"
+      },
+      {
+        "category": "screw",
+        "defect_type": "thread_side",
+        "image_path": "screw/test/thread_side/005.png",
+        "mask_path": "screw/ground_truth/thread_side/005_mask.png",
+        "image_sha256": "05200c7c5c1972f8039658e3e13bfcc7540cad525bbb8a30702c2bd8ff526fed",
+        "mask_sha256": "885398c319e595feafceb2a6fe263fddfc0c96fb874682159d7690c7c2b5bf97"
+      },
+      {
+        "category": "screw",
+        "defect_type": "thread_side",
+        "image_path": "screw/test/thread_side/012.png",
+        "mask_path": "screw/ground_truth/thread_side/012_mask.png",
+        "image_sha256": "558ef5e5a43172ab90851596fab74123ac92d1787204bb6fd5a5a4924764ca13",
+        "mask_sha256": "5dd37ce13f8b1142699841d45165fa0aea0ecaa6a91adec0bed4b9b8567fbffe"
+      },
+      {
+        "category": "screw",
+        "defect_type": "thread_side",
+        "image_path": "screw/test/thread_side/013.png",
+        "mask_path": "screw/ground_truth/thread_side/013_mask.png",
+        "image_sha256": "93cd19b069f6451d8871b379ad84568001073203a189d6a7add77f46ff1752ac",
+        "mask_sha256": "11f0474ea048ebfa4e5b33b4fa4343c071a37121ff87ba895f0f4058bdc399a2"
+      },
+      {
+        "category": "screw",
+        "defect_type": "thread_top",
+        "image_path": "screw/test/thread_top/004.png",
+        "mask_path": "screw/ground_truth/thread_top/004_mask.png",
+        "image_sha256": "00990d7647b5c3a0a4a87ae32c7b45335f7c750e0cfbeacb62ed96109130ca4f",
+        "mask_sha256": "35649c81cfc31868d9a4c7ccd3f17685cd49166e264324c3b536a5a75a805cb9"
+      },
+      {
+        "category": "screw",
+        "defect_type": "thread_top",
+        "image_path": "screw/test/thread_top/012.png",
+        "mask_path": "screw/ground_truth/thread_top/012_mask.png",
+        "image_sha256": "8fa8998f99c47d393cbf92b947655784e61fb86fdd70599f079394fec60c9c93",
+        "mask_sha256": "a05378c12c65241c9b407da4a460dc4c01b9d28abdc4c9f5ac2b2e1673d8d62a"
+      },
+      {
+        "category": "screw",
+        "defect_type": "thread_top",
+        "image_path": "screw/test/thread_top/015.png",
+        "mask_path": "screw/ground_truth/thread_top/015_mask.png",
+        "image_sha256": "c197e7e13a05d213c87c1ca295c29d4dc7f931f5d97a1725501ee21a3674d65a",
+        "mask_sha256": "ffe50efa062c268236f093da8b024d228bf302128f8097247f8856197c8947ef"
+      },
+      {
+        "category": "screw",
+        "defect_type": "thread_top",
+        "image_path": "screw/test/thread_top/017.png",
+        "mask_path": "screw/ground_truth/thread_top/017_mask.png",
+        "image_sha256": "ac7a132822530d5c6b1d0b8cdd92f16a0ec91b93bd13f6ac0b47bfab4a3f8ec9",
+        "mask_sha256": "6ef23a506ce02dfef918016d2aedaa49338b492b9ab0fe982c2f6cbfcdfa0fef"
+      },
+      {
+        "category": "screw",
+        "defect_type": "thread_top",
+        "image_path": "screw/test/thread_top/021.png",
+        "mask_path": "screw/ground_truth/thread_top/021_mask.png",
+        "image_sha256": "7e138b95ea8c8c0036e58574974cf91158379639ab1a75d785865d8503fc90cb",
+        "mask_sha256": "f8b9e33a5d40324a1e06a6946461c5f687bf9d3d5f30c3c33220b97e3d85961a"
+      }
+    ]
+  },
+  "mask_models": {
+    "job": 39986,
+    "output_dir": "~/outputs/diffusion/p1_masks_s42",
+    "support_list": "~/external/diffusion_support/support_n5_seed42.json",
+    "support_list_sha256": "53d00b771aa985233cd0c3af17dbc708572cdf5bccc10b11fb382f328323754e",
+    "source": "SUPPORT_LIST env in ~/jobs/p1_train_masks.sh; masks loaded by _support_files() in ~/external/anomalydiffusion/ldm/data/personalized.py from groups[<category>+<defect_type>][\"mask\"]; log prints \"[patch] mask dataset <group>: 5 support masks\" per model",
+    "note": "This list has 9 groups (includes metal_nut+flip). For the 8 in-scope groups its entries are identical to support_core_n5_seed42.json. The flip mask model was trained but is not used by generation.",
+    "models": [
+      {
+        "model": "metal_nut-bent",
+        "category": "metal_nut",
+        "defect_type": "bent",
+        "checkpoint_dir": "~/outputs/diffusion/p1_masks_s42/mask-checkpoints/metal_nut-bent/checkpoints",
+        "in_scope_used_by_generation": true,
+        "masks": [
+          {
+            "mask_path": "metal_nut/ground_truth/bent/009_mask.png",
+            "mask_sha256": "dba2d92821aaccb41fcccff924848d5486fe162a6327b9501a247ac9be0a3e77"
+          },
+          {
+            "mask_path": "metal_nut/ground_truth/bent/012_mask.png",
+            "mask_sha256": "91234e7581c0c27134753581bff2f5cf965b2d844032a92f1ec7fbf4e5ccc0f0"
+          },
+          {
+            "mask_path": "metal_nut/ground_truth/bent/016_mask.png",
+            "mask_sha256": "39e37cf5d5480ab9f7b93e3a8ce381cdfdb22a2614fe61580f97fee5d312f10c"
+          },
+          {
+            "mask_path": "metal_nut/ground_truth/bent/018_mask.png",
+            "mask_sha256": "c84b722f6e2c9608aed34a4bf2628087808a17b63bbaba04cf6c3024d09a3679"
+          },
+          {
+            "mask_path": "metal_nut/ground_truth/bent/019_mask.png",
+            "mask_sha256": "f9ba14d7fae636772881b9e8228a70e1947629b19b090c22740231ce38bb206b"
+          }
+        ]
+      },
+      {
+        "model": "metal_nut-color",
+        "category": "metal_nut",
+        "defect_type": "color",
+        "checkpoint_dir": "~/outputs/diffusion/p1_masks_s42/mask-checkpoints/metal_nut-color/checkpoints",
+        "in_scope_used_by_generation": true,
+        "masks": [
+          {
+            "mask_path": "metal_nut/ground_truth/color/004_mask.png",
+            "mask_sha256": "e9cb0450cbeb1f5fbe6895ece89f098cbcdbcfa454ab62e6ac2b7a83c198aade"
+          },
+          {
+            "mask_path": "metal_nut/ground_truth/color/007_mask.png",
+            "mask_sha256": "239680d5801c0ddd9d3ef1f415640028124c2b050a37974f891bc4d493d92325"
+          },
+          {
+            "mask_path": "metal_nut/ground_truth/color/011_mask.png",
+            "mask_sha256": "99b4ff8b46317aef22e183a3d01deac5a29c92a86338716a3d92c19fd26a3233"
+          },
+          {
+            "mask_path": "metal_nut/ground_truth/color/017_mask.png",
+            "mask_sha256": "1e452486cc5b9f6bbe0f231bfe0e382a5aba0741713ba8a66bb1d23f6f2b9452"
+          },
+          {
+            "mask_path": "metal_nut/ground_truth/color/019_mask.png",
+            "mask_sha256": "ebf3be71cd65c453e2371c60387ce9ae8300b106272a9f30e5638b9451fba930"
+          }
+        ]
+      },
+      {
+        "model": "metal_nut-flip",
+        "category": "metal_nut",
+        "defect_type": "flip",
+        "checkpoint_dir": "~/outputs/diffusion/p1_masks_s42/mask-checkpoints/metal_nut-flip/checkpoints",
+        "in_scope_used_by_generation": false,
+        "masks": [
+          {
+            "mask_path": "metal_nut/ground_truth/flip/005_mask.png",
+            "mask_sha256": "ce72442c35960cc27ba1da56eb108d5dca60cf5e711d24e8aed9dc278bbc2f6e"
+          },
+          {
+            "mask_path": "metal_nut/ground_truth/flip/007_mask.png",
+            "mask_sha256": "6c6623afc6b53ce56e65426e9f62e570f7dca73d25baad1782e2234c07efed0a"
+          },
+          {
+            "mask_path": "metal_nut/ground_truth/flip/008_mask.png",
+            "mask_sha256": "232ba50797975b177ed45e1023c0d17f14beaee74855950211c70af5759c242f"
+          },
+          {
+            "mask_path": "metal_nut/ground_truth/flip/018_mask.png",
+            "mask_sha256": "e7fd46bbda2d78e305f465b4018d3fcbeb6575b15d76a4c27ad63cfaeeda5529"
+          },
+          {
+            "mask_path": "metal_nut/ground_truth/flip/019_mask.png",
+            "mask_sha256": "39894bdad23f1e9e657817794bd5b1863edd236588edaef3f91ff0b703a453be"
+          }
+        ]
+      },
+      {
+        "model": "metal_nut-scratch",
+        "category": "metal_nut",
+        "defect_type": "scratch",
+        "checkpoint_dir": "~/outputs/diffusion/p1_masks_s42/mask-checkpoints/metal_nut-scratch/checkpoints",
+        "in_scope_used_by_generation": true,
+        "masks": [
+          {
+            "mask_path": "metal_nut/ground_truth/scratch/001_mask.png",
+            "mask_sha256": "4c04756e8a91fdf5528a836f26709eecef0d88ac45ae67d3bce0fcf912634924"
+          },
+          {
+            "mask_path": "metal_nut/ground_truth/scratch/009_mask.png",
+            "mask_sha256": "bbd74beeda58c839d6dc140ebcdb8d0d384b37311d82336afffa868a716d5bac"
+          },
+          {
+            "mask_path": "metal_nut/ground_truth/scratch/013_mask.png",
+            "mask_sha256": "e02eeae9486458032a6af82624e2be89e961330360c9e32efd986ddfd2b45ac8"
+          },
+          {
+            "mask_path": "metal_nut/ground_truth/scratch/014_mask.png",
+            "mask_sha256": "e6875f65a19f2ba1883e8e950d478bb2c16e6b32373f6a27163ef286aff4e340"
+          },
+          {
+            "mask_path": "metal_nut/ground_truth/scratch/020_mask.png",
+            "mask_sha256": "41719ecc139fca974c8e0aa346e18cf1646c53dafc5266637fef54c17ef4d5c2"
+          }
+        ]
+      },
+      {
+        "model": "screw-manipulated_front",
+        "category": "screw",
+        "defect_type": "manipulated_front",
+        "checkpoint_dir": "~/outputs/diffusion/p1_masks_s42/mask-checkpoints/screw-manipulated_front/checkpoints",
+        "in_scope_used_by_generation": true,
+        "masks": [
+          {
+            "mask_path": "screw/ground_truth/manipulated_front/000_mask.png",
+            "mask_sha256": "46db61f53968c876a733697fdaa33f7ef8f8a2913c09a38df93ef2089a6bcc0e"
+          },
+          {
+            "mask_path": "screw/ground_truth/manipulated_front/001_mask.png",
+            "mask_sha256": "a9a326a2c450361e780e36a0cc27a8bd04f883a51c0afcd21c2785e2a6e72217"
+          },
+          {
+            "mask_path": "screw/ground_truth/manipulated_front/005_mask.png",
+            "mask_sha256": "8aee6893d32ba6a69a1b58b9de4c8c36ec9f9850c751d65dac12bce1b50e8289"
+          },
+          {
+            "mask_path": "screw/ground_truth/manipulated_front/007_mask.png",
+            "mask_sha256": "cda3464ca5ce7ab73a1d745ee96c92e455583f72f0461846eb512f676aefd823"
+          },
+          {
+            "mask_path": "screw/ground_truth/manipulated_front/016_mask.png",
+            "mask_sha256": "3811b148d9f361863d02652e4992911003f67dd0e74f7e21586c797085abfc3c"
+          }
+        ]
+      },
+      {
+        "model": "screw-scratch_head",
+        "category": "screw",
+        "defect_type": "scratch_head",
+        "checkpoint_dir": "~/outputs/diffusion/p1_masks_s42/mask-checkpoints/screw-scratch_head/checkpoints",
+        "in_scope_used_by_generation": true,
+        "masks": [
+          {
+            "mask_path": "screw/ground_truth/scratch_head/010_mask.png",
+            "mask_sha256": "abaa144d08d816f0baa324ee14e8c8d4ca9eee6c883a42c107362cd6b5eef69d"
+          },
+          {
+            "mask_path": "screw/ground_truth/scratch_head/014_mask.png",
+            "mask_sha256": "293b01b4ef68b95d2fb006d17af1058d27446297f52f8be4aba95953b4ab66cf"
+          },
+          {
+            "mask_path": "screw/ground_truth/scratch_head/017_mask.png",
+            "mask_sha256": "b48ffa1f70d317729e5f3ff887db06548c3fd428a4beb2921485199ef8309f4d"
+          },
+          {
+            "mask_path": "screw/ground_truth/scratch_head/018_mask.png",
+            "mask_sha256": "1c71157ccc6d0f7d4af91b868170b8149792ff10d9927d6d8a9ab216526c6710"
+          },
+          {
+            "mask_path": "screw/ground_truth/scratch_head/021_mask.png",
+            "mask_sha256": "5213e667c40ea94d14a4b149deca9895f4f1661b647c715f099c179f458aa29c"
+          }
+        ]
+      },
+      {
+        "model": "screw-scratch_neck",
+        "category": "screw",
+        "defect_type": "scratch_neck",
+        "checkpoint_dir": "~/outputs/diffusion/p1_masks_s42/mask-checkpoints/screw-scratch_neck/checkpoints",
+        "in_scope_used_by_generation": true,
+        "masks": [
+          {
+            "mask_path": "screw/ground_truth/scratch_neck/001_mask.png",
+            "mask_sha256": "c8ee7b4eed9db9f6e8312a5476b48abe860b0c81ae350f9c8d1b085adcd8df17"
+          },
+          {
+            "mask_path": "screw/ground_truth/scratch_neck/004_mask.png",
+            "mask_sha256": "94ffc879f72d1b3ff4934e2ca08ec138b0bf9f53b14e0dc0dfe383e7563150ea"
+          },
+          {
+            "mask_path": "screw/ground_truth/scratch_neck/007_mask.png",
+            "mask_sha256": "965b6b7b786982d7808669b21336a8ac966e236640972da1a7b470f3c68f6cff"
+          },
+          {
+            "mask_path": "screw/ground_truth/scratch_neck/011_mask.png",
+            "mask_sha256": "3f6831d5dd346cefda1652f7613768637b168c2eeb165ceedca082002c83c8d1"
+          },
+          {
+            "mask_path": "screw/ground_truth/scratch_neck/015_mask.png",
+            "mask_sha256": "b02df3389de7d6ace187466f386e56098665e5416e7ab6d862cab0bc0dd4c6ea"
+          }
+        ]
+      },
+      {
+        "model": "screw-thread_side",
+        "category": "screw",
+        "defect_type": "thread_side",
+        "checkpoint_dir": "~/outputs/diffusion/p1_masks_s42/mask-checkpoints/screw-thread_side/checkpoints",
+        "in_scope_used_by_generation": true,
+        "masks": [
+          {
+            "mask_path": "screw/ground_truth/thread_side/000_mask.png",
+            "mask_sha256": "3b8ff48be93b534703735bcb0d12760bc79d773eaebd344dfcded026185479f2"
+          },
+          {
+            "mask_path": "screw/ground_truth/thread_side/003_mask.png",
+            "mask_sha256": "398da14b1ad687a8a696fea7855dbeaf3c58681fcbd8d8eedb81c94a89c39f64"
+          },
+          {
+            "mask_path": "screw/ground_truth/thread_side/005_mask.png",
+            "mask_sha256": "885398c319e595feafceb2a6fe263fddfc0c96fb874682159d7690c7c2b5bf97"
+          },
+          {
+            "mask_path": "screw/ground_truth/thread_side/012_mask.png",
+            "mask_sha256": "5dd37ce13f8b1142699841d45165fa0aea0ecaa6a91adec0bed4b9b8567fbffe"
+          },
+          {
+            "mask_path": "screw/ground_truth/thread_side/013_mask.png",
+            "mask_sha256": "11f0474ea048ebfa4e5b33b4fa4343c071a37121ff87ba895f0f4058bdc399a2"
+          }
+        ]
+      },
+      {
+        "model": "screw-thread_top",
+        "category": "screw",
+        "defect_type": "thread_top",
+        "checkpoint_dir": "~/outputs/diffusion/p1_masks_s42/mask-checkpoints/screw-thread_top/checkpoints",
+        "in_scope_used_by_generation": true,
+        "masks": [
+          {
+            "mask_path": "screw/ground_truth/thread_top/004_mask.png",
+            "mask_sha256": "35649c81cfc31868d9a4c7ccd3f17685cd49166e264324c3b536a5a75a805cb9"
+          },
+          {
+            "mask_path": "screw/ground_truth/thread_top/012_mask.png",
+            "mask_sha256": "a05378c12c65241c9b407da4a460dc4c01b9d28abdc4c9f5ac2b2e1673d8d62a"
+          },
+          {
+            "mask_path": "screw/ground_truth/thread_top/015_mask.png",
+            "mask_sha256": "ffe50efa062c268236f093da8b024d228bf302128f8097247f8856197c8947ef"
+          },
+          {
+            "mask_path": "screw/ground_truth/thread_top/017_mask.png",
+            "mask_sha256": "6ef23a506ce02dfef918016d2aedaa49338b492b9ab0fe982c2f6cbfcdfa0fef"
+          },
+          {
+            "mask_path": "screw/ground_truth/thread_top/021_mask.png",
+            "mask_sha256": "f8b9e33a5d40324a1e06a6946461c5f687bf9d3d5f30c3c33220b97e3d85961a"
+          }
+        ]
+      }
+    ]
+  }
+}
