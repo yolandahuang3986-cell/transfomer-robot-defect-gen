@@ -1,0 +1,111 @@
+# Training log excerpts for the diffusion data-leakage review
+# Lines are copied verbatim from the job logs (prefixed with <log path>:<line number>:).
+# Excludes the "[patch] ... not compiled" warnings. Full-log sha256 listed per job.
+
+==============================================================================
+JOB 40227: anomaly model (joint, 8 groups, 10000 steps)
+log file: ~/jobs/logs/p1_train_anomaly_core_40227.out  sha256=a04381df237fa1b8f99ecd400811ec4099d3c784497347afdab50eae22e79111  lines=1371
+log file: ~/jobs/logs/p1_train_anomaly_core_40227.err  sha256=046bcf03c8f554a13bf028801662428a41f19169b6df9f07892ab434ee1c8181  lines=12969
+------------------------------------------------------------------------------
+~/jobs/logs/p1_train_anomaly_core_40227.out:1: === node: TC2N01 | start: Tue Oct  6 07:16:48 PM +08 2026 ===
+~/jobs/logs/p1_train_anomaly_core_40227.out:3: [patch] SUPPORT_LIST /home/mcaai/yuchen027/external/diffusion_support/support_core_n5_seed42.json: 8 groups, 40 images
+~/jobs/logs/p1_train_anomaly_core_40227.out:27: {'target': 'pytorch_lightning.callbacks.ModelCheckpoint', 'params': {'dirpath': '/home/mcaai/yuchen027/outputs/diffusion/p1_anomaly_core_s42/anomaly-checkpoints/checkpoints', 'filename': '{epoch:06}', 'verbose': True, 'save_last': True, 'monitor': 'val/loss_simple_ema', 'save_top_k': 1, 'every_n_train_steps': 2000}}
+~/jobs/logs/p1_train_anomaly_core_40227.out:28: [patch] SUPPORT_LIST /home/mcaai/yuchen027/external/diffusion_support/support_core_n5_seed42.json: 8 groups, 40 images
+~/jobs/logs/p1_train_anomaly_core_40227.out:37: [patch] SUPPORT_LIST /home/mcaai/yuchen027/external/diffusion_support/support_core_n5_seed42.json: 8 groups, 40 images
+~/jobs/logs/p1_train_anomaly_core_40227.out:46: [patch] SUPPORT_LIST /home/mcaai/yuchen027/external/diffusion_support/support_core_n5_seed42.json: 8 groups, 40 images
+~/jobs/logs/p1_train_anomaly_core_40227.out:55: [patch] SUPPORT_LIST /home/mcaai/yuchen027/external/diffusion_support/support_core_n5_seed42.json: 8 groups, 40 images
+~/jobs/logs/p1_train_anomaly_core_40227.out:1356: === train exit: 0 | wall: 5808 s ===
+~/jobs/logs/p1_train_anomaly_core_40227.out:1369: -rw-r--r-- 1 yuchen027 yuchen027 1520263 Oct  6 20:53 /home/mcaai/yuchen027/outputs/diffusion/p1_anomaly_core_s42/anomaly-checkpoints/checkpoints/embeddings_gs-9999.pt
+~/jobs/logs/p1_train_anomaly_core_40227.out:1370: -rw-r--r-- 1 yuchen027 yuchen027 1424310631 Oct  6 20:53 /home/mcaai/yuchen027/outputs/diffusion/p1_anomaly_core_s42/anomaly-checkpoints/checkpoints/spatial_encoder_gs-9999.pt
+~/jobs/logs/p1_train_anomaly_core_40227.out:1371: === end: Tue Oct  6 08:53:42 PM +08 2026 ===
+~/jobs/logs/p1_train_anomaly_core_40227.err:2357: Epoch 9, global step 1999: val/loss_simple_ema reached 0.01372 (best 0.01372), saving model to "/home/mcaai/yuchen027/outputs/diffusion/p1_anomaly_core_s42/anomaly-checkpoints/checkpoints/epoch=000009.ckpt" as top 1
+~/jobs/logs/p1_train_anomaly_core_40227.err:4956: Epoch 19, global step 3999: val/loss_simple_ema reached 0.00518 (best 0.00518), saving model to "/home/mcaai/yuchen027/outputs/diffusion/p1_anomaly_core_s42/anomaly-checkpoints/checkpoints/epoch=000019.ckpt" as top 1
+~/jobs/logs/p1_train_anomaly_core_40227.err:12753: Epoch 49, global step 9999: val/loss_simple_ema reached 0.00055 (best 0.00055), saving model to "/home/mcaai/yuchen027/outputs/diffusion/p1_anomaly_core_s42/anomaly-checkpoints/checkpoints/epoch=000049.ckpt" as top 1
+
+==============================================================================
+JOB 39986: mask models (one per defect type, step 2999 used)
+log file: ~/jobs/logs/p1_train_masks_39986.out  sha256=f16ffdee41b0b8b83429c0c038b32313cb2f9f4c287147d9450cd8584c6e41c4  lines=2323
+log file: ~/jobs/logs/p1_train_masks_39986.err  sha256=e981ff75ba9487567cacfa84a3c3793d529077179339c0246b1f000ef7e687f4  lines=37386
+NOTE: this job never calls _support_pairs(), so no "[patch] SUPPORT_LIST" line is printed.
+The list it read is set in ~/jobs/p1_train_masks.sh: SUPPORT_LIST=$HOME/external/diffusion_support/support_n5_seed42.json
+(file mtime 2026-10-05 15:56 +0800, before job start 19:11; sha256 53d00b771aa985233cd0c3af17dbc708572cdf5bccc10b11fb382f328323754e).
+The "=== groups:" line below is computed from that same SUPPORT_LIST by the job script.
+Masks are loaded by _support_files() in ~/external/anomalydiffusion/ldm/data/personalized.py from groups[<cat>+<defect>]["mask"].
+metal_nut+flip mask model was trained here but is not used by configs/diffusion/generation.json for the 8 in-scope groups.
+------------------------------------------------------------------------------
+~/jobs/logs/p1_train_masks_39986.out:1: === node: TC2N01 | start: Mon Oct  5 07:11:55 PM +08 2026 ===
+~/jobs/logs/p1_train_masks_39986.out:9: === groups: metal_nut+bent metal_nut+color metal_nut+flip metal_nut+scratch screw+manipulated_front screw+scratch_head screw+scratch_neck screw+thread_side screw+thread_top ===
+~/jobs/logs/p1_train_masks_39986.out:10: === [metal_nut+bent] guard ===
+~/jobs/logs/p1_train_masks_39986.out:27: {'target': 'pytorch_lightning.callbacks.ModelCheckpoint', 'params': {'dirpath': '/home/mcaai/yuchen027/outputs/diffusion/p1_masks_s42/mask-checkpoints/metal_nut-bent/checkpoints', 'filename': '{epoch:06}', 'verbose': True, 'save_last': True, 'monitor': 'val/loss_simple_ema', 'save_top_k': 1, 'every_n_train_steps': 1000}}
+~/jobs/logs/p1_train_masks_39986.out:29: [patch] mask dataset metal_nut+bent: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:30: [patch] mask dataset metal_nut+bent: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:31: [patch] mask dataset metal_nut+bent: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:32: [patch] mask dataset metal_nut+bent: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:260: === [metal_nut+bent] exit: 0 | wall: 1735 s ===
+~/jobs/logs/p1_train_masks_39986.out:262: -rw-r--r-- 1 yuchen027 yuchen027 84071 Oct  5 19:29 /home/mcaai/yuchen027/outputs/diffusion/p1_masks_s42/mask-checkpoints/metal_nut-bent/checkpoints/embeddings_gs-2999.pt
+~/jobs/logs/p1_train_masks_39986.out:267: === [metal_nut+color] guard ===
+~/jobs/logs/p1_train_masks_39986.out:284: {'target': 'pytorch_lightning.callbacks.ModelCheckpoint', 'params': {'dirpath': '/home/mcaai/yuchen027/outputs/diffusion/p1_masks_s42/mask-checkpoints/metal_nut-color/checkpoints', 'filename': '{epoch:06}', 'verbose': True, 'save_last': True, 'monitor': 'val/loss_simple_ema', 'save_top_k': 1, 'every_n_train_steps': 1000}}
+~/jobs/logs/p1_train_masks_39986.out:286: [patch] mask dataset metal_nut+color: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:287: [patch] mask dataset metal_nut+color: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:288: [patch] mask dataset metal_nut+color: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:289: [patch] mask dataset metal_nut+color: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:517: === [metal_nut+color] exit: 0 | wall: 1723 s ===
+~/jobs/logs/p1_train_masks_39986.out:519: -rw-r--r-- 1 yuchen027 yuchen027 84071 Oct  5 19:58 /home/mcaai/yuchen027/outputs/diffusion/p1_masks_s42/mask-checkpoints/metal_nut-color/checkpoints/embeddings_gs-2999.pt
+~/jobs/logs/p1_train_masks_39986.out:524: === [metal_nut+flip] guard ===
+~/jobs/logs/p1_train_masks_39986.out:541: {'target': 'pytorch_lightning.callbacks.ModelCheckpoint', 'params': {'dirpath': '/home/mcaai/yuchen027/outputs/diffusion/p1_masks_s42/mask-checkpoints/metal_nut-flip/checkpoints', 'filename': '{epoch:06}', 'verbose': True, 'save_last': True, 'monitor': 'val/loss_simple_ema', 'save_top_k': 1, 'every_n_train_steps': 1000}}
+~/jobs/logs/p1_train_masks_39986.out:543: [patch] mask dataset metal_nut+flip: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:544: [patch] mask dataset metal_nut+flip: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:545: [patch] mask dataset metal_nut+flip: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:546: [patch] mask dataset metal_nut+flip: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:774: === [metal_nut+flip] exit: 0 | wall: 1731 s ===
+~/jobs/logs/p1_train_masks_39986.out:776: -rw-r--r-- 1 yuchen027 yuchen027 84071 Oct  5 20:26 /home/mcaai/yuchen027/outputs/diffusion/p1_masks_s42/mask-checkpoints/metal_nut-flip/checkpoints/embeddings_gs-2999.pt
+~/jobs/logs/p1_train_masks_39986.out:781: === [metal_nut+scratch] guard ===
+~/jobs/logs/p1_train_masks_39986.out:798: {'target': 'pytorch_lightning.callbacks.ModelCheckpoint', 'params': {'dirpath': '/home/mcaai/yuchen027/outputs/diffusion/p1_masks_s42/mask-checkpoints/metal_nut-scratch/checkpoints', 'filename': '{epoch:06}', 'verbose': True, 'save_last': True, 'monitor': 'val/loss_simple_ema', 'save_top_k': 1, 'every_n_train_steps': 1000}}
+~/jobs/logs/p1_train_masks_39986.out:800: [patch] mask dataset metal_nut+scratch: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:801: [patch] mask dataset metal_nut+scratch: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:802: [patch] mask dataset metal_nut+scratch: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:803: [patch] mask dataset metal_nut+scratch: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:1031: === [metal_nut+scratch] exit: 0 | wall: 1742 s ===
+~/jobs/logs/p1_train_masks_39986.out:1033: -rw-r--r-- 1 yuchen027 yuchen027 84071 Oct  5 20:55 /home/mcaai/yuchen027/outputs/diffusion/p1_masks_s42/mask-checkpoints/metal_nut-scratch/checkpoints/embeddings_gs-2999.pt
+~/jobs/logs/p1_train_masks_39986.out:1038: === [screw+manipulated_front] guard ===
+~/jobs/logs/p1_train_masks_39986.out:1055: {'target': 'pytorch_lightning.callbacks.ModelCheckpoint', 'params': {'dirpath': '/home/mcaai/yuchen027/outputs/diffusion/p1_masks_s42/mask-checkpoints/screw-manipulated_front/checkpoints', 'filename': '{epoch:06}', 'verbose': True, 'save_last': True, 'monitor': 'val/loss_simple_ema', 'save_top_k': 1, 'every_n_train_steps': 1000}}
+~/jobs/logs/p1_train_masks_39986.out:1057: [patch] mask dataset screw+manipulated_front: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:1058: [patch] mask dataset screw+manipulated_front: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:1059: [patch] mask dataset screw+manipulated_front: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:1060: [patch] mask dataset screw+manipulated_front: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:1288: === [screw+manipulated_front] exit: 0 | wall: 1750 s ===
+~/jobs/logs/p1_train_masks_39986.out:1290: -rw-r--r-- 1 yuchen027 yuchen027 84071 Oct  5 21:25 /home/mcaai/yuchen027/outputs/diffusion/p1_masks_s42/mask-checkpoints/screw-manipulated_front/checkpoints/embeddings_gs-2999.pt
+~/jobs/logs/p1_train_masks_39986.out:1295: === [screw+scratch_head] guard ===
+~/jobs/logs/p1_train_masks_39986.out:1312: {'target': 'pytorch_lightning.callbacks.ModelCheckpoint', 'params': {'dirpath': '/home/mcaai/yuchen027/outputs/diffusion/p1_masks_s42/mask-checkpoints/screw-scratch_head/checkpoints', 'filename': '{epoch:06}', 'verbose': True, 'save_last': True, 'monitor': 'val/loss_simple_ema', 'save_top_k': 1, 'every_n_train_steps': 1000}}
+~/jobs/logs/p1_train_masks_39986.out:1314: [patch] mask dataset screw+scratch_head: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:1315: [patch] mask dataset screw+scratch_head: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:1316: [patch] mask dataset screw+scratch_head: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:1317: [patch] mask dataset screw+scratch_head: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:1545: === [screw+scratch_head] exit: 0 | wall: 1761 s ===
+~/jobs/logs/p1_train_masks_39986.out:1547: -rw-r--r-- 1 yuchen027 yuchen027 84071 Oct  5 21:54 /home/mcaai/yuchen027/outputs/diffusion/p1_masks_s42/mask-checkpoints/screw-scratch_head/checkpoints/embeddings_gs-2999.pt
+~/jobs/logs/p1_train_masks_39986.out:1552: === [screw+scratch_neck] guard ===
+~/jobs/logs/p1_train_masks_39986.out:1569: {'target': 'pytorch_lightning.callbacks.ModelCheckpoint', 'params': {'dirpath': '/home/mcaai/yuchen027/outputs/diffusion/p1_masks_s42/mask-checkpoints/screw-scratch_neck/checkpoints', 'filename': '{epoch:06}', 'verbose': True, 'save_last': True, 'monitor': 'val/loss_simple_ema', 'save_top_k': 1, 'every_n_train_steps': 1000}}
+~/jobs/logs/p1_train_masks_39986.out:1571: [patch] mask dataset screw+scratch_neck: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:1572: [patch] mask dataset screw+scratch_neck: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:1573: [patch] mask dataset screw+scratch_neck: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:1574: [patch] mask dataset screw+scratch_neck: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:1802: === [screw+scratch_neck] exit: 0 | wall: 1771 s ===
+~/jobs/logs/p1_train_masks_39986.out:1804: -rw-r--r-- 1 yuchen027 yuchen027 84071 Oct  5 22:23 /home/mcaai/yuchen027/outputs/diffusion/p1_masks_s42/mask-checkpoints/screw-scratch_neck/checkpoints/embeddings_gs-2999.pt
+~/jobs/logs/p1_train_masks_39986.out:1809: === [screw+thread_side] guard ===
+~/jobs/logs/p1_train_masks_39986.out:1826: {'target': 'pytorch_lightning.callbacks.ModelCheckpoint', 'params': {'dirpath': '/home/mcaai/yuchen027/outputs/diffusion/p1_masks_s42/mask-checkpoints/screw-thread_side/checkpoints', 'filename': '{epoch:06}', 'verbose': True, 'save_last': True, 'monitor': 'val/loss_simple_ema', 'save_top_k': 1, 'every_n_train_steps': 1000}}
+~/jobs/logs/p1_train_masks_39986.out:1828: [patch] mask dataset screw+thread_side: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:1829: [patch] mask dataset screw+thread_side: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:1830: [patch] mask dataset screw+thread_side: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:1831: [patch] mask dataset screw+thread_side: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:2059: === [screw+thread_side] exit: 0 | wall: 1761 s ===
+~/jobs/logs/p1_train_masks_39986.out:2061: -rw-r--r-- 1 yuchen027 yuchen027 84071 Oct  5 22:53 /home/mcaai/yuchen027/outputs/diffusion/p1_masks_s42/mask-checkpoints/screw-thread_side/checkpoints/embeddings_gs-2999.pt
+~/jobs/logs/p1_train_masks_39986.out:2066: === [screw+thread_top] guard ===
+~/jobs/logs/p1_train_masks_39986.out:2083: {'target': 'pytorch_lightning.callbacks.ModelCheckpoint', 'params': {'dirpath': '/home/mcaai/yuchen027/outputs/diffusion/p1_masks_s42/mask-checkpoints/screw-thread_top/checkpoints', 'filename': '{epoch:06}', 'verbose': True, 'save_last': True, 'monitor': 'val/loss_simple_ema', 'save_top_k': 1, 'every_n_train_steps': 1000}}
+~/jobs/logs/p1_train_masks_39986.out:2085: [patch] mask dataset screw+thread_top: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:2086: [patch] mask dataset screw+thread_top: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:2087: [patch] mask dataset screw+thread_top: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:2088: [patch] mask dataset screw+thread_top: 5 support masks
+~/jobs/logs/p1_train_masks_39986.out:2316: === [screw+thread_top] exit: 0 | wall: 1765 s ===
+~/jobs/logs/p1_train_masks_39986.out:2318: -rw-r--r-- 1 yuchen027 yuchen027 84071 Oct  5 23:22 /home/mcaai/yuchen027/outputs/diffusion/p1_masks_s42/mask-checkpoints/screw-thread_top/checkpoints/embeddings_gs-2999.pt
+~/jobs/logs/p1_train_masks_39986.out:2323: === end: Mon Oct  5 11:34:36 PM +08 2026 ===
+

@@ -1,0 +1,187 @@
+{
+  "source_manifest": "/home/mcaai/yuchen027/transfomer-robot-defect-gen/data/splits/fewshot_n5_seed42.json",
+  "manifest_sha256": "259a091b8681542704a69701473b03834440bc4da3371b5415e10f6b45be901c",
+  "protocol_name": "5-shot per defect type, seed 42",
+  "excluded_groups": [
+    "metal_nut+flip"
+  ],
+  "exclusion_note": "Team decision 2026-10-06 (A): flip is a whole-object anomaly incompatible with QC v1 area rule; excluded from support training, synthesis and held-out evaluation for all methods. color kept after support-mask audit.",
+  "groups": {
+    "metal_nut+bent": [
+      {
+        "image": "metal_nut/test/bent/009.png",
+        "mask": "metal_nut/ground_truth/bent/009_mask.png"
+      },
+      {
+        "image": "metal_nut/test/bent/012.png",
+        "mask": "metal_nut/ground_truth/bent/012_mask.png"
+      },
+      {
+        "image": "metal_nut/test/bent/016.png",
+        "mask": "metal_nut/ground_truth/bent/016_mask.png"
+      },
+      {
+        "image": "metal_nut/test/bent/018.png",
+        "mask": "metal_nut/ground_truth/bent/018_mask.png"
+      },
+      {
+        "image": "metal_nut/test/bent/019.png",
+        "mask": "metal_nut/ground_truth/bent/019_mask.png"
+      }
+    ],
+    "metal_nut+color": [
+      {
+        "image": "metal_nut/test/color/004.png",
+        "mask": "metal_nut/ground_truth/color/004_mask.png"
+      },
+      {
+        "image": "metal_nut/test/color/007.png",
+        "mask": "metal_nut/ground_truth/color/007_mask.png"
+      },
+      {
+        "image": "metal_nut/test/color/011.png",
+        "mask": "metal_nut/ground_truth/color/011_mask.png"
+      },
+      {
+        "image": "metal_nut/test/color/017.png",
+        "mask": "metal_nut/ground_truth/color/017_mask.png"
+      },
+      {
+        "image": "metal_nut/test/color/019.png",
+        "mask": "metal_nut/ground_truth/color/019_mask.png"
+      }
+    ],
+    "metal_nut+scratch": [
+      {
+        "image": "metal_nut/test/scratch/001.png",
+        "mask": "metal_nut/ground_truth/scratch/001_mask.png"
+      },
+      {
+        "image": "metal_nut/test/scratch/009.png",
+        "mask": "metal_nut/ground_truth/scratch/009_mask.png"
+      },
+      {
+        "image": "metal_nut/test/scratch/013.png",
+        "mask": "metal_nut/ground_truth/scratch/013_mask.png"
+      },
+      {
+        "image": "metal_nut/test/scratch/014.png",
+        "mask": "metal_nut/ground_truth/scratch/014_mask.png"
+      },
+      {
+        "image": "metal_nut/test/scratch/020.png",
+        "mask": "metal_nut/ground_truth/scratch/020_mask.png"
+      }
+    ],
+    "screw+manipulated_front": [
+      {
+        "image": "screw/test/manipulated_front/000.png",
+        "mask": "screw/ground_truth/manipulated_front/000_mask.png"
+      },
+      {
+        "image": "screw/test/manipulated_front/001.png",
+        "mask": "screw/ground_truth/manipulated_front/001_mask.png"
+      },
+      {
+        "image": "screw/test/manipulated_front/005.png",
+        "mask": "screw/ground_truth/manipulated_front/005_mask.png"
+      },
+      {
+        "image": "screw/test/manipulated_front/007.png",
+        "mask": "screw/ground_truth/manipulated_front/007_mask.png"
+      },
+      {
+        "image": "screw/test/manipulated_front/016.png",
+        "mask": "screw/ground_truth/manipulated_front/016_mask.png"
+      }
+    ],
+    "screw+scratch_head": [
+      {
+        "image": "screw/test/scratch_head/010.png",
+        "mask": "screw/ground_truth/scratch_head/010_mask.png"
+      },
+      {
+        "image": "screw/test/scratch_head/014.png",
+        "mask": "screw/ground_truth/scratch_head/014_mask.png"
+      },
+      {
+        "image": "screw/test/scratch_head/017.png",
+        "mask": "screw/ground_truth/scratch_head/017_mask.png"
+      },
+      {
+        "image": "screw/test/scratch_head/018.png",
+        "mask": "screw/ground_truth/scratch_head/018_mask.png"
+      },
+      {
+        "image": "screw/test/scratch_head/021.png",
+        "mask": "screw/ground_truth/scratch_head/021_mask.png"
+      }
+    ],
+    "screw+scratch_neck": [
+      {
+        "image": "screw/test/scratch_neck/001.png",
+        "mask": "screw/ground_truth/scratch_neck/001_mask.png"
+      },
+      {
+        "image": "screw/test/scratch_neck/004.png",
+        "mask": "screw/ground_truth/scratch_neck/004_mask.png"
+      },
+      {
+        "image": "screw/test/scratch_neck/007.png",
+        "mask": "screw/ground_truth/scratch_neck/007_mask.png"
+      },
+      {
+        "image": "screw/test/scratch_neck/011.png",
+        "mask": "screw/ground_truth/scratch_neck/011_mask.png"
+      },
+      {
+        "image": "screw/test/scratch_neck/015.png",
+        "mask": "screw/ground_truth/scratch_neck/015_mask.png"
+      }
+    ],
+    "screw+thread_side": [
+      {
+        "image": "screw/test/thread_side/000.png",
+        "mask": "screw/ground_truth/thread_side/000_mask.png"
+      },
+      {
+        "image": "screw/test/thread_side/003.png",
+        "mask": "screw/ground_truth/thread_side/003_mask.png"
+      },
+      {
+        "image": "screw/test/thread_side/005.png",
+        "mask": "screw/ground_truth/thread_side/005_mask.png"
+      },
+      {
+        "image": "screw/test/thread_side/012.png",
+        "mask": "screw/ground_truth/thread_side/012_mask.png"
+      },
+      {
+        "image": "screw/test/thread_side/013.png",
+        "mask": "screw/ground_truth/thread_side/013_mask.png"
+      }
+    ],
+    "screw+thread_top": [
+      {
+        "image": "screw/test/thread_top/004.png",
+        "mask": "screw/ground_truth/thread_top/004_mask.png"
+      },
+      {
+        "image": "screw/test/thread_top/012.png",
+        "mask": "screw/ground_truth/thread_top/012_mask.png"
+      },
+      {
+        "image": "screw/test/thread_top/015.png",
+        "mask": "screw/ground_truth/thread_top/015_mask.png"
+      },
+      {
+        "image": "screw/test/thread_top/017.png",
+        "mask": "screw/ground_truth/thread_top/017_mask.png"
+      },
+      {
+        "image": "screw/test/thread_top/021.png",
+        "mask": "screw/ground_truth/thread_top/021_mask.png"
+      }
+    ]
+  }
+}
