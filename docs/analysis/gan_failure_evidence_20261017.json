@@ -1,0 +1,196 @@
+{
+  "archive_sha256": "4e62995040b589fba306180f2993d61ced0c9f883c2ff1d83b12d3ae629b589d",
+  "upstream_commit": "5a8099204bc0858da314f8e0b5e8b6770c298e98",
+  "formal_e2_status": "not_run_quality_gate",
+  "original_preview_scope": "Eight in-scope defect types, five normal training sources each; diagnostic previews only",
+  "original_previews": [
+    {
+      "condition": "gan300/metal_nut/scratch",
+      "preview_count": 5,
+      "shared_qc_pass_count_reported_by_b": 5,
+      "rejection_counts_reported_by_b": {
+        "empty_mask": 0,
+        "mask_too_small": 0,
+        "mask_too_large": 0,
+        "low_foreground_overlap": 0
+      }
+    },
+    {
+      "condition": "gan300/metal_nut/bent",
+      "preview_count": 5,
+      "shared_qc_pass_count_reported_by_b": 0,
+      "rejection_counts_reported_by_b": {
+        "empty_mask": 5,
+        "mask_too_small": 0,
+        "mask_too_large": 0,
+        "low_foreground_overlap": 0
+      }
+    },
+    {
+      "condition": "gan300/metal_nut/color",
+      "preview_count": 5,
+      "shared_qc_pass_count_reported_by_b": 5,
+      "rejection_counts_reported_by_b": {
+        "empty_mask": 0,
+        "mask_too_small": 0,
+        "mask_too_large": 0,
+        "low_foreground_overlap": 0
+      }
+    },
+    {
+      "condition": "gan300/screw/thread_side",
+      "preview_count": 5,
+      "shared_qc_pass_count_reported_by_b": 0,
+      "rejection_counts_reported_by_b": {
+        "empty_mask": 5,
+        "mask_too_small": 0,
+        "mask_too_large": 0,
+        "low_foreground_overlap": 0
+      }
+    },
+    {
+      "condition": "gan300/screw/thread_top",
+      "preview_count": 5,
+      "shared_qc_pass_count_reported_by_b": 0,
+      "rejection_counts_reported_by_b": {
+        "empty_mask": 3,
+        "mask_too_small": 2,
+        "mask_too_large": 0,
+        "low_foreground_overlap": 1
+      }
+    },
+    {
+      "condition": "gan300/screw/scratch_neck",
+      "preview_count": 5,
+      "shared_qc_pass_count_reported_by_b": 0,
+      "rejection_counts_reported_by_b": {
+        "empty_mask": 5,
+        "mask_too_small": 0,
+        "mask_too_large": 0,
+        "low_foreground_overlap": 0
+      }
+    },
+    {
+      "condition": "gan300/screw/scratch_head",
+      "preview_count": 5,
+      "shared_qc_pass_count_reported_by_b": 0,
+      "rejection_counts_reported_by_b": {
+        "empty_mask": 5,
+        "mask_too_small": 0,
+        "mask_too_large": 0,
+        "low_foreground_overlap": 0
+      }
+    },
+    {
+      "condition": "gan300/screw/manipulated_front",
+      "preview_count": 5,
+      "shared_qc_pass_count_reported_by_b": 0,
+      "rejection_counts_reported_by_b": {
+        "empty_mask": 5,
+        "mask_too_small": 0,
+        "mask_too_large": 0,
+        "low_foreground_overlap": 0
+      }
+    }
+  ],
+  "screw_preview_empty_masks": 23,
+  "screw_preview_count": 25,
+  "matched_bent_ablation": {
+    "seed": 42,
+    "epochs_per_arm": 50,
+    "normal_count": 220,
+    "bent_support_count": 5,
+    "recorded_environment_identical": true,
+    "recorded_common_settings_match": true,
+    "records": [
+      {
+        "arm": "control",
+        "lambda_background": 0.1,
+        "epoch": 25,
+        "preview_count": 5,
+        "empty_masks": 0,
+        "shared_qc_pass_count_reported_by_b": 5,
+        "rejection_counts_reported_by_b": {
+          "empty_mask": 0,
+          "mask_too_small": 0,
+          "mask_too_large": 0,
+          "low_foreground_overlap": 0
+        },
+        "mask_statistics_recomputed_by_a": true,
+        "qc_source": "B supplied report; not a formal generation-budget experiment"
+      },
+      {
+        "arm": "control",
+        "lambda_background": 0.1,
+        "epoch": 50,
+        "preview_count": 5,
+        "empty_masks": 3,
+        "shared_qc_pass_count_reported_by_b": 1,
+        "rejection_counts_reported_by_b": {
+          "empty_mask": 3,
+          "mask_too_small": 1,
+          "mask_too_large": 0,
+          "low_foreground_overlap": 0
+        },
+        "mask_statistics_recomputed_by_a": true,
+        "qc_source": "B supplied report; not a formal generation-budget experiment"
+      },
+      {
+        "arm": "no_background",
+        "lambda_background": 0.0,
+        "epoch": 25,
+        "preview_count": 5,
+        "empty_masks": 0,
+        "shared_qc_pass_count_reported_by_b": 0,
+        "rejection_counts_reported_by_b": {
+          "empty_mask": 0,
+          "mask_too_small": 0,
+          "mask_too_large": 0,
+          "low_foreground_overlap": 5
+        },
+        "mask_statistics_recomputed_by_a": true,
+        "qc_source": "B supplied report; not a formal generation-budget experiment"
+      },
+      {
+        "arm": "no_background",
+        "lambda_background": 0.0,
+        "epoch": 50,
+        "preview_count": 5,
+        "empty_masks": 4,
+        "shared_qc_pass_count_reported_by_b": 0,
+        "rejection_counts_reported_by_b": {
+          "empty_mask": 4,
+          "mask_too_small": 1,
+          "mask_too_large": 0,
+          "low_foreground_overlap": 0
+        },
+        "mask_statistics_recomputed_by_a": true,
+        "qc_source": "B supplied report; not a formal generation-budget experiment"
+      }
+    ]
+  },
+  "sources_sha256": {
+    "gan_evidence/shared_qc_audit_20261010.json": "ff5bfaa2e7e16b7110899caaa4acd4889bb6be5735dab91e678bebd43d10f4a9",
+    "gan_evidence/screw_review/report.json": "556009cf829b9628581bbdb0fc4ce7328050156584f26730456c491383e40409",
+    "gan_evidence/screw_review/review.md": "ebaed0b89151630cd0f4743f79b9099bcb88cda41e439ba18976b826c2811eff",
+    "gan_evidence/diagnosis/findings.md": "3dc497958e048d25d32c4982eb0d69e3d62f2d16e2d7715527527451e0a7133d",
+    "gan_evidence/bent_ablation_40711/control/provenance.json": "b8cf4e0fb34b92959f11cef3b651951390b8ff0946ec7abe2c03c1a8b105845d",
+    "gan_evidence/bent_ablation_40711/control/packages.txt": "3651df86284b84c38bc6f16a26854f15aecd9279c8099dc7ac38afe2b4b8dee3",
+    "gan_evidence/bent_ablation_40711/control/training.log": "dee1bb8ccb0ecc9bb28729b9b259b4f2d1f5757b6f1ee6e7b36be9ae6b9a5b3f",
+    "gan_evidence/bent_ablation_40711/control/preview/summary.json": "1bc30e5bf7c50c1f783a73914e710bc8d1a037ea362e2af7791e41cc68016a45",
+    "gan_evidence/bent_ablation_40711/control/preview/epoch25_probabilities.npz": "5dd0dd233501f747dc1b3f43c235af106c9e02332c2b2fc7438a867c2444c974",
+    "gan_evidence/bent_ablation_40711/control/preview/epoch50_probabilities.npz": "c3dbbd11286ea409af72548333ac2c8a6375bab60c4a6df85c6c1639285981e5",
+    "gan_evidence/bent_ablation_40711/no_background/provenance.json": "152efd2ddd44e4b9a9d7e75f632f9d876e97fdfac911b1ee034538b0747981cb",
+    "gan_evidence/bent_ablation_40711/no_background/packages.txt": "3651df86284b84c38bc6f16a26854f15aecd9279c8099dc7ac38afe2b4b8dee3",
+    "gan_evidence/bent_ablation_40711/no_background/training.log": "f85033eface0c76243a55477910d7a5bb3eccc0c6eb79134a188fc31e7f479a8",
+    "gan_evidence/bent_ablation_40711/no_background/preview/summary.json": "7ace1220c7c9f1b5f58fbf9e85b840745eabf3edcb6954305e479ccabff5e532",
+    "gan_evidence/bent_ablation_40711/no_background/preview/epoch25_probabilities.npz": "c2f8ad45ace50fd573fd009417291e24d94a35a74a2f872196abc3b2c5f77ec6",
+    "gan_evidence/bent_ablation_40711/no_background/preview/epoch50_probabilities.npz": "5e3067328be2220b93edc1ac27ab7ea3298e0ef4f674ae99bef93683a0c91be3"
+  },
+  "limitations": [
+    "One training seed, five preview sources, and a 50-epoch ablation do not establish a general causal root cause.",
+    "Preview QC counts are not a full retry-budget yield estimate or visual acceptance.",
+    "Flip is excluded; original flip diagnostics do not enter the formal method comparison.",
+    "No GAN downstream score is assigned."
+  ]
+}

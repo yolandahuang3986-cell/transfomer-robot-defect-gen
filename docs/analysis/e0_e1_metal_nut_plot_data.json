@@ -1,0 +1,73 @@
+{
+  "category": "metal_nut",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "sources": [
+    {
+      "file": "results/metrics/e0_20261010/real_only_metal_nut_seed42.json",
+      "sha256": "79ee5c4771749122fc9887ba296d547da4fa09475be2b45267f02c0b013b010a"
+    },
+    {
+      "file": "results/metrics/e0_20261010/real_only_metal_nut_seed43.json",
+      "sha256": "5cf515affafcc305d40a3133d8ee79ebfbd8c9606a427f1b8a4297b76f94d91e"
+    },
+    {
+      "file": "results/metrics/e0_20261010/real_only_metal_nut_seed44.json",
+      "sha256": "d397229d210eabd169482f5008589e7c88b2fe30562e0b769dc4056c7114d230"
+    },
+    {
+      "file": "results/metrics/e1_metal_nut_20261017/procedural_metal_nut_seed42.json",
+      "sha256": "404e153a8bee107f5a8b5dc90639e3aa95de30f937a9fbdd9aa4bf9ecc954e8d"
+    },
+    {
+      "file": "results/metrics/e1_metal_nut_20261017/procedural_metal_nut_seed43.json",
+      "sha256": "2deef7992f6f2188f731a172565564a0f48c1102a3ba96c0cc5cc0019d9b5d56"
+    },
+    {
+      "file": "results/metrics/e1_metal_nut_20261017/procedural_metal_nut_seed44.json",
+      "sha256": "e2b70783a4d31e2a6c2ae5464b3852fd5591d25d116be6ea58a17614869b6f36"
+    }
+  ],
+  "uncertainty": "Sample SD across downstream seeds; one fixed synthetic pool",
+  "paired_deltas": {
+    "pixel_auroc": {
+      "values": [
+        0.10326151536925754,
+        0.40552594969087574,
+        -0.015651170248949575
+      ],
+      "mean": 0.16437876493706124,
+      "sample_sd": 0.21713827446180786
+    },
+    "dice": {
+      "values": [
+        -0.194337416070497,
+        0.12545458046210084,
+        -0.0002798831734530685
+      ],
+      "mean": -0.023054239593949748,
+      "sample_sd": 0.1611078326598435
+    },
+    "iou": {
+      "values": [
+        -0.11333892799525416,
+        0.06711279185041248,
+        -0.00014004955829843418
+      ],
+      "mean": -0.015455395234380038,
+      "sample_sd": 0.09119553530024452
+    },
+    "image_false_positive_rate": {
+      "values": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean": 0.0,
+      "sample_sd": 0.0
+    }
+  }
+}

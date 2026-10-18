@@ -1,0 +1,188 @@
+{
+  "as_of": "2026-10-17",
+  "archive_sha256": "4e62995040b589fba306180f2993d61ced0c9f883c2ff1d83b12d3ae629b589d",
+  "source_provenance_sha256": {
+    "metal_nut/provenance.json": "12b00900dd0c48eaab8ce040a16a3c5448787eaaddd1513cbfa56a82dcd19c2a",
+    "screw/provenance.json": "9e778a491a42b7ad1c672e577ce3f9c4fda3c781f0128d90a159372b0e89b341"
+  },
+  "procedural": [
+    {
+      "method": "procedural",
+      "category": "metal_nut",
+      "target": 75,
+      "attempts": 83,
+      "qc_passing_pairs": 75,
+      "qc_rejected_attempts": 8,
+      "qc_pass_rate": 0.9036144578313253,
+      "qc_rejection_reasons": {
+        "empty_mask": 0,
+        "mask_too_small": 8,
+        "mask_too_large": 0,
+        "low_foreground_overlap": 0
+      },
+      "formal_status": "accepted_and_evaluated",
+      "formal_accepted_pairs": 75,
+      "fitting_required": false,
+      "fitting_seconds": null,
+      "cpu_generation_seconds_including_shared_qc_rejects": 1.1789228729732955,
+      "cpu_shared_qc_seconds": 0.3580729584209621,
+      "cpu_generation_plus_qc_seconds": 1.5369958313942576,
+      "cpu_generation_plus_qc_seconds_per_qc_passing_pair": 0.020493277751923434,
+      "cpu_generation_plus_qc_seconds_per_formally_accepted_pair": 0.020493277751923434,
+      "exporter_measured_generation_block_seconds": 1.6729933340102434,
+      "cpu_timing_scope": "Reported CPU generation block; normal loading/resize precedes it; export/compression/preview follow it; not GPU inference latency",
+      "benchmark": false,
+      "internal_filter_cost_seconds": null,
+      "notes": "Generic synthetic_patch; QC geometry is not semantic validity. No separate internal-filter cost measurement."
+    },
+    {
+      "method": "procedural",
+      "category": "screw",
+      "target": 125,
+      "attempts": 136,
+      "qc_passing_pairs": 125,
+      "qc_rejected_attempts": 11,
+      "qc_pass_rate": 0.9191176470588235,
+      "qc_rejection_reasons": {
+        "empty_mask": 0,
+        "mask_too_small": 11,
+        "mask_too_large": 0,
+        "low_foreground_overlap": 0
+      },
+      "formal_status": "on_hold_placement_quality",
+      "formal_accepted_pairs": 0,
+      "fitting_required": false,
+      "fitting_seconds": null,
+      "cpu_generation_seconds_including_shared_qc_rejects": 2.3095673754132457,
+      "cpu_shared_qc_seconds": 0.514489583671093,
+      "cpu_generation_plus_qc_seconds": 2.8240569590843387,
+      "cpu_generation_plus_qc_seconds_per_qc_passing_pair": 0.02259245567267471,
+      "cpu_generation_plus_qc_seconds_per_formally_accepted_pair": null,
+      "exporter_measured_generation_block_seconds": 2.984875333029777,
+      "cpu_timing_scope": "Reported CPU generation block; normal loading/resize precedes it; export/compression/preview follow it; not GPU inference latency",
+      "benchmark": false,
+      "internal_filter_cost_seconds": null,
+      "notes": "Generic synthetic_patch; QC geometry is not semantic validity. No separate internal-filter cost measurement."
+    }
+  ],
+  "downstream_training": [
+    {
+      "method": "real_only",
+      "category": "metal_nut",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "optimizer_steps_per_run": 1500,
+      "runtime_seconds": [
+        80.40505939628929,
+        81.5357057005167,
+        80.41678934637457
+      ],
+      "mean_runtime_seconds": 80.78585148106019,
+      "sum_runtime_seconds": 242.35755444318056,
+      "timing_scope": "Inside train(); includes integrity checks, data setup, training and evaluation up to result assembly; excludes Python import startup, checkpoint write and queue",
+      "device": "NVIDIA A40"
+    },
+    {
+      "method": "real_only",
+      "category": "screw",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "optimizer_steps_per_run": 2200,
+      "runtime_seconds": [
+        119.53462194371969,
+        120.68699374236166,
+        119.93621044512838
+      ],
+      "mean_runtime_seconds": 120.05260871040325,
+      "sum_runtime_seconds": 360.15782613120973,
+      "timing_scope": "Inside train(); includes integrity checks, data setup, training and evaluation up to result assembly; excludes Python import startup, checkpoint write and queue",
+      "device": "NVIDIA A40"
+    },
+    {
+      "method": "procedural",
+      "category": "metal_nut",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "optimizer_steps_per_run": 1500,
+      "runtime_seconds": [
+        68.19278215616941,
+        69.38271327223629,
+        68.18051299173385
+      ],
+      "mean_runtime_seconds": 68.58533614004652,
+      "sum_runtime_seconds": 205.75600842013955,
+      "timing_scope": "Inside train(); includes integrity checks, data setup, training and evaluation up to result assembly; excludes Python import startup, checkpoint write and queue",
+      "device": "NVIDIA A40"
+    }
+  ],
+  "jobs": [
+    {
+      "experiment": "E0",
+      "job_id": "40765",
+      "elapsed_seconds": 696,
+      "runs": 6
+    },
+    {
+      "experiment": "E1_metal_nut",
+      "job_id": "43178",
+      "elapsed_seconds": 285,
+      "runs": 3
+    }
+  ],
+  "job_elapsed_scope": "Allocation elapsed time includes job setup/preflight and runs, excludes queue and external generation/acceptance",
+  "training_only_probe": {
+    "training_only": true,
+    "warmup_steps": 5,
+    "measured_steps": 20,
+    "seconds_per_step": 0.047008081478998064,
+    "category": "metal_nut",
+    "batch_size": 8,
+    "image_size": 256,
+    "projected_training_seconds": {
+      "metal_nut": 70.5121222184971,
+      "screw": 103.41777925379574
+    },
+    "projection_caveat": "Excludes setup, evaluation and queue time; other-category projection is approximate",
+    "device": "NVIDIA A40",
+    "peak_allocated_vram_bytes": 551783424
+  },
+  "gan": {
+    "formal_pool_available": false,
+    "downstream_status": "not_run_quality_gate",
+    "formal_accepted_pair_cost_seconds": null,
+    "training_cost_comparable": null,
+    "diagnostic_evidence": "gan_failure_evidence_20261017.json",
+    "missing_cost_fields": [
+      "Comparable generator fitting wall time",
+      "Total generation attempts/cost for a formal candidate pool",
+      "GPU peak-memory measurement with a defined scope"
+    ]
+  },
+  "diffusion": {
+    "formal_pool_available": false,
+    "downstream_status": "not_run_missing_delivery",
+    "formal_accepted_pair_cost_seconds": null,
+    "training_cost_comparable": null,
+    "missing_cost_fields": [
+      "Final formal-pool training and checkpoint evidence",
+      "Internal/shared rejection accounting",
+      "Defined load/sampling/wall-time and VRAM measurements"
+    ]
+  },
+  "interpretation": [
+    "Do not compare these CPU procedural timings against upstream GAN/Diffusion GPU timings as a controlled speed ranking.",
+    "Cost per formally accepted screw pair is undefined while the entire pool is on hold.",
+    "Training-only PyTorch peak allocation is not total process VRAM and not generator VRAM.",
+    "Different job timings do not isolate a speed effect of augmentation.",
+    "Null values denote missing or inapplicable measurements, never free generation or a zero quality score."
+  ]
+}

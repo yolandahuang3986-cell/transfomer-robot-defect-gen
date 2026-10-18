@@ -16,7 +16,7 @@
     "eta": 1.0,
     "adaptive_mask": true,
     "batch_size": 8,
-    "mask_attempt_factor": 50
+    "mask_attempt_factor": 130
   },
   "mask_filter_rules": "configs/diffusion/mask_filter_v2.json",
   "placement_rules": "configs/diffusion/placement_v2.json",
