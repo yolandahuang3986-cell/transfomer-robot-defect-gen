@@ -161,8 +161,8 @@ def test_formal_trainer_writes_schema_valid_fixed_step_result(tmp_path, monkeypa
                                [dict(method='procedural', category='metal_nut', defect_type='synthetic_patch',
                                      source_image_id='metal_nut/train/good/0.png', seed=42,
                                      generation_seconds=.1, generation_config={}) for _ in range(2)])
-        monkeypatch.setattr(trainer, 'load_formal_pool', lambda *a: (batch, {'pool_sha256':'fixture'}, [{'generation_seconds':.2}]))
-        monkeypatch.setattr(trainer, 'require_acceptance', lambda *a: {})
+        monkeypatch.setattr(trainer, 'load_formal_pool', lambda *a, **kw: (batch, {'pool_sha256':'fixture'}, [{'generation_seconds':.2}]))
+        monkeypatch.setattr(trainer, 'require_acceptance', lambda *a, **kw: {})
     args = SimpleNamespace(root=tmp_path, manifest=path, category='metal_nut', method=method, formal=True,
                            bundle=['fixture'] if method == 'procedural' else [],
                            acceptance=acceptance if method == 'procedural' else None,
