@@ -197,11 +197,13 @@ secondary analysis and the final report, not new primary comparisons:
   mix-ratio tiers are not yet decided** (flagged open since the original
   hand-off); this is a new generation + downstream-training experiment and cannot
   be planned or scheduled until the ratio tiers are set.
-- **Quality/cost synthesis:** compile B's and C's already-recorded generation
-  timers, QC statistics and failure taxonomies (currently split across
-  `analysis/quality_cost_ledger_20261017.md`, `analysis/gan_failure_analysis_20261017.md`
-  and `member_c_delivery.md` §8–10) into one cross-method ledger. This is
-  compilation of existing records, not a new experiment.
+- **Quality/cost synthesis: complete** (18 Oct 2026). B's and C's generation
+  timers, QC statistics and failure taxonomies are compiled into one cross-method
+  [ledger](analysis/quality_cost_ledger_20261018.md); Diffusion's totals were
+  independently recomputed by A from the raw bundle JSON and match C's reported
+  figures exactly. No controlled cross-method speed ranking is possible (different
+  timers, different hardware paths); Diffusion's per-type cost spans 7.7–103.3 s
+  per accepted pair, driven by stage-1 mask yield.
 - **Final report and PPT:** A assembles the unified report (background/framework +
   common evaluation); B and C contribute their method, failure-analysis and cost
   sections, which can be finalized now independent of the ratio analysis. Only the
