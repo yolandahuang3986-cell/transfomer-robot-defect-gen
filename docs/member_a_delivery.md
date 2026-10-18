@@ -1,6 +1,6 @@
-# Member A evaluation delivery: E0 and metal_nut E1
+# Member A evaluation delivery: E0, E1 (Procedural) and E3 (Diffusion)
 
-更新：2026-10-17；E0 完成于 2026-10-10。对应 [冻结协议](formal_evaluation_protocol.md) 与 [执行说明](formal_evaluation_runbook.md)。
+更新：2026-10-18；E0 完成于 2026-10-10。对应 [冻结协议](formal_evaluation_protocol.md) 与 [执行说明](formal_evaluation_runbook.md)。
 
 ## 1. 已完成
 
@@ -78,28 +78,132 @@ significance. No protocol was changed after observing these results.
 Weights remain outside Git in A's TC2 result storage; acceptance and run records
 are also saved in the OneDrive project review folder.
 
-## 5. Completed analysis and report integration
+## 5. Completed screw E1 (Procedural) — 18 October 2026
+
+B's revised screw pool (`screw_dark_core_colored_polygon_v4`, commit `2914399`,
+PR #10) replaces the held original: a second Otsu split isolates a conservative
+dark material core for placement, separately from the shared-foreground patch-size
+reference. 125/125 accepted from 134 attempts (93.28%), 9 `mask_too_small` rejects;
+the earlier underfilled development attempt (120/125 at 1250 attempts) is kept as a
+separate, unused record. A verified all 285 package checksums, confirmed every
+source/donor image is `screw/train/good/*` (frozen split hash match, no held-out or
+support use), and visually audited all 20 fixed review pairs: every patch lands on
+the physical screw, resolving the prior hold (patches 0009/0082 on background/shadow).
+Accepted 2026-10-18.
+
+Job **43671** completed on NVIDIA A40 with **exit 0:0**, elapsed **6:19**. Seeds
+42/43/44 each completed the frozen 2,200 optimizer steps using the accepted pool,
+code commit `77ebf7f` (same as E0/metal_nut E1). CUDA Gate 0 passed.
+
+| Metric | E0 screw | E1 screw |
+|---|---:|---:|
+| Pixel AUROC | 0.5201 ± 0.2718 | 0.6913 ± 0.1515 |
+| Dice | 0.0000 ± 0.0000 | 0.0000 ± 0.0000 |
+| IoU | 0.0000 ± 0.0000 | 0.0000 ± 0.0000 |
+| Anomalous-image recall | 0.0000 ± 0.0000 | 0.3333 ± 0.5774 |
+| Normal-image FPR | 0.2846 ± 0.4929 | 0.3333 ± 0.5774 |
+
+Pixel AUROC improves on average (2 of 3 seeds up, one roughly flat), but Dice/IoU
+stay at 0 for both E0 and E1: the screw real-only baseline is already degenerate at
+the fixed 0.5 threshold (recorded as-is since E0), and this does not change under
+Procedural training. Recall moves from 0/3 to 1/3 seeds — a single-seed change, not
+a reliable detection gain. No protocol was changed after observing these results.
+
+[Full results, paired differences and execution evidence](../results/metrics/e1_screw_20261018/README.md).
+
+## 6. Completed E3 (Diffusion), metal_nut and screw — 18 October 2026
+
+C's formal AnomalyDiffusion pool (8 in-scope defect types × 25 = 200 pairs, code
+commit `6e2d490`/main `dd65331`, PR #9 + PR #11) was independently leakage-checked
+and visually audited by A, then accepted for both categories on 2026-10-18:
+
+- **Leakage**: the 40 anomaly-model training records and both mask-model support
+  lists match the frozen in-scope support (`fewshot_n5_seed42.json`) exactly by path
+  and SHA-256, with zero hash intersection against the 149 held-out images (checked
+  both directions). `metal_nut+flip`'s mask model was trained but is not referenced
+  by `configs/diffusion/generation.json` and was not used for formal generation.
+- **Code**: all 7 unique source files referenced in the 8 bundles' `provenance.json`
+  (56 entries) match `origin/main` @ `dd65331` byte-for-byte.
+- **Quota**: 75 metal_nut (bent/color/scratch × 25) + 125 screw (manipulated_front/
+  scratch_head/scratch_neck/thread_side/thread_top × 25), no flip.
+- **Visual audit**: 20/20 metal_nut pairs and 20/20 screw pairs show the defect
+  primarily on the physical object; 3 of the 20 screw pairs show a few stray mask
+  pixels on background next to the screw head, matching the already-disclosed,
+  quantified limitation in `member_c_delivery.md` §10.2c (≤5% of mask area outside
+  the placement foreground) — not a new or undisclosed defect, and not comparable to
+  the full-patch-on-background issue that held the original Procedural screw pool.
+
+Jobs **43672** (metal_nut, 4:02) and **43675** (screw, 5:48) both completed on
+NVIDIA A40 with **exit 0:0**, seeds 42/43/44, frozen optimizer steps (1,500 /
+2,200), code commit `dd65331` (its `src/inspection/formal_bundle.py` and
+`scripts/train_inspector.py` are byte-identical to the `77ebf7f` commit used for
+E0/E1, so downstream training/eval code is unchanged across experiments). CUDA
+Gate 0 passed for both.
+
+| Metric | E0 metal_nut | E1 metal_nut (Procedural) | E3 metal_nut (Diffusion) |
+|---|---:|---:|---:|
+| Pixel AUROC | 0.6559 ± 0.1177 | 0.8202 ± 0.0995 | 0.8306 ± 0.0321 |
+| Dice | 0.0821 ± 0.1391 | 0.0591 ± 0.0644 | 0.2198 ± 0.2824 |
+| IoU | 0.0467 ± 0.0792 | 0.0312 ± 0.0345 | 0.1443 ± 0.1970 |
+| Normal-image FPR | 1.0000 ± 0.0000 | 1.0000 ± 0.0000 | 0.9242 ± 0.1312 |
+
+| Metric | E0 screw | E1 screw (Procedural) | E3 screw (Diffusion) |
+|---|---:|---:|---:|
+| Pixel AUROC | 0.5201 ± 0.2718 | 0.6913 ± 0.1515 | 0.5705 ± 0.2347 |
+| Dice | 0.0000 ± 0.0000 | 0.0000 ± 0.0000 | 0.0000 ± 0.0000 |
+| IoU | 0.0000 ± 0.0000 | 0.0000 ± 0.0000 | 0.0000 ± 0.0000 |
+| Normal-image FPR | 0.2846 ± 0.4929 | 0.3333 ± 0.5774 | 0.2927 ± 0.5069 |
+
+On metal_nut, Diffusion's average AUROC gain (+0.1748 ± 0.1140, 3/3 seeds improve)
+is slightly larger and markedly more consistent across seeds than Procedural's
+(+0.1644 ± 0.2171, 2/3 improve); its Dice/IoU gain is larger in mean but driven
+mostly by one seed (43), not a consistent per-seed pattern. On screw, Diffusion's
+gain (+0.0504 ± 0.0558) is clearly smaller than Procedural's (+0.1712 ± 0.1464) —
+the smallest effect of the four E1/E3 runs so far. These are descriptive results
+from one fixed pool per method/category and three downstream seeds: they do not
+establish statistical significance or a general Procedural-vs-Diffusion ranking.
+No protocol was changed after observing these results.
+
+[metal_nut full results and evidence](../results/metrics/e3_metal_nut_20261018/README.md);
+[screw full results and evidence](../results/metrics/e3_screw_20261018/README.md).
+Weights remain outside Git in A's TC2 result storage; both categories' hash-bound
+`acceptance.json` records are kept in A's local review archive, synced from the
+OneDrive project review folder.
+
+## 7. Completed analysis and report integration
 
 The [analysis index](analysis/README.md) links the paired seed table/figure, GAN
 failure and matched bent-ablation evidence, and the quality/cost ledger. The
 English working report on OneDrive retains the four-part ownership structure.
-The metal_nut E0/E1 result, current GAN evidence and current quality/cost account
-are marked finalized within their stated scope; missing B/C experiments are not.
 
-The analysis preserves raw result precision and source hashes, identifies
-Codex-assisted visual review explicitly, and leaves unavailable costs null.
-C's adapter/validation PR is merged; its formal candidate pools remain pending.
+As of 2026-10-18, the primary comparison is complete for both accepted methods and
+both categories: E0 vs E1 (Procedural, metal_nut + screw) and E0 vs E3 (Diffusion,
+metal_nut + screw), 24 downstream training runs total (4 run-sets × 3 seeds, plus
+the 6 E0 runs). GAN has no accepted formal pool; E2 is recorded as
+`not_run_quality_gate`, not a zero score, per the approved decision to treat it as
+a negative result (existing failure/ablation evidence stands, no new GAN training
+is planned). The analysis preserves raw result precision and source hashes and
+identifies AI-assisted visual review explicitly throughout (B's and A's own).
 
-## 6. Remaining work
+## 8. Remaining work
 
-- **B:** Fix screw placement and deliver a new complete 125-pair pool with
-  provenance, QC/cost records and fixed review evidence. The current pool is on
-  hold. The GAN failure/ablation evidence has been received; it is not qualified
-  formal E2 training data.
-- **C:** Deliver 25 samples per in-scope defect type, with shared QC, training-data
-  and checkpoint provenance, and the required formal-purpose declaration.
-- **A:** Review new complete pools and execute the remaining accepted comparisons.
-  No accepted GAN pool means E2 remains unrun, not a zero score.
-- Complete ratio analysis, quality/utility/cost comparisons and the report once
-  the required primary comparisons are available. E0 and metal_nut E1 completion
-  do not mean that all four experiment chains or all A responsibilities are done.
+The B and C delivery/acceptance/primary-comparison chain (steps 1–6 of the team's
+linear workflow) is complete for both methods and both categories. What remains is
+secondary analysis and the final report, not new primary comparisons:
+
+- **Ratio analysis (pending a decision):** the primary comparison uses the frozen
+  ratio r=5 (§4 of the frozen protocol). Secondary ratios (candidates: r=1, r=10)
+  would show whether the observed gains scale with synthetic-data volume. **The
+  mix-ratio tiers are not yet decided** (flagged open since the original
+  hand-off); this is a new generation + downstream-training experiment and cannot
+  be planned or scheduled until the ratio tiers are set.
+- **Quality/cost synthesis:** compile B's and C's already-recorded generation
+  timers, QC statistics and failure taxonomies (currently split across
+  `analysis/quality_cost_ledger_20261017.md`, `analysis/gan_failure_analysis_20261017.md`
+  and `member_c_delivery.md` §8–10) into one cross-method ledger. This is
+  compilation of existing records, not a new experiment.
+- **Final report and PPT:** A assembles the unified report (background/framework +
+  common evaluation); B and C contribute their method, failure-analysis and cost
+  sections, which can be finalized now independent of the ratio analysis. Only the
+  final cross-method conclusion section depends on the ratio analysis, if it runs.
+- No accepted GAN pool means E2 remains unrun by design, not a gap to fill.

@@ -1,0 +1,16 @@
+{
+  "training_only": true,
+  "warmup_steps": 5,
+  "measured_steps": 20,
+  "seconds_per_step": 0.0437471560202539,
+  "category": "screw",
+  "batch_size": 8,
+  "image_size": 256,
+  "projected_training_seconds": {
+    "metal_nut": 65.62073403038085,
+    "screw": 96.24374324455857
+  },
+  "projection_caveat": "Excludes setup, evaluation and queue time; other-category projection is approximate",
+  "device": "NVIDIA A40",
+  "peak_allocated_vram_bytes": 551783424
+}
