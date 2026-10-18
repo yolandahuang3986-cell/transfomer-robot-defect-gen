@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "experiment_id": "diffusion_screw_support5_seed42",
+  "category": "screw",
+  "method": "diffusion",
+  "real_train_count": 345,
+  "synthetic_count": 125,
+  "seed": 42,
+  "generator": {
+    "generation_seconds_per_image": 41.583196082465356,
+    "config": {
+      "pool": {
+        "protocol_version": "v1.0-frozen",
+        "category": "screw",
+        "method": "diffusion",
+        "split_sha256": "259a091b8681542704a69701473b03834440bc4da3371b5415e10f6b45be901c",
+        "artifacts": [
+          {
+            "batch.npz": "6091738fe1fd68f36048d343b504ee8341c6aab249266889b84db9b7e1c250c0",
+            "metadata.json": "c79995733b11c072a5727986c7bc3d529a111d9ae442de5fb811b92ef91e2cd8",
+            "provenance.json": "99be8f18d23a4f2b940bf2a041f94feeeb382c0eee970ec7e4cf4154d50a3e65"
+          },
+          {
+            "batch.npz": "c4e51fefef1df81defe37aec7391f2a180b6eb6ad5624af1ddee13c578ec0c1e",
+            "metadata.json": "3e5b08cb226c2600594c8809d9075cfcf48d32c49bd7313753c8aaafc6498cd4",
+            "provenance.json": "2262e6bd02b9c3922b9e15124b66ac3b3f68f4a7065d1995497ff86667a42018"
+          },
+          {
+            "batch.npz": "a6f71c7e5d97f738d48b87c1347439cec5fe3b97cde0402e3b5eb9bb54f71424",
+            "metadata.json": "358c500f58993e746adc08fa473814f6e5bcdd375043dfd4753415e6a1907f91",
+            "provenance.json": "24f4f373399f424e2efb578828f99c185d0ecf4d58e92f165a10263fd49d9bda"
+          },
+          {
+            "batch.npz": "7236c263d1d973628ccd67ce6b208528c288ede8f91813917aeaa3192cf6e4f0",
+            "metadata.json": "5249ece99599372f27783bf069205aeb3b38573b881227452b8c3843ce87ba75",
+            "provenance.json": "76e21e698117f170dca40634de6677a122c8c1996c9f3660b6251332680ef312"
+          },
+          {
+            "batch.npz": "4972a87df7b7916dcd1c8ed13f8d046cfdb76145e1e84956e4c854c44239a56d",
+            "metadata.json": "ff5cecff35982c39ec9cf6405e39e0cd9683dd92e3e292b969bdda1228481fce",
+            "provenance.json": "b3905ab999116bfec6a291ee7daa4fe080b001575988ed2598496e5486c1cc06"
+          }
+        ],
+        "policy_hashes": {
+          "src/generation/qc.py": "e0bed11f5f5d6c6eb03bcf60ccc0e15b7ffadbaf4860b53313b063465384f62e",
+          "configs/experiment_scope.json": "7a5175f7ba58f29698ca47bd6b586bb8457b8e36677f4360bc87416ca9adce77",
+          "configs/experiments.yaml": "b8e7eab8d9b1d51019aa2e1f41c3b842aa737c7f882487a64ff180c3d09d86b0"
+        },
+        "synthetic_count": 125,
+        "pool_sha256": "20ed191cb95fe04749d58f87f5e9a126b9aa9df4898c6b876099c026164d7eee"
+      },
+      "qc_reports": [
+        {
+          "policy_version": "synthetic-qc-v1",
+          "target_count": 25,
+          "attempted_count": 25,
+          "accepted_count": 25,
+          "rejection_counts": {
+            "empty_mask": 0,
+            "mask_too_small": 0,
+            "mask_too_large": 0,
+            "low_foreground_overlap": 0
+          },
+          "rejected_samples": [],
+          "generation_seconds": 442.95102425199013,
+          "qc_seconds": 1.4686276940628886,
+          "target_met": true,
+          "acceptance_rate": 1.0
+        },
+        {
+          "policy_version": "synthetic-qc-v1",
+          "target_count": 25,
+          "attempted_count": 25,
+          "accepted_count": 25,
+          "rejection_counts": {
+            "empty_mask": 0,
+            "mask_too_small": 0,
+            "mask_too_large": 0,
+            "low_foreground_overlap": 0
+          },
+          "rejected_samples": [],
+          "generation_seconds": 193.33151310589153,
+          "qc_seconds": 1.4709164593368769,
+          "target_met": true,
+          "acceptance_rate": 1.0
+        },
+        {
+          "policy_version": "synthetic-qc-v1",
+          "target_count": 25,
+          "attempted_count": 25,
+          "accepted_count": 25,
+          "rejection_counts": {
+            "empty_mask": 0,
+            "mask_too_small": 0,
+            "mask_too_large": 0,
+            "low_foreground_overlap": 0
+          },
+          "rejected_samples": [],
+          "generation_seconds": 2582.4111732495962,
+          "qc_seconds": 1.490669509395957,
+          "target_met": true,
+          "acceptance_rate": 1.0
+        },
+        {
+          "policy_version": "synthetic-qc-v1",
+          "target_count": 25,
+          "attempted_count": 25,
+          "accepted_count": 25,
+          "rejection_counts": {
+            "empty_mask": 0,
+            "mask_too_small": 0,
+            "mask_too_large": 0,
+            "low_foreground_overlap": 0
+          },
+          "rejected_samples": [],
+          "generation_seconds": 1651.2234141165384,
+          "qc_seconds": 1.4674024945124984,
+          "target_met": true,
+          "acceptance_rate": 1.0
+        },
+        {
+          "policy_version": "synthetic-qc-v1",
+          "target_count": 25,
+          "attempted_count": 25,
+          "accepted_count": 25,
+          "rejection_counts": {
+            "empty_mask": 0,
+            "mask_too_small": 0,
+            "mask_too_large": 0,
+            "low_foreground_overlap": 0
+          },
+          "rejected_samples": [],
+          "generation_seconds": 327.98238558415323,
+          "qc_seconds": 1.4932472771033645,
+          "target_met": true,
+          "acceptance_rate": 1.0
+        }
+      ],
+      "acceptance_sha256": "74b236876a2912718007818812689cb4b1a762583147f8f9e326dd98df8f967b",
+      "cost_basis": "reported generation seconds including shared-QC rejected attempts; not total wall time"
+    }
+  },
+  "inspection": {
+    "pixel_auroc": 0.36254007699159496,
+    "iou": 0.0,
+    "dice": 0.0,
+    "defect_recall": 0.06382978723404255,
+    "image_false_positive_rate": 0.8780487804878049
+  },
+  "training": {
+    "architecture": "unet",
+    "encoder": "resnet18",
+    "encoder_weights": null,
+    "image_size": 256,
+    "steps": 2200,
+    "learning_rate": 0.0001,
+    "loss": 0.23055497436022215,
+    "batch_size": 8,
+    "sampler": "uniform_with_replacement",
+    "checkpoint_selection": "final_step"
+  },
+  "evaluation": {
+    "source": "heldout_real",
+    "count": 135,
+    "threshold": 0.5,
+    "scope_protocol": "local-defect-scope-v1",
+    "excluded_support_count": 0,
+    "excluded_heldout_count": 0,
+    "formal_protocol": "v1.0-frozen",
+    "smoke_only": false,
+    "split_sha256": "259a091b8681542704a69701473b03834440bc4da3371b5415e10f6b45be901c"
+  },
+  "provenance": {
+    "git_commit": "dd653319958f875f209885aabe8d81e6912b77e6",
+    "git_dirty": false,
+    "python": "3.10.21",
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "device": "NVIDIA A40",
+    "runtime_seconds": 104.6784573411569,
+    "packages": {
+      "segmentation-models-pytorch": "0.5.0",
+      "torchvision": "0.23.0",
+      "numpy": "2.2.6",
+      "Pillow": "12.3.0",
+      "scikit-learn": "1.7.2",
+      "jsonschema": "4.26.0"
+    }
+  }
+}

@@ -1,0 +1,235 @@
+{
+  "schema_version": 1,
+  "experiment_id": "diffusion_metal_nut_support5_seed44",
+  "category": "metal_nut",
+  "method": "diffusion",
+  "real_train_count": 235,
+  "synthetic_count": 75,
+  "seed": 44,
+  "generator": {
+    "generation_seconds_per_image": 19.58670094942053,
+    "config": {
+      "pool": {
+        "protocol_version": "v1.0-frozen",
+        "category": "metal_nut",
+        "method": "diffusion",
+        "split_sha256": "259a091b8681542704a69701473b03834440bc4da3371b5415e10f6b45be901c",
+        "artifacts": [
+          {
+            "batch.npz": "716c068d0fca962379c10e5342441d0e11ad68d3402042c16d3d0f7523270203",
+            "metadata.json": "9fc8e08f301df15c97b0bccb27b469f402e462dc4d574e94219042c7fc58c0ca",
+            "provenance.json": "44b4af3d0d5623062819ae9480043795bf9a53a8a91bdd7943c6571e75769784"
+          },
+          {
+            "batch.npz": "b5279e2d72c6e1f8c49f2feb835abf5dc979e58c3e552dea86b546e0127f61ff",
+            "metadata.json": "e6d3bbfd1ca3d4ecf7c44ff65f6936cf7d35c126a073cec47c55b9f9f6f49370",
+            "provenance.json": "5d691e9f7a68e22e0abe844298afdb92f3b9d4f6c3bbce28827d5818a3797e2b"
+          },
+          {
+            "batch.npz": "677fe2b5b34a652d08e1ca2254a2d4343f0b0b7f51f7cf123a4ca87a25c6e838",
+            "metadata.json": "58a50b1971412a72e4895468b4d4a1ca946e74bc16db5d76e5dad3c74f08e712",
+            "provenance.json": "27b668cdef67a85708d5b91c74ac861ad5f8dff790a62c853c4e4df6bb934a02"
+          }
+        ],
+        "policy_hashes": {
+          "src/generation/qc.py": "e0bed11f5f5d6c6eb03bcf60ccc0e15b7ffadbaf4860b53313b063465384f62e",
+          "configs/experiment_scope.json": "7a5175f7ba58f29698ca47bd6b586bb8457b8e36677f4360bc87416ca9adce77",
+          "configs/experiments.yaml": "b8e7eab8d9b1d51019aa2e1f41c3b842aa737c7f882487a64ff180c3d09d86b0"
+        },
+        "synthetic_count": 75,
+        "pool_sha256": "0c1bcad8f2256099ccefd3bdda30a1f99fcc3e9cded90dbb58ac0905cde311ba"
+      },
+      "qc_reports": [
+        {
+          "policy_version": "synthetic-qc-v1",
+          "target_count": 25,
+          "attempted_count": 25,
+          "accepted_count": 25,
+          "rejection_counts": {
+            "empty_mask": 0,
+            "mask_too_small": 0,
+            "mask_too_large": 0,
+            "low_foreground_overlap": 0
+          },
+          "rejected_samples": [],
+          "generation_seconds": 212.34158262517298,
+          "qc_seconds": 1.0652664974331856,
+          "target_met": true,
+          "acceptance_rate": 1.0
+        },
+        {
+          "policy_version": "synthetic-qc-v1",
+          "target_count": 25,
+          "attempted_count": 36,
+          "accepted_count": 25,
+          "rejection_counts": {
+            "empty_mask": 0,
+            "mask_too_small": 0,
+            "mask_too_large": 11,
+            "low_foreground_overlap": 0
+          },
+          "rejected_samples": [
+            {
+              "index": 9,
+              "source_image_id": "metal_nut/train/good/162.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 9
+            },
+            {
+              "index": 11,
+              "source_image_id": "metal_nut/train/good/079.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 11
+            },
+            {
+              "index": 16,
+              "source_image_id": "metal_nut/train/good/070.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 16
+            },
+            {
+              "index": 17,
+              "source_image_id": "metal_nut/train/good/054.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 17
+            },
+            {
+              "index": 23,
+              "source_image_id": "metal_nut/train/good/037.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 23
+            },
+            {
+              "index": 2,
+              "source_image_id": "metal_nut/train/good/184.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 27
+            },
+            {
+              "index": 3,
+              "source_image_id": "metal_nut/train/good/064.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 28
+            },
+            {
+              "index": 4,
+              "source_image_id": "metal_nut/train/good/070.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 29
+            },
+            {
+              "index": 0,
+              "source_image_id": "metal_nut/train/good/169.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 30
+            },
+            {
+              "index": 0,
+              "source_image_id": "metal_nut/train/good/098.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 33
+            },
+            {
+              "index": 0,
+              "source_image_id": "metal_nut/train/good/141.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 34
+            }
+          ],
+          "generation_seconds": 620.807613763958,
+          "qc_seconds": 1.0682890405878425,
+          "target_met": true,
+          "acceptance_rate": 0.6944444444444444
+        },
+        {
+          "policy_version": "synthetic-qc-v1",
+          "target_count": 25,
+          "attempted_count": 25,
+          "accepted_count": 25,
+          "rejection_counts": {
+            "empty_mask": 0,
+            "mask_too_small": 0,
+            "mask_too_large": 0,
+            "low_foreground_overlap": 0
+          },
+          "rejected_samples": [],
+          "generation_seconds": 635.8533748174086,
+          "qc_seconds": 1.049992403946817,
+          "target_met": true,
+          "acceptance_rate": 1.0
+        }
+      ],
+      "acceptance_sha256": "0e803a80e0d13237910a730e8523d9115f8380ba28c12aadccbe1c233296b359",
+      "cost_basis": "reported generation seconds including shared-QC rejected attempts; not total wall time"
+    }
+  },
+  "inspection": {
+    "pixel_auroc": 0.8119398807187435,
+    "iou": 0.0016408150728667384,
+    "dice": 0.003276254418101709,
+    "defect_recall": 1.0,
+    "image_false_positive_rate": 1.0
+  },
+  "training": {
+    "architecture": "unet",
+    "encoder": "resnet18",
+    "encoder_weights": null,
+    "image_size": 256,
+    "steps": 1500,
+    "learning_rate": 0.0001,
+    "loss": 0.33152680535117784,
+    "batch_size": 8,
+    "sampler": "uniform_with_replacement",
+    "checkpoint_selection": "final_step"
+  },
+  "evaluation": {
+    "source": "heldout_real",
+    "count": 77,
+    "threshold": 0.5,
+    "scope_protocol": "local-defect-scope-v1",
+    "excluded_support_count": 5,
+    "excluded_heldout_count": 18,
+    "formal_protocol": "v1.0-frozen",
+    "smoke_only": false,
+    "split_sha256": "259a091b8681542704a69701473b03834440bc4da3371b5415e10f6b45be901c"
+  },
+  "provenance": {
+    "git_commit": "dd653319958f875f209885aabe8d81e6912b77e6",
+    "git_dirty": false,
+    "python": "3.10.21",
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "device": "NVIDIA A40",
+    "runtime_seconds": 69.75352015160024,
+    "packages": {
+      "segmentation-models-pytorch": "0.5.0",
+      "torchvision": "0.23.0",
+      "numpy": "2.2.6",
+      "Pillow": "12.3.0",
+      "scikit-learn": "1.7.2",
+      "jsonschema": "4.26.0"
+    }
+  }
+}

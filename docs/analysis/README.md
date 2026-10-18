@@ -1,10 +1,12 @@
 # Member A analysis and evidence
 
-As of 17 October 2026, all six E0 runs and the three-seed metal_nut E1 comparison
-are complete. The original metal_nut 75-pair pool is accepted. **B's screw 125-pair
-pool remains on hold and must be repaired and redelivered.** C's adapter and
-validation evidence are merged, but the complete formal Diffusion pools are still
-pending. GAN has failure-analysis evidence and no accepted formal pool.
+As of 18 October 2026, all six E0 runs and the primary comparison are complete for
+both accepted methods and both categories: metal_nut and screw E1 (Procedural) and
+E3 (Diffusion). B's screw pool was repaired (`screw_dark_core_colored_polygon_v4`,
+PR #10) and accepted; C's formal Diffusion pools (8 in-scope types × 25) were
+independently leakage-checked and visually audited, and accepted for both
+categories. GAN still has only failure-analysis evidence and no accepted formal
+pool; E2 remains `not_run_quality_gate` by design.
 
 ## Completed analysis
 
@@ -12,36 +14,44 @@ pending. GAN has failure-analysis evidence and no accepted formal pool.
 - [GAN failure analysis and bounded bent ablation](gan_failure_analysis_20261017.md)
 - [Quality and cost ledger with measurement boundaries](quality_cost_ledger_20261017.md)
 - [English text integrated into A's report sections](a_report_sections_20261017.md)
-- [Raw E1 metrics and execution evidence](../../results/metrics/e1_metal_nut_20261017/README.md)
+- [Raw E1 metal_nut metrics and execution evidence](../../results/metrics/e1_metal_nut_20261017/README.md)
+- [Raw E1 screw metrics and execution evidence](../../results/metrics/e1_screw_20261018/README.md)
+- [Raw E3 metal_nut metrics and execution evidence](../../results/metrics/e3_metal_nut_20261018/README.md)
+- [Raw E3 screw metrics and execution evidence](../../results/metrics/e3_screw_20261018/README.md)
+- [Full primary-comparison writeup](../member_a_delivery.md) (§4–§6)
 
-E1 raises average pixel AUROC on metal_nut, while average Dice/IoU decrease and
-normal-image FPR remains 1.0. This is a descriptive ranking result, not evidence
-of improved segmentation or usable image-level detection. The three downstream
-seeds use one fixed synthetic pool; no significance claim or overall method
-ranking is made.
+Across the four E1/E3 run-sets, average pixel AUROC rises over E0 in every case
+(metal_nut: Procedural +0.1644±0.2171, Diffusion +0.1748±0.1140, 3/3 seeds up and
+markedly more consistent than Procedural; screw: Procedural +0.1712±0.1464, Diffusion
++0.0504±0.0558, the smallest effect of the four). Dice/IoU gains are inconsistent
+across seeds and, on screw, both methods stay at 0 at the fixed threshold because
+the screw real-only baseline is already degenerate. These are descriptive ranking
+results from one fixed pool per method/category and three downstream seeds; none
+of them establish statistical significance or a general method ranking.
 
 The OneDrive working report retains four main parts: A's background/framework,
-B's Procedural/GAN methods, C's Diffusion methods, and A's common evaluation.
-The completed metal_nut comparison, current GAN evidence, and current quality/cost
-accounting have scoped finalized labels. The full cross-method comparison,
-secondary ratios and final overall conclusion remain open.
+B's Procedural/GAN methods, C's Diffusion methods, and A's common evaluation. B and
+C's method/process/cost/limitations sections can now be finalized independently of
+further primary runs; the cross-method effectiveness conclusion stays in A's part.
+The full cross-method quality/cost synthesis, secondary ratio analysis and final
+overall conclusion remain open (see `member_a_delivery.md` §8).
 
 ## Remaining inputs and dependencies
 
 | Owner | Required input or task | Enables |
 |---|---|---|
-| B | Repaired complete screw 125-pair candidate pool, provenance, QC and costs | A's whole-pool review, then screw E1 |
-| C | Formal pools: 25 pairs per in-scope defect type (75/125 by category), training/checkpoint evidence and rejection/cost records | A's review, then E3 |
-| A | Review each new complete pool and run frozen three-seed evaluation after acceptance | Completed matched primary comparison |
-| A | Disclosed secondary ratio experiments and final quality/utility/cost synthesis | Final cross-method analysis and report conclusion |
+| — | **Primary comparison: complete.** E0/E1/E3 done for both methods, both categories. | — |
+| A | Decide the secondary ratio-analysis mix tiers (open since hand-off; candidates r=1, r=10 against the frozen primary r=5) | Secondary ratio experiment can be planned |
+| A | Compile B's and C's existing cost/QC/failure records into one cross-method ledger | Final quality/cost synthesis |
+| A | Final cross-method conclusion once the above are available | Unified report, §4.8-equivalent |
+| B / C | Finalize method, failure-analysis and cost sections (content already largely written) | Unified report assembly |
 
-C's previously reported validation-code issues also remain relevant at the
-merged adapter head: internal attempt batches can exceed the configured cap,
-zero-output exports omit accounting fields, and the development summary can omit
-shared-QC rejected-sample costs. These are implementation/accounting corrections
-for C to resolve before formal handoff; merging the validation adapter does not
-close them. The formal A trainer already sums the bundle QC reports rather than
-using that development summary.
+C's PR #9 fixed the three validation-code issues previously flagged at the merged
+adapter head (stage-1 budget checked once per 8-mask batch instead of per mask;
+zero-output exports omitting accounting fields; the development cost summary
+omitting shared-QC-rejected-sample costs). The formal A trainer already summed the
+bundle QC reports rather than using that development summary, so the formal pool's
+numbers were unaffected; see PR #9's description for the fix-by-fix mapping.
 
 No accepted GAN pool means E2 is recorded as not_run_quality_gate, with no score
 imputed. This analysis does not authorize extra GAN training or changes to the

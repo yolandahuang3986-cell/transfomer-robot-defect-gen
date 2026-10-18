@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "experiment_id": "procedural_screw_support5_seed44",
+  "category": "screw",
+  "method": "procedural",
+  "real_train_count": 345,
+  "synthetic_count": 125,
+  "seed": 44,
+  "generator": {
+    "generation_seconds_per_image": 0.020337956298867862,
+    "config": {
+      "pool": {
+        "protocol_version": "v1.0-frozen",
+        "category": "screw",
+        "method": "procedural",
+        "split_sha256": "259a091b8681542704a69701473b03834440bc4da3371b5415e10f6b45be901c",
+        "artifacts": [
+          {
+            "batch.npz": "3f928a27f1d3bc84d8292c657c3a56929f810230cdd2a1dfa27948ac512da089",
+            "metadata.json": "2f0589d46d68c70ae9f5a58cc532c1b11deb224582a339f77d3a83466b4816be",
+            "provenance.json": "db1bdf4cc869c7e1a76384436747a494a6e8f4afcc6874da763d128ba1d5e6aa"
+          }
+        ],
+        "policy_hashes": {
+          "src/generation/qc.py": "e0bed11f5f5d6c6eb03bcf60ccc0e15b7ffadbaf4860b53313b063465384f62e",
+          "configs/experiment_scope.json": "7a5175f7ba58f29698ca47bd6b586bb8457b8e36677f4360bc87416ca9adce77",
+          "configs/experiments.yaml": "b8e7eab8d9b1d51019aa2e1f41c3b842aa737c7f882487a64ff180c3d09d86b0"
+        },
+        "synthetic_count": 125,
+        "pool_sha256": "e9fc88f0a3018b5882f89fcdbd79c6dc050621bf45b64f1b81336fe4645fc6ce"
+      },
+      "qc_reports": [
+        {
+          "policy_version": "synthetic-qc-v1",
+          "target_count": 125,
+          "attempted_count": 134,
+          "accepted_count": 125,
+          "rejection_counts": {
+            "empty_mask": 0,
+            "mask_too_small": 9,
+            "mask_too_large": 0,
+            "low_foreground_overlap": 0
+          },
+          "rejected_samples": [
+            {
+              "index": 15,
+              "source_image_id": "screw/train/good/307.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 15
+            },
+            {
+              "index": 26,
+              "source_image_id": "screw/train/good/280.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 26
+            },
+            {
+              "index": 32,
+              "source_image_id": "screw/train/good/049.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 32
+            },
+            {
+              "index": 42,
+              "source_image_id": "screw/train/good/085.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 42
+            },
+            {
+              "index": 43,
+              "source_image_id": "screw/train/good/074.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 43
+            },
+            {
+              "index": 54,
+              "source_image_id": "screw/train/good/084.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 54
+            },
+            {
+              "index": 81,
+              "source_image_id": "screw/train/good/042.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 81
+            },
+            {
+              "index": 107,
+              "source_image_id": "screw/train/good/307.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 107
+            },
+            {
+              "index": 117,
+              "source_image_id": "screw/train/good/310.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 117
+            }
+          ],
+          "generation_seconds": 2.5422445373584828,
+          "qc_seconds": 0.5047649182379246,
+          "target_met": true,
+          "acceptance_rate": 0.9328358208955224
+        }
+      ],
+      "acceptance_sha256": "5d2aae07d371f2cc11814ced5396289344811b72e2746cdf2de11ae8f048cb28",
+      "cost_basis": "reported generation seconds including shared-QC rejected attempts; not total wall time"
+    }
+  },
+  "inspection": {
+    "pixel_auroc": 0.8356798872118768,
+    "iou": 0.0,
+    "dice": 0.0,
+    "defect_recall": 0.0,
+    "image_false_positive_rate": 0.0
+  },
+  "training": {
+    "architecture": "unet",
+    "encoder": "resnet18",
+    "encoder_weights": null,
+    "image_size": 256,
+    "steps": 2200,
+    "learning_rate": 0.0001,
+    "loss": 0.23957091978327794,
+    "batch_size": 8,
+    "sampler": "uniform_with_replacement",
+    "checkpoint_selection": "final_step"
+  },
+  "evaluation": {
+    "source": "heldout_real",
+    "count": 135,
+    "threshold": 0.5,
+    "scope_protocol": "local-defect-scope-v1",
+    "excluded_support_count": 0,
+    "excluded_heldout_count": 0,
+    "formal_protocol": "v1.0-frozen",
+    "smoke_only": false,
+    "split_sha256": "259a091b8681542704a69701473b03834440bc4da3371b5415e10f6b45be901c"
+  },
+  "provenance": {
+    "git_commit": "77ebf7f5870cc21a97d98373c2f03ac83871219b",
+    "git_dirty": false,
+    "python": "3.10.21",
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "device": "NVIDIA A40",
+    "runtime_seconds": 102.54753521922976,
+    "packages": {
+      "segmentation-models-pytorch": "0.5.0",
+      "torchvision": "0.23.0",
+      "numpy": "2.2.6",
+      "Pillow": "12.3.0",
+      "scikit-learn": "1.7.2",
+      "jsonschema": "4.26.0"
+    }
+  }
+}
