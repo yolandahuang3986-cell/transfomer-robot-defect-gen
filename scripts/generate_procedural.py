@@ -25,8 +25,10 @@ def main():
     p.add_argument('--num-samples',type=int,default=30)
     p.add_argument('--image-size',type=int,default=256)
     p.add_argument('--seed',type=int,default=42)
+    p.add_argument('--purpose',choices=['validation','formal'],default='validation')
     p.add_argument('--shared-qc',action='store_true',help='Require A shared QC (generic synthetic_patch integration gate)')
     a=p.parse_args()
+    if a.purpose=='formal' and not a.shared_qc:p.error('Formal generation requires --shared-qc')
     if a.image_size<32 or a.num_samples<1:p.error('Invalid image size or sample count')
     out=Path(a.out).resolve()
     if out.is_relative_to(ROOT):p.error('Keep generated image bundles outside the code repository')
@@ -60,7 +62,7 @@ def main():
     if qc_report is not None:(out/'qc_report.json').write_text(json.dumps(qc_report,indent=2))
     np.savez_compressed(out/'batch.npz',images=batch.images,masks=batch.masks)
     (out/'metadata.json').write_text(json.dumps(batch.metadata,indent=2,allow_nan=False)+'\n')
-    provenance=dict(category=a.category,num_samples=a.num_samples,image_size=a.image_size,seed=a.seed,
+    provenance=dict(purpose=a.purpose,category=a.category,num_samples=a.num_samples,image_size=a.image_size,seed=a.seed,
         split_sha256=manifest['manifest_sha256'],source_partition='train_normal',normal_source_count=len(rows),
         code_commit=subprocess.check_output(['git','-C',str(ROOT),'rev-parse','HEAD'],text=True).strip(),
         code_dirty=bool(subprocess.check_output(['git','-C',str(ROOT),'status','--porcelain'],text=True).strip()),

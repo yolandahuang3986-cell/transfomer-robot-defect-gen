@@ -67,11 +67,11 @@ B 的现有脚本可直接生成所需格式，必须显式启用共享 QC。示
 ```bash
 python scripts/generate_procedural.py --root ~/datasets/mvtec_ad \
   --manifest data/splits/fewshot_n5_seed42.json --category metal_nut \
-  --num-samples 75 --image-size 256 --seed 42 --shared-qc \
+  --num-samples 75 --image-size 256 --seed 42 --shared-qc --purpose formal \
   --out ~/datasets/robot-generated/procedural_metal_nut_primary
 python scripts/generate_procedural.py --root ~/datasets/mvtec_ad \
   --manifest data/splits/fewshot_n5_seed42.json --category screw \
-  --num-samples 125 --image-size 256 --seed 42 --shared-qc \
+  --num-samples 125 --image-size 256 --seed 42 --shared-qc --purpose formal \
   --out ~/datasets/robot-generated/procedural_screw_primary
 ```
 
