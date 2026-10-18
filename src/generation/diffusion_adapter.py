@@ -7,7 +7,8 @@ writes a request JSON, runs the worker, and reads back PNG image/mask pairs.
 Diffusion-internal rules (configs/diffusion/*.json) run inside the worker before
 shared QC. Their rejections are reported in `generation_config.stage1` and in
 `self.runs`, separately from shared QC. Each sample's generation_seconds includes
-its share of every rejected stage-1 attempt.
+its share of every rejected stage-1 attempt; summarize_runs() also counts pairs
+that shared QC rejected.
 """
 import hashlib
 import json
@@ -58,6 +59,28 @@ def _rules(path, expected_prefix):
     if 'DRAFT' in rules.get('status', ''):
         raise ValueError(f'{path} is still a DRAFT; freeze it before generating')
     return rules, hashlib.sha256(raw).hexdigest()
+
+
+def summarize_runs(runs):
+    """Totals over every worker call of one bundle, accepted or not.
+
+    generation_seconds_total counts all sampled work: stage-1 masks that were
+    rejected or discarded as surplus, and inpainted pairs that shared QC later
+    rejected. Summing the accepted samples' metadata would miss the latter.
+    Model loads are reported separately."""
+    totals = {'worker_calls': len(runs), 'mask_attempts': 0, 'mask_attempt_budget': 0,
+              'mask_surplus_discarded': 0, 'produced_pairs_sent_to_shared_qc': 0,
+              'rejected_by_reason': {}, 'generation_seconds_total': 0.0, 'model_load_seconds_total': 0.0}
+    for r in runs:
+        totals['mask_attempts'] += r['mask_attempts']
+        totals['mask_attempt_budget'] += r['mask_attempt_budget']
+        totals['mask_surplus_discarded'] += r['mask_surplus_discarded']
+        totals['produced_pairs_sent_to_shared_qc'] += r['produced']
+        totals['generation_seconds_total'] += r['generation_seconds_total']
+        totals['model_load_seconds_total'] += r['model_load_seconds']
+        for reason, n in r['rejected_by_reason'].items():
+            totals['rejected_by_reason'][reason] = totals['rejected_by_reason'].get(reason, 0) + n
+    return totals
 
 
 class DiffusionDefectGenerator(DefectGenerator):
@@ -196,19 +219,25 @@ class DiffusionDefectGenerator(DefectGenerator):
         if code not in (0, 2) or not result_path.exists():
             raise RuntimeError(f'Diffusion worker failed (exit {code}); see {run_dir / "worker.log"}')
         result = json.loads(result_path.read_text())
-        stage1 = {'run_dir': str(run_dir), 'status': result.get('status', 'ok'),
-                  'requested': num_samples, 'produced': result.get('n', 0),
+        # every key below is written on both worker paths (ok/underfilled and zero-output);
+        # index directly so a missing statistic fails loudly instead of turning into 0
+        stage1 = {'run_dir': str(run_dir), 'status': result['status'],
+                  'requested': num_samples, 'produced': result['n'],
                   'mask_attempts': result['mask_attempts'],
-                  'upstream_check_mask_rejected': result.get('stage1_upstream_check_mask_rejected'),
-                  'internal_rejected': (result.get('diffusion_internal_filter') or {}).get('rejected'),
-                  'mask_sampling_seconds_total': result.get('mask_sampling_seconds_total'),
-                  'model_load_seconds': (result.get('mask_model_load_seconds') or 0)
-                                        + (result.get('image_model_load_seconds') or 0),
+                  'mask_attempt_budget': result['mask_attempt_budget'],
+                  'mask_surplus_discarded': result['mask_surplus_discarded'],
+                  'rejected_by_reason': result['mask_reject_reasons'],
+                  'upstream_check_mask_rejected': result['stage1_upstream_check_mask_rejected'],
+                  'internal_rejected': result['diffusion_internal_filter']['rejected'],
+                  'mask_sampling_seconds_total': result['mask_sampling_seconds_total'],
+                  'inpaint_seconds_total': result['inpaint_seconds_total'],
+                  'generation_seconds_total': result['generation_seconds_total'],
+                  'model_load_seconds': result['mask_model_load_seconds'] + result['image_model_load_seconds'],
                   'worker_wall_seconds': wall}
         self.runs.append(stage1)
-        if result.get('status') != 'ok' or result.get('n') != num_samples:
+        if result['status'] != 'ok' or result['n'] != num_samples:
             raise DiffusionUnderfilledError(
-                f'Diffusion stage 1 underfilled: {result.get("n", 0)}/{num_samples} after '
+                f'Diffusion stage 1 underfilled: {result["n"]}/{num_samples} after '
                 f'{result["mask_attempts"]} mask attempts', run_dir)
 
         records = {int(r['index']): r for r in result['samples']}

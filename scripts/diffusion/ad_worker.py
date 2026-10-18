@@ -33,6 +33,8 @@ import torch
 from omegaconf import OmegaConf
 from PIL import Image
 
+from stage1 import run_stage1, stage1_result          # sibling module; sys.path[0] is this script's dir
+
 
 def setup_seed(seed):
     random.seed(seed)
@@ -139,7 +141,6 @@ def main():
     os.makedirs(os.path.join(out, "images"), exist_ok=True)
     os.makedirs(os.path.join(out, "masks"), exist_ok=True)
     save_rejects = bool(req.get("save_rejects", False))     # keep every rejected stage-1 mask as evidence
-    rejects = []
     if save_rejects:
         os.makedirs(os.path.join(out, "rejects"), exist_ok=True)
     dev = torch.device("cuda")
@@ -169,64 +170,72 @@ def main():
         place_rng = np.random.default_rng(int(req["seed"]))
     elif placement != "v0":
         raise SystemExit(f"unknown placement {placement}")
-    masks, place_info, mask_s, mask_attempts, mask_rejected, surplus = [], [], 0.0, 0, 0, 0
-    reject_reasons = {}
-    max_attempts = n * int(sp.get("mask_attempt_factor", 10))
-    while len(masks) < n and mask_attempts < max_attempts:
-        imgs, dt = cuda_time(lambda: mask_batch(int(sp["mask_ddim_steps"])))
-        mask_s += dt
-        for im in imgs:
-            if len(masks) >= n:                       # rest of the last batch is generated but unused
-                surplus += 1
-                continue
-            mask_attempts += 1
-            g = im.mean(0)
-            m = (g > 0.8).float()[None]                           # upstream binarisation
-            reason = None if check_mask(m) else "check_mask"
-            if reason is None and mfilter:
-                reason = mask_filter_reason(g, m, mfilter)
-            info = {}
-            if reason is None and placement in ("v1", "v2"):
-                placed, tries, overlap = place_mask(m[0].numpy() > 0.5, fgs[len(masks)], prules, place_rng)
-                if placed is None:
-                    reason = "placement_failed"
-                else:
-                    m = torch.from_numpy(placed.astype(np.float32))[None]
-                    info = {"placement_tries": tries, "placement_overlap": round(overlap, 4)}
-            if reason is None and mfilter and "min_latent_cells" in mfilter:
-                cells = latent_cells(m)                   # after placement: the grid alignment matters
-                info["latent_cells"] = cells
-                if cells < int(mfilter["min_latent_cells"]):
-                    reason = "latent_too_small"
-            info["mask_attempt"] = mask_attempts
-            if reason is None:
-                masks.append(m)
-                place_info.append(info)
+    rejects = []
+
+    def judge(im, attempt, accepted_so_far):
+        g = im.mean(0)
+        m = (g > 0.8).float()[None]                               # upstream binarisation
+        reason = None if check_mask(m) else "check_mask"
+        if reason is None and mfilter:
+            reason = mask_filter_reason(g, m, mfilter)
+        info = {}
+        if reason is None and placement in ("v1", "v2"):
+            placed, tries, overlap = place_mask(m[0].numpy() > 0.5, fgs[accepted_so_far], prules, place_rng)
+            if placed is None:
+                reason = "placement_failed"
             else:
-                mask_rejected += 1
-                reject_reasons[reason] = reject_reasons.get(reason, 0) + 1
-                if save_rejects:                      # raw grey sample + the binary mask the rule judged
-                    stem = f"{mask_attempts:05d}_{reason}"
-                    grey = ((g.clamp(-1, 1) + 1) / 2 * 255).round().byte().numpy()
-                    Image.fromarray(grey).save(os.path.join(out, "rejects", stem + "_raw.png"))
-                    Image.fromarray((m[0].numpy() > 0.5).astype(np.uint8) * 255).save(
-                        os.path.join(out, "rejects", stem + "_mask.png"))
-                    rejects.append({"attempt": mask_attempts, "reason": reason,
-                                    "target_index": int(samples[len(masks)]["index"]), **info})
+                m = torch.from_numpy(placed.astype(np.float32))[None]
+                info = {"placement_tries": tries, "placement_overlap": round(overlap, 4)}
+        if reason is None and mfilter and "min_latent_cells" in mfilter:
+            cells = latent_cells(m)                               # after placement: the grid alignment matters
+            info["latent_cells"] = cells
+            if cells < int(mfilter["min_latent_cells"]):
+                reason = "latent_too_small"
+        info["mask_attempt"] = attempt
+        if reason is not None and save_rejects:                   # raw grey sample + the binary mask the rule judged
+            stem = f"{attempt:05d}_{reason}"
+            grey = ((g.clamp(-1, 1) + 1) / 2 * 255).round().byte().numpy()
+            Image.fromarray(grey).save(os.path.join(out, "rejects", stem + "_raw.png"))
+            Image.fromarray((m[0].numpy() > 0.5).astype(np.uint8) * 255).save(
+                os.path.join(out, "rejects", stem + "_mask.png"))
+            rejects.append({"attempt": attempt, "reason": reason,
+                            "target_index": int(samples[accepted_so_far]["index"]), **info})
+        return m, reason, info
+
+    # the budget counts judged masks; a full last batch past the budget is surplus, not extra attempts
+    s1 = run_stage1(lambda: cuda_time(lambda: mask_batch(int(sp["mask_ddim_steps"]))), judge,
+                    n, n * int(sp.get("mask_attempt_factor", 10)))
+    masks, place_info, mask_s = s1["masks"], s1["infos"], s1["seconds"]
     requested = n
     underfilled = len(masks) < n
     if underfilled:                                   # keep what we have + all statistics, do not throw them away
-        print(f"[worker] WARNING underfilled: only {len(masks)}/{n} masks after {mask_attempts} attempts "
-              f"{reject_reasons}", flush=True)
+        print(f"[worker] WARNING underfilled: only {len(masks)}/{n} masks after {s1['attempts']} "
+              f"of {s1['budget']} attempts {s1['reasons']}", flush=True)
         n = len(masks)
         samples = samples[:n]
-    masks = masks[:n]
     if save_rejects:
         json.dump(rejects, open(os.path.join(out, "rejects.json"), "w"), indent=2)
-    if n == 0:
-        json.dump({"name": name, "status": "underfilled", "requested": requested, "n": 0,
-                   "mask_attempts": mask_attempts, "mask_reject_reasons": reject_reasons,
-                   "mask_sampling_seconds_total": mask_s, "samples": []},
+
+    def provenance():
+        here = os.path.dirname(os.path.abspath(__file__))
+        sha = lambda f: __import__("hashlib").sha256(open(f, "rb").read()).hexdigest()
+        commit = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+        patched = subprocess.run(["git", "diff", "--stat"], capture_output=True, text=True).stdout.strip()
+        return {"upstream_commit": commit, "upstream_patches": patched,
+                "torch": torch.__version__, "cuda": torch.version.cuda,
+                "torchvision": __import__("torchvision").__version__,
+                "pillow": Image.__version__, "numpy": np.__version__,
+                "worker_sha256": sha(os.path.abspath(__file__)),
+                "stage1_sha256": sha(os.path.join(here, "stage1.py")),
+                "gpu": torch.cuda.get_device_name(0), "ckpt": ck, "sampling": sp,
+                "seed": int(req["seed"])}
+
+    note = "stage-1 counts are Diffusion-internal; shared QC statistics are reported separately by the adapter"
+    if n == 0:                                        # same statistics as a normal run; stage 2 never loaded
+        json.dump({"name": name, "placement": placement,
+                   **stage1_result(requested, s1, mask_load_s, mask_filter=mfilter),
+                   "placement_rules": req.get("placement_rules"), "note": note,
+                   "provenance": provenance(), "samples": []},
                   open(os.path.join(out, "result.json"), "w"), indent=2)
         raise SystemExit(2)
     del mmodel
@@ -257,12 +266,13 @@ def main():
 
     idx_pos = {int(s["index"]): k for k, s in enumerate(samples)}
     mask_share = mask_s / n                           # stage-1 cost incl. rejected masks, per accepted sample
-    records = []
+    records, inpaint_total = [], 0.0
     for start in range(0, n, bs):
         chunk = samples[start:start + bs]
         src = [load_source(os.path.join(req["mvtec_root"], s["source_image_id"]), size) for s in chunk]
         msk = masks[start:start + bs]
         gen, dt = cuda_time(lambda: inpaint(src, msk, int(sp["image_ddim_steps"])))
+        inpaint_total += dt
         per = dt / len(chunk)
         for s, g, m in zip(chunk, gen, msk):
             idx = int(s["index"])
@@ -273,29 +283,14 @@ def main():
                             "mask_seconds": mask_share, "inpaint_seconds": per,
                             "generation_seconds": mask_share + per, **place_info[idx_pos[idx]]})
 
-    commit = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
-    patched = subprocess.run(["git", "diff", "--stat"], capture_output=True, text=True).stdout.strip()
-    json.dump({"name": name, "placement": req.get("placement", "v0"), "n": n, "requested": requested,
-               "status": "underfilled" if underfilled else "ok",
-               "mask_attempts": mask_attempts, "stage1_upstream_check_mask_rejected": reject_reasons.get("check_mask", 0),
-               "mask_surplus_discarded": surplus,
-               "placement_rules": req.get("placement_rules"),
-               "diffusion_internal_filter": None if not mfilter else {
-                   "rules_version": mfilter.get("rules_version"), "rules_sha256": mfilter.get("rules_sha256"),
-                   "rejected": {k: v for k, v in reject_reasons.items() if k != "check_mask"}},
-               "note": "stage-1 counts are Diffusion-internal; shared QC statistics are reported separately by the adapter",
-               "mask_model_load_seconds": mask_load_s, "image_model_load_seconds": image_load_s,
-               "mask_sampling_seconds_total": mask_s,
-               "provenance": {"upstream_commit": commit, "upstream_patches": patched,
-                              "torch": torch.__version__, "cuda": torch.version.cuda,
-                              "torchvision": __import__("torchvision").__version__,
-                              "pillow": Image.__version__, "numpy": np.__version__,
-                              "worker_sha256": __import__("hashlib").sha256(open(__file__, "rb").read()).hexdigest(),
-                              "gpu": torch.cuda.get_device_name(0), "ckpt": ck, "sampling": sp,
-                              "seed": int(req["seed"])},
-               "samples": records}, open(os.path.join(out, "result.json"), "w"), indent=2)
-    print(f"[worker] {name}: {n}/{requested} pairs -> {out} | mask attempts {mask_attempts} "
-          f"(rejected {mask_rejected} {reject_reasons}) | load {mask_load_s + image_load_s:.0f}s | "
+    json.dump({"name": name, "placement": placement,
+               **stage1_result(requested, s1, mask_load_s, image_load_s, inpaint_total, mfilter),
+               "placement_rules": req.get("placement_rules"), "note": note,
+               "provenance": provenance(), "samples": records},
+              open(os.path.join(out, "result.json"), "w"), indent=2)
+    print(f"[worker] {name}: {n}/{requested} pairs -> {out} | mask attempts {s1['attempts']}/{s1['budget']} "
+          f"(rejected {sum(s1['reasons'].values())} {s1['reasons']}, surplus {s1['surplus']}) | "
+          f"load {mask_load_s + image_load_s:.0f}s | "
           f"mean gen {np.mean([r['generation_seconds'] for r in records]):.2f}s/img")
 
 
