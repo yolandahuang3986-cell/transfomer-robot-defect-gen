@@ -47,8 +47,11 @@ def train(args):
     if args.method in {'real_only', 'dummy'} and (getattr(args, 'bundle', None) or getattr(args, 'acceptance', None)):
         raise ValueError('Real-only/dummy must not receive synthetic bundles or acceptance')
     ratio_tier_count = getattr(args, 'ratio_tier_count', None)
+    ratio_append_seeds = getattr(args, 'ratio_append_seed', None) or None
     if ratio_tier_count is not None and not (formal and args.method not in {'real_only', 'dummy'}):
         raise ValueError('--ratio-tier-count is only valid with --formal and a synthetic method')
+    if ratio_append_seeds is not None and ratio_tier_count is None:
+        raise ValueError('--ratio-append-seed is only valid together with --ratio-tier-count')
     for output in (args.out, args.checkpoint):
         if Path(output).exists():
             raise FileExistsError(f'Refusing to overwrite output: {output}')
@@ -88,7 +91,8 @@ def train(args):
         if not args.acceptance:
             raise ValueError('Synthetic training requires --acceptance')
         batch, identity, reports = load_formal_pool(args.bundle, manifest, args.category, args.method, args.root,
-                                                    ratio_tier_count=ratio_tier_count)
+                                                    ratio_tier_count=ratio_tier_count,
+                                                    ratio_append_seeds=ratio_append_seeds)
         require_acceptance(args.acceptance, identity)
         synthetic_count = len(batch.images)
         train_set = ConcatDataset([train_set, generated_dataset(batch)])
@@ -198,6 +202,11 @@ def main():
                    help='Secondary ratio-analysis quota override (e.g. 15 or 150 for metal_nut instead '
                         'of the frozen 75/125 or per-type 25); never the primary quota, only valid with '
                         '--formal and a synthetic method, and bound into the acceptance record it requires')
+    p.add_argument('--ratio-append-seed', type=int, action='append', default=None,
+                   help='Disclosed extra generation seed(s) a ratio-tier append bundle is allowed to use '
+                        '(e.g. for an r=10 bundle built by keeping the primary r=5 pool and appending new '
+                        'samples under a fresh seed to avoid a directory collision); repeat for multiple '
+                        'seeds; only valid together with --ratio-tier-count, never for a primary pool')
     p.add_argument('--epochs', type=int, default=50)
     p.add_argument('--batch-size', type=int, default=8)
     p.add_argument('--image-size', type=int, default=256)

@@ -50,7 +50,8 @@ def _purpose_review(directory, provenance, method, artifacts):
     return {path.name: sha256(path)}
 
 
-def load_formal_pool(directories, manifest, category, method, root, ratio_tier_count=None):
+def load_formal_pool(directories, manifest, category, method, root, ratio_tier_count=None,
+                     ratio_append_seeds=None):
     """Validate artifacts and re-run shared QC; never silently filter the pool.
 
     Every directory contains batch.npz, metadata.json and provenance.json.
@@ -67,9 +68,26 @@ def load_formal_pool(directories, manifest, category, method, root, ratio_tier_c
     themselves, only what this one call checks against. The resulting identity
     records which tier was used, so acceptance.json stays bound to the exact
     tier, not just the exact bytes.
+
+    ratio_append_seeds=None (default) means every bundle must still record the
+    frozen base generation seed, exactly as before: a ratio-tier pool built by
+    truncating the already-accepted primary pool (e.g. r=1) needs nothing else.
+    The frozen protocol's "r=10 keeps the primary pool and appends" construction
+    needs a second bundle generated with a fresh, disclosed seed to avoid
+    colliding with the primary pool's own output directory; passing that seed
+    (or seeds) here is the only way such a bundle's provenance.seed is accepted.
+    Only valid together with an explicit ratio_tier_count (never for a primary
+    pool). The accepted extra seeds are recorded in identity, so acceptance.json
+    is bound to exactly which seeds were allowed, not just a bundle's bytes.
     """
     if ratio_tier_count is not None and (not _integer(ratio_tier_count) or ratio_tier_count < 1):
         raise ValueError('ratio_tier_count must be a positive int when given')
+    if ratio_append_seeds is not None:
+        if ratio_tier_count is None:
+            raise ValueError('ratio_append_seeds is only valid with an explicit ratio_tier_count')
+        ratio_append_seeds = sorted(set(ratio_append_seeds))
+        if not ratio_append_seeds or any(not _integer(s) for s in ratio_append_seeds):
+            raise ValueError('ratio_append_seeds must be a nonempty list of ints when given')
     protocol = settings()
     if category not in protocol['synthetic_counts'] or method not in {'procedural', 'gan', 'diffusion'}:
         raise ValueError('Unsupported formal category/method')
@@ -89,8 +107,11 @@ def load_formal_pool(directories, manifest, category, method, root, ratio_tier_c
         provenance = json.loads((directory / 'provenance.json').read_text())
         if provenance.get('split_sha256') != manifest['manifest_sha256'] or provenance.get('category') != category:
             raise ValueError('Bundle split/category mismatch')
-        if provenance.get('seed') != protocol['generation_seed']:
-            raise ValueError('Bundle must record base generation seed 42')
+        allowed_seeds = {protocol['generation_seed']} | set(ratio_append_seeds or ())
+        if provenance.get('seed') not in allowed_seeds:
+            raise ValueError('Bundle must record base generation seed 42'
+                            + (f' or a declared ratio_append_seed {sorted(allowed_seeds)}'
+                               if ratio_append_seeds else ''))
         for name in ('batch.npz', 'metadata.json'):
             if sha256(directory / name) != provenance.get('file_sha256', {}).get(name):
                 raise ValueError('Bundle checksum mismatch')
@@ -162,13 +183,16 @@ def load_formal_pool(directories, manifest, category, method, root, ratio_tier_c
     # against it) is byte-for-byte unchanged from before this parameter existed.
     if ratio_tier_count is not None:
         identity['ratio_tier_count'] = ratio_tier_count
+    if ratio_append_seeds is not None:
+        identity['ratio_append_seeds'] = ratio_append_seeds
     identity['pool_sha256'] = fingerprint(identity)
     return batch, identity, reports
 
 
 def require_acceptance(path, identity):
     record = json.loads(Path(path).read_text())
-    for key in ('pool_sha256', 'protocol_version', 'category', 'method', 'policy_hashes', 'ratio_tier_count'):
+    for key in ('pool_sha256', 'protocol_version', 'category', 'method', 'policy_hashes',
+               'ratio_tier_count', 'ratio_append_seeds'):
         if record.get(key) != identity.get(key):
             raise ValueError(f'Acceptance is stale or mismatched: {key}')
     if record.get('status') != 'accepted' or record.get('reviewer') != 'A':

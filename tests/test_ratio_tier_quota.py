@@ -12,7 +12,7 @@ from src.experiments.formal import settings
 from src.inspection.formal_bundle import load_formal_pool, require_acceptance
 
 
-def _build_bundle(tmp_path, count, monkeypatch, frozen_count=2):
+def _build_bundle(tmp_path, count, monkeypatch, frozen_count=2, seed=42, name='bundle'):
     import src.inspection.formal_bundle as module
     config = copy.deepcopy(settings())
     config['synthetic_counts']['metal_nut'] = frozen_count
@@ -22,20 +22,21 @@ def _build_bundle(tmp_path, count, monkeypatch, frozen_count=2):
     image = np.zeros((256, 256, 3), dtype=np.uint8)
     image[32:224, 32:224] = 200
     path = tmp_path / source
-    path.parent.mkdir(parents=True)
-    Image.fromarray(image).save(path)
-    directory = tmp_path / 'bundle'
+    if not path.exists():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        Image.fromarray(image).save(path)
+    directory = tmp_path / name
     directory.mkdir()
     images = np.repeat((image.transpose(2, 0, 1).astype(np.float32) / 255)[None], count, axis=0)
     masks = np.zeros((count, 1, 256, 256), dtype=np.float32)
     masks[:, :, 80:90, 80:90] = 1
     images[:, :, 80:90, 80:90] = .1
     records = [dict(method='procedural', category='metal_nut', defect_type='synthetic_patch',
-                    seed=42, source_image_id=source, generation_seconds=.1,
+                    seed=seed, source_image_id=source, generation_seconds=.1,
                     generation_config={'donor_image_id': source}) for _ in range(count)]
     np.savez_compressed(directory / 'batch.npz', images=images, masks=masks)
     (directory / 'metadata.json').write_text(json.dumps(records))
-    provenance = dict(purpose='formal', category='metal_nut', split_sha256='frozen', seed=42, num_samples=count,
+    provenance = dict(purpose='formal', category='metal_nut', split_sha256='frozen', seed=seed, num_samples=count,
                       file_sha256={n: sha256(directory / n) for n in ('batch.npz', 'metadata.json')},
                       shared_qc=dict(policy_version='synthetic-qc-v1', target_met=True, target_count=count,
                                      accepted_count=count, attempted_count=count + 1,
@@ -113,3 +114,74 @@ def test_acceptance_is_bound_to_its_own_ratio_tier(tmp_path, monkeypatch):
     primary_identity['pool_sha256'] = 'different-pool-entirely'
     with pytest.raises(ValueError, match='stale or mismatched'):
         require_acceptance(path, primary_identity)
+
+
+# ---------- ratio_append_seeds: the frozen "r=10 keeps the primary pool and
+# appends under a fresh, disclosed seed" construction (protocol §4) ----------
+
+def test_default_seed_check_is_unaffected_by_the_new_parameter(tmp_path, monkeypatch):
+    # A seed-142 bundle must still be rejected exactly as before when
+    # ratio_append_seeds is not passed at all.
+    directory, manifest = _build_bundle(tmp_path, 2, monkeypatch, frozen_count=2, seed=142)
+    with pytest.raises(ValueError, match='base generation seed 42'):
+        load_formal_pool([directory], manifest, 'metal_nut', 'procedural', tmp_path)
+
+
+def test_ratio_append_seeds_requires_ratio_tier_count(tmp_path, monkeypatch):
+    directory, manifest = _build_bundle(tmp_path, 2, monkeypatch, frozen_count=2, seed=142)
+    with pytest.raises(ValueError, match='only valid with an explicit ratio_tier_count'):
+        load_formal_pool([directory], manifest, 'metal_nut', 'procedural', tmp_path,
+                         ratio_append_seeds=[142])
+
+
+@pytest.mark.parametrize('bad', [[], [1.5], ['x']])
+def test_ratio_append_seeds_must_be_nonempty_ints(tmp_path, monkeypatch, bad):
+    directory, manifest = _build_bundle(tmp_path, 2, monkeypatch, frozen_count=2)
+    with pytest.raises(ValueError, match='nonempty list of ints'):
+        load_formal_pool([directory], manifest, 'metal_nut', 'procedural', tmp_path,
+                         ratio_tier_count=2, ratio_append_seeds=bad)
+
+
+def test_ratio_append_seeds_admits_primary_plus_a_declared_extra_seed_bundle(tmp_path, monkeypatch):
+    # The real construction: keep the primary (seed-42) pool unchanged, append
+    # new samples generated under a fresh, disclosed seed, combine via two bundles.
+    primary_dir, manifest = _build_bundle(tmp_path, 2, monkeypatch, frozen_count=2, seed=42, name='primary')
+    append_dir, _ = _build_bundle(tmp_path, 3, monkeypatch, frozen_count=2, seed=142, name='append')
+    batch, identity, _ = load_formal_pool([primary_dir, append_dir], manifest, 'metal_nut', 'procedural', tmp_path,
+                                          ratio_tier_count=5, ratio_append_seeds=[142])
+    assert len(batch.images) == 5
+    assert identity['ratio_append_seeds'] == [142]
+
+
+def test_ratio_append_seeds_rejects_an_undeclared_seed(tmp_path, monkeypatch):
+    primary_dir, manifest = _build_bundle(tmp_path, 2, monkeypatch, frozen_count=2, seed=42, name='primary')
+    append_dir, _ = _build_bundle(tmp_path, 3, monkeypatch, frozen_count=2, seed=142, name='append')
+    # Declaring a different seed than the one the append bundle actually used must still fail.
+    with pytest.raises(ValueError, match='base generation seed 42 or a declared ratio_append_seed'):
+        load_formal_pool([primary_dir, append_dir], manifest, 'metal_nut', 'procedural', tmp_path,
+                         ratio_tier_count=5, ratio_append_seeds=[999])
+
+
+def test_primary_pool_identity_unaffected_by_ratio_append_seeds_being_available(tmp_path, monkeypatch):
+    # Regression guard, same spirit as the ratio_tier_count one: not using the
+    # parameter must not change a primary pool's identity shape or pool_sha256.
+    directory, manifest = _build_bundle(tmp_path, 2, monkeypatch, frozen_count=2)
+    _, identity, _ = load_formal_pool([directory], manifest, 'metal_nut', 'procedural', tmp_path)
+    assert 'ratio_append_seeds' not in identity
+
+
+def test_acceptance_is_bound_to_its_declared_append_seeds(tmp_path, monkeypatch):
+    primary_dir, manifest = _build_bundle(tmp_path, 2, monkeypatch, frozen_count=2, seed=42, name='primary')
+    append_dir, _ = _build_bundle(tmp_path, 3, monkeypatch, frozen_count=2, seed=142, name='append')
+    _, identity, _ = load_formal_pool([primary_dir, append_dir], manifest, 'metal_nut', 'procedural', tmp_path,
+                                      ratio_tier_count=5, ratio_append_seeds=[142])
+    record = dict(identity, status='accepted', reviewer='A', reviewed_at='2026-10-19',
+                 notes='fixture', training_provenance_verified=True)
+    path = tmp_path / 'acceptance.json'
+    path.write_text(json.dumps(record))
+    require_acceptance(path, identity)
+    # An identity for the same pool_sha256 but a different declared seed set must not match
+    # (constructed here as a stale record claiming no append seeds were used).
+    stale = {k: v for k, v in identity.items() if k != 'ratio_append_seeds'}
+    with pytest.raises(ValueError, match='stale or mismatched'):
+        require_acceptance(path, stale)

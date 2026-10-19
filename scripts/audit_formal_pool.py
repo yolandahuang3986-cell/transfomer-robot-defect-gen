@@ -25,6 +25,9 @@ def main():
     p.add_argument('--ratio-tier-count', type=int, default=None,
                    help='Secondary ratio-analysis quota to admit instead of the frozen primary quota '
                         '(e.g. 15 or 150 for metal_nut procedural, or 5/50 per diffusion/GAN defect type)')
+    p.add_argument('--ratio-append-seed', type=int, action='append', default=None,
+                   help='Disclosed extra generation seed(s) a ratio-tier append bundle is allowed to use '
+                        '(only valid together with --ratio-tier-count); repeat for multiple seeds')
     args = p.parse_args()
     out = Path(args.out).resolve()
     if out.is_relative_to(ROOT) or out.exists():
@@ -33,7 +36,8 @@ def main():
     manifest = validate_manifest(json.loads(path.read_text()), args.root)
     validate_freeze_attestation(manifest, json.loads(path.with_suffix('.freeze.json').read_text()))
     batch, identity, reports = load_formal_pool(args.bundle, manifest, args.category, args.method, args.root,
-                                                ratio_tier_count=args.ratio_tier_count)
+                                                ratio_tier_count=args.ratio_tier_count,
+                                                ratio_append_seeds=args.ratio_append_seed)
     groups = defaultdict(list)
     for index, row in enumerate(batch.metadata):
         groups[row['defect_type']].append(index)
