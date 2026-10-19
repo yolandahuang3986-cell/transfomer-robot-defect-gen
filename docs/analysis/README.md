@@ -1,12 +1,12 @@
 # Member A analysis and evidence
 
-As of 18 October 2026, all six E0 runs and the primary comparison are complete for
-both accepted methods and both categories: metal_nut and screw E1 (Procedural) and
-E3 (Diffusion). B's screw pool was repaired (`screw_dark_core_colored_polygon_v4`,
-PR #10) and accepted; C's formal Diffusion pools (8 in-scope types × 25) were
-independently leakage-checked and visually audited, and accepted for both
-categories. GAN still has only failure-analysis evidence and no accepted formal
-pool; E2 remains `not_run_quality_gate` by design.
+As of 19 October 2026, all six E0 runs, the primary comparison, the cross-method
+cost ledger and the secondary ratio analysis (both methods) are complete. B's
+screw pool was repaired (`screw_dark_core_colored_polygon_v4`, PR #10) and
+accepted; C's formal Diffusion pools (8 in-scope types × 25) were independently
+leakage-checked and visually audited, and accepted for both categories. GAN
+still has only failure-analysis evidence and no accepted formal pool; E2
+remains `not_run_quality_gate` by design.
 
 ## Completed analysis
 
@@ -17,6 +17,8 @@ pool; E2 remains `not_run_quality_gate` by design.
 - [English text integrated into A's report sections](a_report_sections_20261017.md)
 - [Secondary ratio analysis, metal_nut Procedural (19 Oct, corrected)](../../results/metrics/ratio_analysis_metal_nut_20261019/README.md) —
   includes the same-day construction-bug correction (PR #15)
+- [Secondary ratio analysis, metal_nut Diffusion (19 Oct, complete)](../../results/metrics/ratio_analysis_diffusion_metal_nut_20261019/README.md) —
+  includes the combined both-methods comparison and the PR #17 bundle-split fix
 - [Raw E1 metal_nut metrics and execution evidence](../../results/metrics/e1_metal_nut_20261017/README.md)
 - [Raw E1 screw metrics and execution evidence](../../results/metrics/e1_screw_20261018/README.md)
 - [Raw E3 metal_nut metrics and execution evidence](../../results/metrics/e3_metal_nut_20261018/README.md)
@@ -37,9 +39,12 @@ B's Procedural/GAN methods, C's Diffusion methods, and A's common evaluation. B 
 C's method/process/cost/limitations sections can now be finalized independently of
 further primary runs; the cross-method effectiveness conclusion stays in A's part.
 The cross-method quality/cost synthesis is complete (18 Oct ledger, above). The
-secondary ratio analysis's Procedural half is also complete (19 Oct, metal_nut
-r=1/5/10, corrected construction per PR #15 — see `member_a_delivery.md` §8);
-its Diffusion half and the final overall conclusion remain open.
+secondary ratio analysis is complete for both methods (19 Oct, metal_nut r=1/5/10
+— see `member_a_delivery.md` §8): Procedural shows diminishing returns past the
+primary r=5 ratio, while Diffusion shows continued, increasingly consistent gains
+through r=10, with the largest segmentation jump (Dice/IoU) observed anywhere in
+this project — flagged, not over-interpreted. Only the final overall conclusion
+and report assembly remain open.
 
 The 18 Oct cost ledger independently recomputed Diffusion's totals from each
 bundle's raw `diffusion_internal.json`/`qc_report.json` (2026-10-18) and found them
@@ -55,9 +60,8 @@ cross-method speed ranking is possible: Procedural (CPU), Diffusion (GPU) and GA
 |---|---|---|
 | — | **Primary comparison: complete.** E0/E1/E3 done for both methods, both categories. | — |
 | — | **Quality/cost synthesis: complete** (18 Oct cross-method ledger). | — |
-| — | **Ratio analysis, Procedural side: complete** (19 Oct, metal_nut r=1/5/10). | — |
-| C | Diffusion ratio pools (r=10's 25/type append only; r=1 needs no new generation) | Ratio analysis, Diffusion side |
-| A | Final cross-method conclusion once the above is available | Unified report, §4.8-equivalent |
+| — | **Ratio analysis: complete**, both methods (19 Oct, metal_nut r=1/5/10). | — |
+| A | Final cross-method conclusion | Unified report, §4.8-equivalent |
 | B / C | Finalize method, failure-analysis and cost sections (content already largely written) | Unified report assembly |
 
 C's PR #9 fixed the three validation-code issues previously flagged at the merged

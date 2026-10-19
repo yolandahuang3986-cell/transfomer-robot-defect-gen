@@ -1,0 +1,378 @@
+{
+  "schema_version": 1,
+  "experiment_id": "diffusion_metal_nut_support5_seed42",
+  "category": "metal_nut",
+  "method": "diffusion",
+  "real_train_count": 235,
+  "synthetic_count": 150,
+  "seed": 42,
+  "generator": {
+    "generation_seconds_per_image": 17.8564002222754,
+    "config": {
+      "pool": {
+        "protocol_version": "v1.0-frozen",
+        "category": "metal_nut",
+        "method": "diffusion",
+        "split_sha256": "259a091b8681542704a69701473b03834440bc4da3371b5415e10f6b45be901c",
+        "artifacts": [
+          {
+            "batch.npz": "e0f47184884dc7629c6bdf4305b3e8c3bcbbedc35bc96e4be60503241e0929b5",
+            "metadata.json": "fd3094e9a98d7df8b4c4a8594b51c0306402ce8c2b36057baea7b5d8868ebd60",
+            "provenance.json": "b7e8b2803098038be94eb0ddfb0eae3fda25e27a5b2a6839027abfa2df4f7fda"
+          },
+          {
+            "batch.npz": "716c068d0fca962379c10e5342441d0e11ad68d3402042c16d3d0f7523270203",
+            "metadata.json": "9fc8e08f301df15c97b0bccb27b469f402e462dc4d574e94219042c7fc58c0ca",
+            "provenance.json": "44b4af3d0d5623062819ae9480043795bf9a53a8a91bdd7943c6571e75769784"
+          },
+          {
+            "batch.npz": "58eff5f5ecf0e7f7f5cd241e28867c30a187c18ad86614e6ce4077f0409d5439",
+            "metadata.json": "455a7f0a621de07940f1330c8ade3ff8acbc05b2eec5147d336665422491314e",
+            "provenance.json": "b879e5628288c9b2008e609501e1505bb57455ce3d1e55b930f700c07f76ccb7"
+          },
+          {
+            "batch.npz": "b5279e2d72c6e1f8c49f2feb835abf5dc979e58c3e552dea86b546e0127f61ff",
+            "metadata.json": "e6d3bbfd1ca3d4ecf7c44ff65f6936cf7d35c126a073cec47c55b9f9f6f49370",
+            "provenance.json": "5d691e9f7a68e22e0abe844298afdb92f3b9d4f6c3bbce28827d5818a3797e2b"
+          },
+          {
+            "batch.npz": "1cc8133ab9b34c04f053a390ac629b2f59753d70ccd96e139cf2a5be362464ae",
+            "metadata.json": "8cb12efb02238799d30237a69ca0e8b0a0f98f4eb12052abca4004976fa5be2b",
+            "provenance.json": "fb011bfb6fe2638587727f05d3d853e313d32dd1809394b968a01c11c5d95404"
+          },
+          {
+            "batch.npz": "677fe2b5b34a652d08e1ca2254a2d4343f0b0b7f51f7cf123a4ca87a25c6e838",
+            "metadata.json": "58a50b1971412a72e4895468b4d4a1ca946e74bc16db5d76e5dad3c74f08e712",
+            "provenance.json": "27b668cdef67a85708d5b91c74ac861ad5f8dff790a62c853c4e4df6bb934a02"
+          }
+        ],
+        "policy_hashes": {
+          "src/generation/qc.py": "e0bed11f5f5d6c6eb03bcf60ccc0e15b7ffadbaf4860b53313b063465384f62e",
+          "configs/experiment_scope.json": "7a5175f7ba58f29698ca47bd6b586bb8457b8e36677f4360bc87416ca9adce77",
+          "configs/experiments.yaml": "b8e7eab8d9b1d51019aa2e1f41c3b842aa737c7f882487a64ff180c3d09d86b0"
+        },
+        "synthetic_count": 150,
+        "ratio_tier_count": 50,
+        "ratio_append_seeds": [
+          142
+        ],
+        "pool_sha256": "31cac9ea32bb7cb0c348b0035b92899142374dadd3b9f1c5929df65a07d47201"
+      },
+      "qc_reports": [
+        {
+          "policy_version": "synthetic-qc-v1",
+          "target_count": 25,
+          "attempted_count": 25,
+          "accepted_count": 25,
+          "rejection_counts": {
+            "empty_mask": 0,
+            "mask_too_small": 0,
+            "mask_too_large": 0,
+            "low_foreground_overlap": 0
+          },
+          "rejected_samples": [],
+          "generation_seconds": 212.34158262517298,
+          "qc_seconds": 1.0652664974331856,
+          "target_met": true,
+          "acceptance_rate": 1.0
+        },
+        {
+          "policy_version": "synthetic-qc-v1",
+          "target_count": 25,
+          "attempted_count": 36,
+          "accepted_count": 25,
+          "rejection_counts": {
+            "empty_mask": 0,
+            "mask_too_small": 0,
+            "mask_too_large": 11,
+            "low_foreground_overlap": 0
+          },
+          "rejected_samples": [
+            {
+              "index": 9,
+              "source_image_id": "metal_nut/train/good/162.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 9
+            },
+            {
+              "index": 11,
+              "source_image_id": "metal_nut/train/good/079.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 11
+            },
+            {
+              "index": 16,
+              "source_image_id": "metal_nut/train/good/070.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 16
+            },
+            {
+              "index": 17,
+              "source_image_id": "metal_nut/train/good/054.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 17
+            },
+            {
+              "index": 23,
+              "source_image_id": "metal_nut/train/good/037.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 23
+            },
+            {
+              "index": 2,
+              "source_image_id": "metal_nut/train/good/184.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 27
+            },
+            {
+              "index": 3,
+              "source_image_id": "metal_nut/train/good/064.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 28
+            },
+            {
+              "index": 4,
+              "source_image_id": "metal_nut/train/good/070.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 29
+            },
+            {
+              "index": 0,
+              "source_image_id": "metal_nut/train/good/169.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 30
+            },
+            {
+              "index": 0,
+              "source_image_id": "metal_nut/train/good/098.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 33
+            },
+            {
+              "index": 0,
+              "source_image_id": "metal_nut/train/good/141.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 34
+            }
+          ],
+          "generation_seconds": 620.807613763958,
+          "qc_seconds": 1.0682890405878425,
+          "target_met": true,
+          "acceptance_rate": 0.6944444444444444
+        },
+        {
+          "policy_version": "synthetic-qc-v1",
+          "target_count": 25,
+          "attempted_count": 25,
+          "accepted_count": 25,
+          "rejection_counts": {
+            "empty_mask": 0,
+            "mask_too_small": 0,
+            "mask_too_large": 0,
+            "low_foreground_overlap": 0
+          },
+          "rejected_samples": [],
+          "generation_seconds": 635.8533748174086,
+          "qc_seconds": 1.049992403946817,
+          "target_met": true,
+          "acceptance_rate": 1.0
+        },
+        {
+          "policy_version": "synthetic-qc-v1",
+          "target_count": 25,
+          "attempted_count": 25,
+          "accepted_count": 25,
+          "rejection_counts": {
+            "empty_mask": 0,
+            "mask_too_small": 0,
+            "mask_too_large": 0,
+            "low_foreground_overlap": 0
+          },
+          "rejected_samples": [],
+          "generation_seconds": 213.25134466681618,
+          "qc_seconds": 1.046332510188222,
+          "target_met": true,
+          "acceptance_rate": 1.0
+        },
+        {
+          "policy_version": "synthetic-qc-v1",
+          "target_count": 25,
+          "attempted_count": 25,
+          "accepted_count": 25,
+          "rejection_counts": {
+            "empty_mask": 0,
+            "mask_too_small": 0,
+            "mask_too_large": 0,
+            "low_foreground_overlap": 0
+          },
+          "rejected_samples": [],
+          "generation_seconds": 505.73802497051634,
+          "qc_seconds": 1.0532532427459955,
+          "target_met": true,
+          "acceptance_rate": 1.0
+        },
+        {
+          "policy_version": "synthetic-qc-v1",
+          "target_count": 25,
+          "attempted_count": 34,
+          "accepted_count": 25,
+          "rejection_counts": {
+            "empty_mask": 0,
+            "mask_too_small": 0,
+            "mask_too_large": 9,
+            "low_foreground_overlap": 0
+          },
+          "rejected_samples": [
+            {
+              "index": 4,
+              "source_image_id": "metal_nut/train/good/038.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 4
+            },
+            {
+              "index": 8,
+              "source_image_id": "metal_nut/train/good/176.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 8
+            },
+            {
+              "index": 14,
+              "source_image_id": "metal_nut/train/good/087.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 14
+            },
+            {
+              "index": 16,
+              "source_image_id": "metal_nut/train/good/103.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 16
+            },
+            {
+              "index": 19,
+              "source_image_id": "metal_nut/train/good/177.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 19
+            },
+            {
+              "index": 21,
+              "source_image_id": "metal_nut/train/good/055.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 21
+            },
+            {
+              "index": 22,
+              "source_image_id": "metal_nut/train/good/039.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 22
+            },
+            {
+              "index": 1,
+              "source_image_id": "metal_nut/train/good/108.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 26
+            },
+            {
+              "index": 0,
+              "source_image_id": "metal_nut/train/good/074.png",
+              "reasons": [
+                "mask_too_large"
+              ],
+              "attempt_index": 32
+            }
+          ],
+          "generation_seconds": 490.46809249743836,
+          "qc_seconds": 1.0874132197350264,
+          "target_met": true,
+          "acceptance_rate": 0.7352941176470589
+        }
+      ],
+      "acceptance_sha256": "c20c3ec8f9ad7eddecc88b2111ab6f9ed23603a273ef6c98396ad4cf6e5db499",
+      "cost_basis": "reported generation seconds including shared-QC rejected attempts; not total wall time"
+    }
+  },
+  "inspection": {
+    "pixel_auroc": 0.8934617877145684,
+    "iou": 0.496621401695158,
+    "dice": 0.6636566885020574,
+    "defect_recall": 1.0,
+    "image_false_positive_rate": 1.0
+  },
+  "training": {
+    "architecture": "unet",
+    "encoder": "resnet18",
+    "encoder_weights": null,
+    "image_size": 256,
+    "steps": 1500,
+    "learning_rate": 0.0001,
+    "loss": 0.34612938917676606,
+    "batch_size": 8,
+    "sampler": "uniform_with_replacement",
+    "checkpoint_selection": "final_step"
+  },
+  "evaluation": {
+    "source": "heldout_real",
+    "count": 77,
+    "threshold": 0.5,
+    "scope_protocol": "local-defect-scope-v1",
+    "excluded_support_count": 5,
+    "excluded_heldout_count": 18,
+    "formal_protocol": "v1.0-frozen",
+    "smoke_only": false,
+    "split_sha256": "259a091b8681542704a69701473b03834440bc4da3371b5415e10f6b45be901c"
+  },
+  "provenance": {
+    "git_commit": "6ec9b23275ce9bfe94596fcdeebc40b430a1e3aa",
+    "git_dirty": false,
+    "python": "3.10.21",
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "device": "NVIDIA L40S",
+    "runtime_seconds": 58.61423750501126,
+    "packages": {
+      "segmentation-models-pytorch": "0.5.0",
+      "torchvision": "0.23.0",
+      "numpy": "2.2.6",
+      "Pillow": "12.3.0",
+      "scikit-learn": "1.7.2",
+      "jsonschema": "4.26.0"
+    }
+  }
+}
