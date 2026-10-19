@@ -50,7 +50,7 @@ def _purpose_review(directory, provenance, method, artifacts):
     return {path.name: sha256(path)}
 
 
-def load_formal_pool(directories, manifest, category, method, root):
+def load_formal_pool(directories, manifest, category, method, root, ratio_tier_count=None):
     """Validate artifacts and re-run shared QC; never silently filter the pool.
 
     Every directory contains batch.npz, metadata.json and provenance.json.
@@ -58,7 +58,18 @@ def load_formal_pool(directories, manifest, category, method, root):
     Explicit purpose must be formal. Legacy B exports without the field require
     a separate A purpose review; this never replaces whole-pool acceptance.
     Sources use the exporter's RGB bilinear resize to the native generated grid.
+
+    ratio_tier_count=None (default) enforces the frozen primary quota exactly as
+    before: protocol['synthetic_counts'][category] for procedural, or
+    protocol['conditional_samples_per_defect'] per defect type otherwise. Passing
+    an explicit positive int is the only way to admit a non-primary quota (a
+    secondary ratio-analysis pool); it never changes the frozen values
+    themselves, only what this one call checks against. The resulting identity
+    records which tier was used, so acceptance.json stays bound to the exact
+    tier, not just the exact bytes.
     """
+    if ratio_tier_count is not None and (not _integer(ratio_tier_count) or ratio_tier_count < 1):
+        raise ValueError('ratio_tier_count must be a positive int when given')
     protocol = settings()
     if category not in protocol['synthetic_counts'] or method not in {'procedural', 'gan', 'diffusion'}:
         raise ValueError('Unsupported formal category/method')
@@ -124,8 +135,9 @@ def load_formal_pool(directories, manifest, category, method, root):
                 with Image.open(Path(root) / source) as im:
                     array = np.asarray(im.convert('RGB').resize((256, 256), Image.Resampling.BILINEAR), dtype=np.float32)
                 foregrounds[source] = estimate_object_foreground(array.transpose(2, 0, 1) / 255)
+        per_defect_quota = ratio_tier_count if ratio_tier_count is not None else protocol['conditional_samples_per_defect']
         if method != 'procedural' and (len({r['defect_type'] for r in batch.metadata}) != 1
-                or count != protocol['conditional_samples_per_defect']):
+                or count != per_defect_quota):
             raise ValueError('Conditional exports require one quota-sized bundle per defect type')
         checked = filter_generated_batch(batch, foregrounds)
         if checked.report.accepted_count != count:
@@ -134,8 +146,9 @@ def load_formal_pool(directories, manifest, category, method, root):
         artifacts.append(artifact)
         reports.append(report)
     counts = Counter(row['defect_type'] for row in metadata)
-    expected = ({'synthetic_patch': protocol['synthetic_counts'][category]} if method == 'procedural'
-                else {name: protocol['conditional_samples_per_defect'] for name in strata})
+    category_quota = ratio_tier_count if ratio_tier_count is not None else protocol['synthetic_counts'][category]
+    expected = ({'synthetic_patch': category_quota} if method == 'procedural'
+                else {name: per_defect_quota for name in strata})
     if dict(counts) != expected:
         raise ValueError(f'Formal quota mismatch: expected {expected}, got {dict(counts)}')
     batch = GeneratedBatch(np.concatenate(images), np.concatenate(masks), metadata)
@@ -144,14 +157,19 @@ def load_formal_pool(directories, manifest, category, method, root):
     identity = dict(protocol_version=protocol['version'], category=category, method=method,
                     split_sha256=manifest['manifest_sha256'], artifacts=artifacts,
                     policy_hashes=policy_hashes(), synthetic_count=len(metadata))
+    # Only present for a non-primary ratio tier, so the primary pools' identity
+    # dict (and therefore pool_sha256 and every acceptance.json already signed
+    # against it) is byte-for-byte unchanged from before this parameter existed.
+    if ratio_tier_count is not None:
+        identity['ratio_tier_count'] = ratio_tier_count
     identity['pool_sha256'] = fingerprint(identity)
     return batch, identity, reports
 
 
 def require_acceptance(path, identity):
     record = json.loads(Path(path).read_text())
-    for key in ('pool_sha256', 'protocol_version', 'category', 'method', 'policy_hashes'):
-        if record.get(key) != identity[key]:
+    for key in ('pool_sha256', 'protocol_version', 'category', 'method', 'policy_hashes', 'ratio_tier_count'):
+        if record.get(key) != identity.get(key):
             raise ValueError(f'Acceptance is stale or mismatched: {key}')
     if record.get('status') != 'accepted' or record.get('reviewer') != 'A':
         raise ValueError('Explicit Member A whole-pool acceptance required')

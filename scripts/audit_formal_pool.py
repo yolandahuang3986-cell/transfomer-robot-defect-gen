@@ -22,6 +22,9 @@ def main():
     p.add_argument('--method', required=True, choices=['procedural', 'gan', 'diffusion'])
     p.add_argument('--bundle', required=True, action='append')
     p.add_argument('--out', required=True, help='New review directory outside Git')
+    p.add_argument('--ratio-tier-count', type=int, default=None,
+                   help='Secondary ratio-analysis quota to admit instead of the frozen primary quota '
+                        '(e.g. 15 or 150 for metal_nut procedural, or 5/50 per diffusion/GAN defect type)')
     args = p.parse_args()
     out = Path(args.out).resolve()
     if out.is_relative_to(ROOT) or out.exists():
@@ -29,7 +32,8 @@ def main():
     path = Path(args.manifest)
     manifest = validate_manifest(json.loads(path.read_text()), args.root)
     validate_freeze_attestation(manifest, json.loads(path.with_suffix('.freeze.json').read_text()))
-    batch, identity, reports = load_formal_pool(args.bundle, manifest, args.category, args.method, args.root)
+    batch, identity, reports = load_formal_pool(args.bundle, manifest, args.category, args.method, args.root,
+                                                ratio_tier_count=args.ratio_tier_count)
     groups = defaultdict(list)
     for index, row in enumerate(batch.metadata):
         groups[row['defect_type']].append(index)

@@ -46,6 +46,9 @@ def train(args):
         raise ValueError('Synthetic training requires --formal and accepted bundles')
     if args.method in {'real_only', 'dummy'} and (getattr(args, 'bundle', None) or getattr(args, 'acceptance', None)):
         raise ValueError('Real-only/dummy must not receive synthetic bundles or acceptance')
+    ratio_tier_count = getattr(args, 'ratio_tier_count', None)
+    if ratio_tier_count is not None and not (formal and args.method not in {'real_only', 'dummy'}):
+        raise ValueError('--ratio-tier-count is only valid with --formal and a synthetic method')
     for output in (args.out, args.checkpoint):
         if Path(output).exists():
             raise FileExistsError(f'Refusing to overwrite output: {output}')
@@ -84,7 +87,8 @@ def train(args):
             raise ValueError('Formal quota is fixed by protocol, not --synthetic-count')
         if not args.acceptance:
             raise ValueError('Synthetic training requires --acceptance')
-        batch, identity, reports = load_formal_pool(args.bundle, manifest, args.category, args.method, args.root)
+        batch, identity, reports = load_formal_pool(args.bundle, manifest, args.category, args.method, args.root,
+                                                    ratio_tier_count=ratio_tier_count)
         require_acceptance(args.acceptance, identity)
         synthetic_count = len(batch.images)
         train_set = ConcatDataset([train_set, generated_dataset(batch)])
@@ -190,6 +194,10 @@ def main():
     p.add_argument('--bundle', action='append', default=[], help='Accepted bundle directory; repeat for conditional strata')
     p.add_argument('--acceptance', help='A whole-pool acceptance JSON bound to exact artifact hashes')
     p.add_argument('--synthetic-count', type=int, default=0)
+    p.add_argument('--ratio-tier-count', type=int, default=None,
+                   help='Secondary ratio-analysis quota override (e.g. 15 or 150 for metal_nut instead '
+                        'of the frozen 75/125 or per-type 25); never the primary quota, only valid with '
+                        '--formal and a synthetic method, and bound into the acceptance record it requires')
     p.add_argument('--epochs', type=int, default=50)
     p.add_argument('--batch-size', type=int, default=8)
     p.add_argument('--image-size', type=int, default=256)
