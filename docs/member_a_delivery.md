@@ -185,18 +185,69 @@ a negative result (existing failure/ablation evidence stands, no new GAN trainin
 is planned). The analysis preserves raw result precision and source hashes and
 identifies AI-assisted visual review explicitly throughout (B's and A's own).
 
-## 8. Remaining work
+## 8. Secondary ratio analysis (Procedural, metal_nut) — 19 October 2026
+
+Decided 18 October: test r=1 and r=10 against the frozen primary r=5 (§4 of the
+protocol), scoped first to metal_nut, both accepted methods, with a reduced
+human-audit pass (5–8 pairs per tier instead of the primary 20) given the
+generation code itself is already accepted at r=5.
+
+**A construction bug was found and corrected same-day.** §4 of the protocol
+requires the tiers to be nested ("r=1 uses the primary pool's deterministic
+stratified prefix, r=10 keeps the primary pool and appends"). The first attempt
+independently re-invoked `generate_procedural.py` at each target count (`--seed
+42`, `--num-samples 15` / `150`) — this was *not* a prefix/superset of the
+accepted primary pool: a shared-QC rejection partway through a run shifts every
+sample generated afterward, so a different `--num-samples` at the same seed
+does not reproduce the primary pool's sequence past the first rejection.
+Verified directly: the independent r=1 matched the primary pool's first 15 on
+only 14/15; the independent r=10 matched the primary pool's first 75 on only
+67/75. That result was shown in the shared OneDrive report draft for a few
+hours, marked `[CORRECTION IN PROGRESS]`, and was never committed to this repo.
+
+**Corrected construction:** r=1 (15 pairs) = a literal, byte-identical prefix
+of the accepted primary pool's own `batch.npz`/`metadata.json` — no
+regeneration. r=10 (150 pairs) = the primary pool (75) kept completely
+unchanged, plus 75 newly generated pairs appended from a second bundle under a
+disclosed, non-primary seed (142, chosen only to avoid a TC2 output-directory
+collision with the primary pool's own seed-42 run; 80 attempts, 93.75%
+acceptance). This needed a small code change admitting a bundle with a
+disclosed non-primary seed in ratio-analysis mode only (PR #15; its own
+real-data regression check, and this analysis's real use of it, both confirm no
+effect on any already-accepted primary pool).
+
+Jobs **44078** (r=1) and **44079** (r=10), both exit 0:0, NVIDIA A40, code
+commit `ed5a727` (includes PR #15), seeds 42/43/44, 1,500 steps.
+
+| Ratio (n) | Pixel AUROC | Δ vs E0 | Dice | IoU |
+|---|---:|---:|---:|---:|
+| r=1 (15, true prefix) | 0.6918 ± 0.1208 | +0.0360 ± 0.0046 | 0.0190 ± 0.0305 | 0.0097 ± 0.0157 |
+| r=5 (75, primary, unchanged) | 0.8202 ± 0.0995 | +0.1644 ± 0.2171 | 0.0591 ± 0.0644 | 0.0312 ± 0.0345 |
+| r=10 (150, primary + seed-142 append) | 0.8000 ± 0.1298 | +0.1442 ± 0.2139 | 0.0429 ± 0.0383 | 0.0222 ± 0.0199 |
+
+Pixel AUROC rises from r=1 to r=5, then dips slightly at r=10 rather than
+continuing to improve — diminishing, not negative, returns in this range.
+r=10's paired gain is close to r=5's and still noisy across seeds; r=1's gain
+is smaller but markedly more consistent. Dice/IoU fall below E0 at all three
+ratios, least so at r=10. Three ratio points and three seeds per point do not
+establish statistical significance or a confirmed optimum.
+
+Diffusion's side is unaffected by the bug (never run) and is now a smaller ask
+for C: r=1 needs no new generation (A builds it directly from her already-
+accepted bundles); r=10 only needs the 25/type append portion under a
+disclosed fresh seed, not a full 50/type regeneration.
+
+[Full results and evidence](../results/metrics/ratio_analysis_metal_nut_20261019/README.md).
+
+## 9. Remaining work
 
 The B and C delivery/acceptance/primary-comparison chain (steps 1–6 of the team's
 linear workflow) is complete for both methods and both categories. What remains is
 secondary analysis and the final report, not new primary comparisons:
 
-- **Ratio analysis (pending a decision):** the primary comparison uses the frozen
-  ratio r=5 (§4 of the frozen protocol). Secondary ratios (candidates: r=1, r=10)
-  would show whether the observed gains scale with synthetic-data volume. **The
-  mix-ratio tiers are not yet decided** (flagged open since the original
-  hand-off); this is a new generation + downstream-training experiment and cannot
-  be planned or scheduled until the ratio tiers are set.
+- **Ratio analysis:** Procedural side complete (§8 above). Diffusion side
+  (r=10's 25/type append only; r=1 needs no generation) requested from C, not
+  yet delivered.
 - **Quality/cost synthesis: complete** (18 Oct 2026). B's and C's generation
   timers, QC statistics and failure taxonomies are compiled into one cross-method
   [ledger](analysis/quality_cost_ledger_20261018.md); Diffusion's totals were

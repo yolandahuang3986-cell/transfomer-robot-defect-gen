@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "experiment_id": "procedural_metal_nut_support5_seed43",
+  "category": "metal_nut",
+  "method": "procedural",
+  "real_train_count": 235,
+  "synthetic_count": 15,
+  "seed": 43,
+  "generator": {
+    "generation_seconds_per_image": 0.0,
+    "config": {
+      "pool": {
+        "protocol_version": "v1.0-frozen",
+        "category": "metal_nut",
+        "method": "procedural",
+        "split_sha256": "259a091b8681542704a69701473b03834440bc4da3371b5415e10f6b45be901c",
+        "artifacts": [
+          {
+            "batch.npz": "ac6f9bb16cf369f37a68f4d4f057e755dc278406ad58e3e0cec914c6e43342f5",
+            "metadata.json": "6724928df0859bfda8a0cda0af8d651dd1d7cf4cd387b372f2ea378d33af8269",
+            "provenance.json": "5951050e0abd6e5411c700cfd6e0d0811c142c9c804c246607c873c84a54442e"
+          }
+        ],
+        "policy_hashes": {
+          "src/generation/qc.py": "e0bed11f5f5d6c6eb03bcf60ccc0e15b7ffadbaf4860b53313b063465384f62e",
+          "configs/experiment_scope.json": "7a5175f7ba58f29698ca47bd6b586bb8457b8e36677f4360bc87416ca9adce77",
+          "configs/experiments.yaml": "b8e7eab8d9b1d51019aa2e1f41c3b842aa737c7f882487a64ff180c3d09d86b0"
+        },
+        "synthetic_count": 15,
+        "ratio_tier_count": 15,
+        "pool_sha256": "3e8267762ac3bee360e11fa3598975af0db80d6596772e0c61492691c9bfcbdd"
+      },
+      "qc_reports": [
+        {
+          "policy_version": "synthetic-qc-v1",
+          "target_met": true,
+          "target_count": 15,
+          "accepted_count": 15,
+          "attempted_count": 15,
+          "generation_seconds": 0.0,
+          "qc_seconds": 0.0
+        }
+      ],
+      "acceptance_sha256": "458cf93ef8810bfbfc354085a871534a94fd87c010ee9f0b7a150ee0642cd1aa",
+      "cost_basis": "reported generation seconds including shared-QC rejected attempts; not total wall time"
+    }
+  },
+  "inspection": {
+    "pixel_auroc": 0.556269938033021,
+    "iou": 0.0007379056453836299,
+    "dice": 0.0014747230842779935,
+    "defect_recall": 1.0,
+    "image_false_positive_rate": 1.0
+  },
+  "training": {
+    "architecture": "unet",
+    "encoder": "resnet18",
+    "encoder_weights": null,
+    "image_size": 256,
+    "steps": 1500,
+    "learning_rate": 0.0001,
+    "loss": 0.2736727144817511,
+    "batch_size": 8,
+    "sampler": "uniform_with_replacement",
+    "checkpoint_selection": "final_step"
+  },
+  "evaluation": {
+    "source": "heldout_real",
+    "count": 77,
+    "threshold": 0.5,
+    "scope_protocol": "local-defect-scope-v1",
+    "excluded_support_count": 5,
+    "excluded_heldout_count": 18,
+    "formal_protocol": "v1.0-frozen",
+    "smoke_only": false,
+    "split_sha256": "259a091b8681542704a69701473b03834440bc4da3371b5415e10f6b45be901c"
+  },
+  "provenance": {
+    "git_commit": "ed5a727e73425cba628592574fe8a4e977b95396",
+    "git_dirty": false,
+    "python": "3.10.21",
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "device": "NVIDIA A40",
+    "runtime_seconds": 80.88452288601547,
+    "packages": {
+      "segmentation-models-pytorch": "0.5.0",
+      "torchvision": "0.23.0",
+      "numpy": "2.2.6",
+      "Pillow": "12.3.0",
+      "scikit-learn": "1.7.2",
+      "jsonschema": "4.26.0"
+    }
+  }
+}

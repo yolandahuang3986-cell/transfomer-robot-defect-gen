@@ -15,6 +15,8 @@ pool; E2 remains `not_run_quality_gate` by design.
 - [Quality and cost ledger, cross-method (18 Oct)](quality_cost_ledger_20261018.md),
   superseding the [17 Oct Procedural/GAN-only version](quality_cost_ledger_20261017.md)
 - [English text integrated into A's report sections](a_report_sections_20261017.md)
+- [Secondary ratio analysis, metal_nut Procedural (19 Oct, corrected)](../../results/metrics/ratio_analysis_metal_nut_20261019/README.md) —
+  includes the same-day construction-bug correction (PR #15)
 - [Raw E1 metal_nut metrics and execution evidence](../../results/metrics/e1_metal_nut_20261017/README.md)
 - [Raw E1 screw metrics and execution evidence](../../results/metrics/e1_screw_20261018/README.md)
 - [Raw E3 metal_nut metrics and execution evidence](../../results/metrics/e3_metal_nut_20261018/README.md)
@@ -34,8 +36,10 @@ The OneDrive working report retains four main parts: A's background/framework,
 B's Procedural/GAN methods, C's Diffusion methods, and A's common evaluation. B and
 C's method/process/cost/limitations sections can now be finalized independently of
 further primary runs; the cross-method effectiveness conclusion stays in A's part.
-The cross-method quality/cost synthesis is complete (18 Oct ledger, above); secondary
-ratio analysis and the final overall conclusion remain open (see `member_a_delivery.md` §8).
+The cross-method quality/cost synthesis is complete (18 Oct ledger, above). The
+secondary ratio analysis's Procedural half is also complete (19 Oct, metal_nut
+r=1/5/10, corrected construction per PR #15 — see `member_a_delivery.md` §8);
+its Diffusion half and the final overall conclusion remain open.
 
 The 18 Oct cost ledger independently recomputed Diffusion's totals from each
 bundle's raw `diffusion_internal.json`/`qc_report.json` (2026-10-18) and found them
@@ -51,7 +55,8 @@ cross-method speed ranking is possible: Procedural (CPU), Diffusion (GPU) and GA
 |---|---|---|
 | — | **Primary comparison: complete.** E0/E1/E3 done for both methods, both categories. | — |
 | — | **Quality/cost synthesis: complete** (18 Oct cross-method ledger). | — |
-| A | Decide the secondary ratio-analysis mix tiers (open since hand-off; candidates r=1, r=10 against the frozen primary r=5) | Secondary ratio experiment can be planned |
+| — | **Ratio analysis, Procedural side: complete** (19 Oct, metal_nut r=1/5/10). | — |
+| C | Diffusion ratio pools (r=10's 25/type append only; r=1 needs no new generation) | Ratio analysis, Diffusion side |
 | A | Final cross-method conclusion once the above is available | Unified report, §4.8-equivalent |
 | B / C | Finalize method, failure-analysis and cost sections (content already largely written) | Unified report assembly |
 

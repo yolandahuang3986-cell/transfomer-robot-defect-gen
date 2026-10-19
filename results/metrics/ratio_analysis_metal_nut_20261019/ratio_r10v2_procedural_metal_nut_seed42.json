@@ -1,0 +1,235 @@
+{
+  "schema_version": 1,
+  "experiment_id": "procedural_metal_nut_support5_seed42",
+  "category": "metal_nut",
+  "method": "procedural",
+  "real_train_count": 235,
+  "synthetic_count": 150,
+  "seed": 42,
+  "generator": {
+    "generation_seconds_per_image": 0.033112324335229475,
+    "config": {
+      "pool": {
+        "protocol_version": "v1.0-frozen",
+        "category": "metal_nut",
+        "method": "procedural",
+        "split_sha256": "259a091b8681542704a69701473b03834440bc4da3371b5415e10f6b45be901c",
+        "artifacts": [
+          {
+            "batch.npz": "3a6ca13fcb6d2728071c22335bc7f102d573e81e41fccf8ccd631b8ffe1105ba",
+            "metadata.json": "bc91f9d8be342837e59cc48fe5a925fcb38629613cc7c91e35abd75e61329db9",
+            "provenance.json": "12b00900dd0c48eaab8ce040a16a3c5448787eaaddd1513cbfa56a82dcd19c2a",
+            "legacy_purpose_review.json": "66c975c4b9b5e75c60c54088326b799a13e62a4d0e3732e4b95379222bacfa5b"
+          },
+          {
+            "batch.npz": "83292113566d0b6e62300e6a9da817e33ac18e8b5b7536ce1433eb0b8326120c",
+            "metadata.json": "65a7d0911b3e6a987feb16c2e1f409fbe328655ff6cc14eba163ef4b1da662ff",
+            "provenance.json": "86d7f1b0628242c85330f9daacb453a94348b17bd5fc23e325d9161ecb07dc93"
+          }
+        ],
+        "policy_hashes": {
+          "src/generation/qc.py": "e0bed11f5f5d6c6eb03bcf60ccc0e15b7ffadbaf4860b53313b063465384f62e",
+          "configs/experiment_scope.json": "7a5175f7ba58f29698ca47bd6b586bb8457b8e36677f4360bc87416ca9adce77",
+          "configs/experiments.yaml": "b8e7eab8d9b1d51019aa2e1f41c3b842aa737c7f882487a64ff180c3d09d86b0"
+        },
+        "synthetic_count": 150,
+        "ratio_tier_count": 150,
+        "ratio_append_seeds": [
+          142
+        ],
+        "pool_sha256": "25861b87bf215e7260f12cbe052987a23a2a03a0ff690430843d66a2241ddcf7"
+      },
+      "qc_reports": [
+        {
+          "policy_version": "synthetic-qc-v1",
+          "target_count": 75,
+          "attempted_count": 83,
+          "accepted_count": 75,
+          "rejection_counts": {
+            "empty_mask": 0,
+            "mask_too_small": 8,
+            "mask_too_large": 0,
+            "low_foreground_overlap": 0
+          },
+          "rejected_samples": [
+            {
+              "index": 5,
+              "source_image_id": "metal_nut/train/good/188.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 5
+            },
+            {
+              "index": 22,
+              "source_image_id": "metal_nut/train/good/038.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 22
+            },
+            {
+              "index": 28,
+              "source_image_id": "metal_nut/train/good/063.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 28
+            },
+            {
+              "index": 43,
+              "source_image_id": "metal_nut/train/good/051.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 43
+            },
+            {
+              "index": 53,
+              "source_image_id": "metal_nut/train/good/161.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 53
+            },
+            {
+              "index": 54,
+              "source_image_id": "metal_nut/train/good/058.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 54
+            },
+            {
+              "index": 58,
+              "source_image_id": "metal_nut/train/good/094.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 58
+            },
+            {
+              "index": 65,
+              "source_image_id": "metal_nut/train/good/201.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 65
+            }
+          ],
+          "generation_seconds": 1.1789228729732955,
+          "qc_seconds": 0.3580729584209621,
+          "target_met": true,
+          "acceptance_rate": 0.9036144578313253
+        },
+        {
+          "policy_version": "synthetic-qc-v1",
+          "target_count": 75,
+          "attempted_count": 80,
+          "accepted_count": 75,
+          "rejection_counts": {
+            "empty_mask": 0,
+            "mask_too_small": 5,
+            "mask_too_large": 0,
+            "low_foreground_overlap": 0
+          },
+          "rejected_samples": [
+            {
+              "index": 0,
+              "source_image_id": "metal_nut/train/good/003.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 0
+            },
+            {
+              "index": 6,
+              "source_image_id": "metal_nut/train/good/035.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 6
+            },
+            {
+              "index": 18,
+              "source_image_id": "metal_nut/train/good/047.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 18
+            },
+            {
+              "index": 66,
+              "source_image_id": "metal_nut/train/good/027.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 66
+            },
+            {
+              "index": 69,
+              "source_image_id": "metal_nut/train/good/185.png",
+              "reasons": [
+                "mask_too_small"
+              ],
+              "attempt_index": 69
+            }
+          ],
+          "generation_seconds": 3.787925777311126,
+          "qc_seconds": 1.0747925639152527,
+          "target_met": true,
+          "acceptance_rate": 0.9375
+        }
+      ],
+      "acceptance_sha256": "aa387c2fe13688ae5a9098b2f1ded6ca6e25091d37ca488a3371766f21c5bdd1",
+      "cost_basis": "reported generation seconds including shared-QC rejected attempts; not total wall time"
+    }
+  },
+  "inspection": {
+    "pixel_auroc": 0.6551430869437773,
+    "iou": 0.02659633273844307,
+    "dice": 0.05181458746788511,
+    "defect_recall": 1.0,
+    "image_false_positive_rate": 1.0
+  },
+  "training": {
+    "architecture": "unet",
+    "encoder": "resnet18",
+    "encoder_weights": null,
+    "image_size": 256,
+    "steps": 1500,
+    "learning_rate": 0.0001,
+    "loss": 0.34731474906206133,
+    "batch_size": 8,
+    "sampler": "uniform_with_replacement",
+    "checkpoint_selection": "final_step"
+  },
+  "evaluation": {
+    "source": "heldout_real",
+    "count": 77,
+    "threshold": 0.5,
+    "scope_protocol": "local-defect-scope-v1",
+    "excluded_support_count": 5,
+    "excluded_heldout_count": 18,
+    "formal_protocol": "v1.0-frozen",
+    "smoke_only": false,
+    "split_sha256": "259a091b8681542704a69701473b03834440bc4da3371b5415e10f6b45be901c"
+  },
+  "provenance": {
+    "git_commit": "ed5a727e73425cba628592574fe8a4e977b95396",
+    "git_dirty": false,
+    "python": "3.10.21",
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "device": "NVIDIA A40",
+    "runtime_seconds": 70.61984662804753,
+    "packages": {
+      "segmentation-models-pytorch": "0.5.0",
+      "torchvision": "0.23.0",
+      "numpy": "2.2.6",
+      "Pillow": "12.3.0",
+      "scikit-learn": "1.7.2",
+      "jsonschema": "4.26.0"
+    }
+  }
+}
