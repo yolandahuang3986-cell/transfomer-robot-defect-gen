@@ -185,3 +185,83 @@ def test_acceptance_is_bound_to_its_declared_append_seeds(tmp_path, monkeypatch)
     stale = {k: v for k, v in identity.items() if k != 'ratio_append_seeds'}
     with pytest.raises(ValueError, match='stale or mismatched'):
         require_acceptance(path, stale)
+
+
+# ---------- diffusion/gan: splitting one defect type's quota across a primary
+# bundle + an append bundle (the real construction C needed for r=10) ----------
+
+def _build_diffusion_bundle(tmp_path, count, monkeypatch, defect_type='bent', per_defect_quota=2,
+                            seed=42, name='bundle'):
+    import src.inspection.formal_bundle as module
+    config = copy.deepcopy(settings())
+    config['conditional_samples_per_defect'] = per_defect_quota
+    config['split_sha256'] = 'frozen'
+    monkeypatch.setattr(module, 'settings', lambda: config)
+    source = 'metal_nut/train/good/000.png'
+    image = np.zeros((256, 256, 3), dtype=np.uint8)
+    image[32:224, 32:224] = 200
+    path = tmp_path / source
+    if not path.exists():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        Image.fromarray(image).save(path)
+    directory = tmp_path / name
+    directory.mkdir()
+    images = np.repeat((image.transpose(2, 0, 1).astype(np.float32) / 255)[None], count, axis=0)
+    masks = np.zeros((count, 1, 256, 256), dtype=np.float32)
+    masks[:, :, 80:90, 80:90] = 1
+    images[:, :, 80:90, 80:90] = .1
+    records = [dict(method='diffusion', category='metal_nut', defect_type=defect_type,
+                    seed=seed, source_image_id=source, generation_seconds=.1,
+                    generation_config={'donor_image_id': source}) for _ in range(count)]
+    np.savez_compressed(directory / 'batch.npz', images=images, masks=masks)
+    (directory / 'metadata.json').write_text(json.dumps(records))
+    provenance = dict(purpose='formal', category='metal_nut', split_sha256='frozen', seed=seed, num_samples=count,
+                      file_sha256={n: sha256(directory / n) for n in ('batch.npz', 'metadata.json')},
+                      shared_qc=dict(policy_version='synthetic-qc-v1', target_met=True, target_count=count,
+                                     accepted_count=count, attempted_count=count + 1,
+                                     generation_seconds=.3, qc_seconds=.1))
+    (directory / 'provenance.json').write_text(json.dumps(provenance))
+    manifest = dict(manifest_sha256='frozen', train_normal=[dict(category='metal_nut', image_path=source)],
+                    support=[dict(category='metal_nut', defect_type=defect_type)])
+    return directory, manifest
+
+
+def test_diffusion_default_still_requires_one_quota_sized_bundle(tmp_path, monkeypatch):
+    # Unchanged behaviour: without ratio_append_seeds, a single bundle must
+    # itself equal the per-defect quota -- splitting across two (same seed,
+    # so this isn't confounded with the seed check) is rejected, exactly as
+    # it always has been.
+    primary_dir, manifest = _build_diffusion_bundle(tmp_path, 2, monkeypatch, per_defect_quota=2, name='primary')
+    second_dir, _ = _build_diffusion_bundle(tmp_path, 3, monkeypatch, per_defect_quota=2, seed=42, name='second')
+    with pytest.raises(ValueError, match='one quota-sized bundle per defect type'):
+        load_formal_pool([primary_dir, second_dir], manifest, 'metal_nut', 'diffusion', tmp_path,
+                         ratio_tier_count=5)  # no ratio_append_seeds: old strict per-bundle check applies
+
+
+def test_diffusion_ratio_append_seeds_admits_a_split_per_type_quota(tmp_path, monkeypatch):
+    # The real construction C needed: one defect type's quota split across a
+    # primary (seed 42, 2) and append (seed 142, 3) bundle, totalling 5.
+    primary_dir, manifest = _build_diffusion_bundle(tmp_path, 2, monkeypatch, per_defect_quota=2, name='primary')
+    append_dir, _ = _build_diffusion_bundle(tmp_path, 3, monkeypatch, per_defect_quota=2, seed=142, name='append')
+    batch, identity, _ = load_formal_pool([primary_dir, append_dir], manifest, 'metal_nut', 'diffusion', tmp_path,
+                                          ratio_tier_count=5, ratio_append_seeds=[142])
+    assert len(batch.images) == 5
+    assert identity['ratio_tier_count'] == 5
+
+
+def test_diffusion_ratio_append_seeds_still_rejects_a_bundle_over_quota(tmp_path, monkeypatch):
+    # A single bundle may not exceed the per-type quota even in append mode.
+    over_dir, manifest = _build_diffusion_bundle(tmp_path, 6, monkeypatch, per_defect_quota=2, name='over')
+    with pytest.raises(ValueError, match='exceeds the ratio-tier per-defect quota'):
+        load_formal_pool([over_dir], manifest, 'metal_nut', 'diffusion', tmp_path,
+                         ratio_tier_count=5, ratio_append_seeds=[142])
+
+
+def test_diffusion_ratio_append_seeds_still_enforces_the_aggregate_total(tmp_path, monkeypatch):
+    # Per-bundle counts are each within quota, but their sum underfills the
+    # declared ratio_tier_count: the aggregate check must still catch this.
+    primary_dir, manifest = _build_diffusion_bundle(tmp_path, 2, monkeypatch, per_defect_quota=2, name='primary')
+    append_dir, _ = _build_diffusion_bundle(tmp_path, 1, monkeypatch, per_defect_quota=2, seed=142, name='append')
+    with pytest.raises(ValueError, match='Formal quota mismatch'):
+        load_formal_pool([primary_dir, append_dir], manifest, 'metal_nut', 'diffusion', tmp_path,
+                         ratio_tier_count=5, ratio_append_seeds=[142])
