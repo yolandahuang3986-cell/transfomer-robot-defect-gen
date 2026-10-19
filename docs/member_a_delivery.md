@@ -185,7 +185,7 @@ a negative result (existing failure/ablation evidence stands, no new GAN trainin
 is planned). The analysis preserves raw result precision and source hashes and
 identifies AI-assisted visual review explicitly throughout (B's and A's own).
 
-## 8. Secondary ratio analysis (Procedural, metal_nut) — 19 October 2026
+## 8. Secondary ratio analysis (metal_nut, both methods) — 19 October 2026
 
 Decided 18 October: test r=1 and r=10 against the frozen primary r=5 (§4 of the
 protocol), scoped first to metal_nut, both accepted methods, with a reduced
@@ -232,12 +232,52 @@ is smaller but markedly more consistent. Dice/IoU fall below E0 at all three
 ratios, least so at r=10. Three ratio points and three seeds per point do not
 establish statistical significance or a confirmed optimum.
 
-Diffusion's side is unaffected by the bug (never run) and is now a smaller ask
-for C: r=1 needs no new generation (A builds it directly from her already-
-accepted bundles); r=10 only needs the 25/type append portion under a
+Diffusion's side was unaffected by the bug (never run) and was a smaller ask
+for C: r=1 needed no new generation (A built it directly from her already-
+accepted bundles); r=10 only needed the 25/type append portion under a
 disclosed fresh seed, not a full 50/type regeneration.
 
-[Full results and evidence](../results/metrics/ratio_analysis_metal_nut_20261019/README.md).
+[Full Procedural results and evidence](../results/metrics/ratio_analysis_metal_nut_20261019/README.md).
+
+### Diffusion side — completed 19 October 2026
+
+C delivered the r=10 append (25/type, metal_nut bent/color/scratch, seed 142,
+SLURM job 44097) same-day, with per-type stage-1/QC statistics and her own
+independent pixel-level duplication check against the primary pool (zero
+duplicates). r=1 needed no delivery from C: A built it as a literal prefix of
+her already-accepted primary pool's first 5 entries per type.
+
+Loading a type's quota split across the primary bundle (25, seed 42) and the
+append bundle (25, seed 142) surfaced a second gap: `load_formal_pool`'s
+per-bundle check for gan/diffusion required each bundle to itself equal the
+exact per-type quota, which no single `--ratio-tier-count` value could satisfy
+for a split quota. **C found and precisely diagnosed this while preparing her
+delivery** (not A). Fixed same-day (PR #17): with `ratio_append_seeds` set, a
+bundle only needs to stay within the per-type quota; the existing aggregate
+check (summed across every bundle) remains the sole enforcer of the exact
+total. Verified against synthetic fixtures and all 4 real accepted pools
+before C's real delivery arrived; this delivery was the fix's first real-world
+use and it worked on the first attempt.
+
+Jobs **44092** (r=1, exit 0:0, 5:01) and **44176** (r=10, exit 0:0, 3:24).
+
+| Ratio (n) | Pixel AUROC | Δ vs E0 | Dice | IoU |
+|---|---:|---:|---:|---:|
+| r=1 (15, A's prefix) | 0.7098 ± 0.0549 | +0.0540 ± 0.0629 | 0.0324 ± 0.0501 | 0.0169 ± 0.0263 |
+| r=5 (75, primary, unchanged) | 0.8306 ± 0.0321 | +0.1748 ± 0.1140 | 0.2198 ± 0.2824 | 0.1443 ± 0.1970 |
+| r=10 (150, primary + C's seed-142 append) | 0.8801 ± 0.0176 | +0.2242 ± 0.1284 | 0.6523 ± 0.0190 | 0.4842 ± 0.0207 |
+
+Unlike Procedural, Diffusion's pixel AUROC rises **monotonically and with
+shrinking cross-seed spread** across all three ratios (SD 0.0549→0.0321→0.0176).
+Dice/IoU jump sharply at r=10 (0.65/0.48) — the largest segmentation gain seen
+anywhere in this project; flagged for attention, not explained (one ratio
+point, three seeds, no isolated mechanism identified).
+
+The two methods respond differently to more synthetic data in this range: a
+descriptive observation from one ratio sweep, one category, three seeds per
+point, not a significance claim or a general scaling law.
+
+[Full combined results and evidence](../results/metrics/ratio_analysis_diffusion_metal_nut_20261019/README.md).
 
 ## 9. Remaining work
 
@@ -245,9 +285,7 @@ The B and C delivery/acceptance/primary-comparison chain (steps 1–6 of the tea
 linear workflow) is complete for both methods and both categories. What remains is
 secondary analysis and the final report, not new primary comparisons:
 
-- **Ratio analysis:** Procedural side complete (§8 above). Diffusion side
-  (r=10's 25/type append only; r=1 needs no generation) requested from C, not
-  yet delivered.
+- **Ratio analysis: complete** (§8 above), both methods, metal_nut.
 - **Quality/cost synthesis: complete** (18 Oct 2026). B's and C's generation
   timers, QC statistics and failure taxonomies are compiled into one cross-method
   [ledger](analysis/quality_cost_ledger_20261018.md); Diffusion's totals were
