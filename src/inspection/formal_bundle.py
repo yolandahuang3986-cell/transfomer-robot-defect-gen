@@ -69,6 +69,13 @@ def load_formal_pool(directories, manifest, category, method, root, ratio_tier_c
     records which tier was used, so acceptance.json stays bound to the exact
     tier, not just the exact bytes.
 
+    Its meaning differs by method, exactly as the frozen quotas it replaces
+    already do: for procedural it is the CATEGORY total (e.g. 150 for metal_nut
+    r=10); for gan/diffusion it is the PER-DEFECT-TYPE count (e.g. 50 for a
+    metal_nut r=10 defect type, summed across however many bundles supply that
+    type -- it is never a per-bundle count when ratio_append_seeds is used, see
+    below).
+
     ratio_append_seeds=None (default) means every bundle must still record the
     frozen base generation seed, exactly as before: a ratio-tier pool built by
     truncating the already-accepted primary pool (e.g. r=1) needs nothing else.
@@ -79,6 +86,16 @@ def load_formal_pool(directories, manifest, category, method, root, ratio_tier_c
     Only valid together with an explicit ratio_tier_count (never for a primary
     pool). The accepted extra seeds are recorded in identity, so acceptance.json
     is bound to exactly which seeds were allowed, not just a bundle's bytes.
+
+    For gan/diffusion specifically, ratio_append_seeds also relaxes the
+    per-bundle defect-type check: normally each bundle must itself hold exactly
+    ratio_tier_count samples of one defect type (one bundle = the whole
+    quota), which makes it impossible to split one type's quota across a
+    primary bundle plus an append bundle. With ratio_append_seeds set, each
+    bundle individually only needs to hold at most ratio_tier_count samples of
+    one defect type; the aggregate check below (summed across all bundles)
+    still enforces the exact total per type, so under-filling is caught there,
+    not silently accepted per bundle.
     """
     if ratio_tier_count is not None and (not _integer(ratio_tier_count) or ratio_tier_count < 1):
         raise ValueError('ratio_tier_count must be a positive int when given')
@@ -157,9 +174,20 @@ def load_formal_pool(directories, manifest, category, method, root, ratio_tier_c
                     array = np.asarray(im.convert('RGB').resize((256, 256), Image.Resampling.BILINEAR), dtype=np.float32)
                 foregrounds[source] = estimate_object_foreground(array.transpose(2, 0, 1) / 255)
         per_defect_quota = ratio_tier_count if ratio_tier_count is not None else protocol['conditional_samples_per_defect']
-        if method != 'procedural' and (len({r['defect_type'] for r in batch.metadata}) != 1
-                or count != per_defect_quota):
-            raise ValueError('Conditional exports require one quota-sized bundle per defect type')
+        if method != 'procedural':
+            if len({r['defect_type'] for r in batch.metadata}) != 1:
+                raise ValueError('Conditional exports require one defect type per bundle')
+            # Normally a bundle must itself be the whole per-type quota. With a
+            # declared append seed, a type's quota may be split across bundles
+            # (e.g. the primary pool plus a new-seed append); each bundle then
+            # only needs to stay within the quota, and the aggregate check
+            # below (summed across every bundle) is what enforces the exact
+            # total per type.
+            if ratio_append_seeds is not None:
+                if count > per_defect_quota:
+                    raise ValueError('Conditional bundle exceeds the ratio-tier per-defect quota')
+            elif count != per_defect_quota:
+                raise ValueError('Conditional exports require one quota-sized bundle per defect type')
         checked = filter_generated_batch(batch, foregrounds)
         if checked.report.accepted_count != count:
             raise ValueError('Shared QC recheck failed; whole bundle must be reviewed')

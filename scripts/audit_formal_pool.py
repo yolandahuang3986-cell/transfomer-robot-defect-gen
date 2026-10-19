@@ -23,8 +23,10 @@ def main():
     p.add_argument('--bundle', required=True, action='append')
     p.add_argument('--out', required=True, help='New review directory outside Git')
     p.add_argument('--ratio-tier-count', type=int, default=None,
-                   help='Secondary ratio-analysis quota to admit instead of the frozen primary quota '
-                        '(e.g. 15 or 150 for metal_nut procedural, or 5/50 per diffusion/GAN defect type)')
+                   help='Secondary ratio-analysis quota to admit instead of the frozen primary quota. '
+                        'For procedural this is the CATEGORY total (e.g. 15 or 150 for metal_nut); for '
+                        'gan/diffusion it is the PER-DEFECT-TYPE count (e.g. 5 or 50), summed across '
+                        'every --bundle for that type when --ratio-append-seed is also given')
     p.add_argument('--ratio-append-seed', type=int, action='append', default=None,
                    help='Disclosed extra generation seed(s) a ratio-tier append bundle is allowed to use '
                         '(only valid together with --ratio-tier-count); repeat for multiple seeds')

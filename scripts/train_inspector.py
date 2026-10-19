@@ -199,9 +199,12 @@ def main():
     p.add_argument('--acceptance', help='A whole-pool acceptance JSON bound to exact artifact hashes')
     p.add_argument('--synthetic-count', type=int, default=0)
     p.add_argument('--ratio-tier-count', type=int, default=None,
-                   help='Secondary ratio-analysis quota override (e.g. 15 or 150 for metal_nut instead '
-                        'of the frozen 75/125 or per-type 25); never the primary quota, only valid with '
-                        '--formal and a synthetic method, and bound into the acceptance record it requires')
+                   help='Secondary ratio-analysis quota override; never the primary quota, only valid '
+                        'with --formal and a synthetic method, and bound into the acceptance record it '
+                        'requires. For procedural this is the CATEGORY total (e.g. 15 or 150 for '
+                        'metal_nut instead of the frozen 75); for gan/diffusion it is the '
+                        'PER-DEFECT-TYPE count (e.g. 5 or 50 instead of the frozen 25), summed across '
+                        'every --bundle for that type when --ratio-append-seed is also given')
     p.add_argument('--ratio-append-seed', type=int, action='append', default=None,
                    help='Disclosed extra generation seed(s) a ratio-tier append bundle is allowed to use '
                         '(e.g. for an r=10 bundle built by keeping the primary r=5 pool and appending new '
